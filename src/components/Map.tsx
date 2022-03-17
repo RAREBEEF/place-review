@@ -6,12 +6,20 @@
 // TODO:검색된 위치 표시 기능(미커)
 // 지도 드래그 시 드래그 된 지도 중심 위치로 마커(마커 드래그 이벤트 & 지도 중심 좌표 얻어오는 메소드 활용)
 // 해당 좌표를 리뷰 작성 페이지로 전달할 방법 생각해보기(redux에서 맵 컴포넌트로 데이터 뿌려주기?)
+// 지도 redux 이식 성공, 나머지 부가적인 지도 state들도 redux 이식 고려해보기
 
-import React, { useEffect, useRef } from "react";
+import React, { ReactElement, useEffect, useRef } from "react";
 import { useState } from "react";
 import { useCallback } from "react";
 import styles from "./Map.module.scss";
 import classNames from "classnames";
+import { useDispatch, useSelector } from "react-redux";
+import { getMapThunk, setMarkerPos } from "../redux/modules/getMap";
+import {
+  mapDataType,
+  paginationStateType,
+  recentSearchStateType,
+} from "../types";
 
 declare global {
   interface Window {
@@ -19,93 +27,58 @@ declare global {
   }
 }
 
-const Map: React.FC = () => {
+const Map: React.FC = (): ReactElement => {
   console.log("rendered");
-  const [map, setMap] = useState<any>();
-  const [places, setPlaces] = useState<any>({});
-  const [geocoder, setGeocoder] = useState<any>({});
   const [marker, setMarker] = useState<any>();
-  const [markerPos, setMarkerPos] = useState<any>();
 
   const [keyword, setKeyword] = useState<string | number>("");
   const [address, setAddress] = useState<string | number>("");
-  const [recentSearch, setRecentSearch] = useState<Array<string | number>>([
-    "",
-    "",
-  ]);
+  const [recentSearch, setRecentSearch] = useState<recentSearchStateType>({
+    text: "",
+    type: "",
+  });
 
-  const [loading, setLoading] = useState(true);
-
-  const [searchResult, setSearchResult] = useState<Array<Object>>([]);
+  const [searchResult, setSearchResult] = useState<Array<any>>([]);
   const [isZero, setIsZero] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-  const [pagination, setPagination] = useState<any>({
+  const [pagination, setPagination] = useState<paginationStateType>({
     nextClick: () => {},
     prevClick: () => {},
     totalCount: 0,
   });
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState<number>(0);
 
-  const MapEl = useRef(null);
+  const mapEl = useRef(null);
 
-  const getData = useCallback((): any => {
-    if (window.navigator) {
-      window.navigator.geolocation.getCurrentPosition((pos) => {
-        const location = new window.kakao.maps.LatLng(
-          pos.coords.latitude,
-          pos.coords.longitude
-        );
+  const dispatch = useDispatch();
+  const { loading, data, markerPos } = useSelector(
+    (state: mapDataType) => state
+  );
+  const map = data.map;
+  const places = data.places;
+  const geocoder = data.geocoder;
 
-        setMarkerPos(location);
+  useEffect((): void => {
+    dispatch(getMapThunk(mapEl.current));
+  }, [dispatch]);
 
-        const options = {
-          center: location,
-          level: 4,
-        };
-
-        setMap(new window.kakao.maps.Map(MapEl.current, options));
-        setPlaces(new window.kakao.maps.services.Places(map));
-
-        setGeocoder(new window.kakao.maps.services.Geocoder());
-
-        setLoading(false);
-      });
-    } else {
-      // setMarkerPos(new window.kakao.maps.LatLng(33.450701, 126.570667));
-      const options = {
-        center: markerPos,
-        level: 3,
-      };
-
-      setMap(new window.kakao.maps.Map(MapEl.current, options));
-      setPlaces(new window.kakao.maps.services.Places(map));
-
-      setGeocoder(new window.kakao.maps.services.Geocoder());
-
-      setLoading(false);
-    }
-  }, [map, markerPos]);
-
-  useEffect(() => {
-    getData();
-  }, [getData]);
-
-  useEffect(() => {
+  useEffect((): void => {
     if (markerPos) {
       marker?.setMap(null);
       const displayMarker = (position: any) => {
         setMarker(
           new window.kakao.maps.Marker({
             map: map,
-            position: markerPos,
+            position: position,
           })
         );
       };
       displayMarker(markerPos);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, markerPos]);
 
   // 검색 콜백
@@ -117,8 +90,8 @@ const Map: React.FC = () => {
         setSearchResult(result);
         const { x, y } = result[0];
         const location = new window.kakao.maps.LatLng(y, x);
-        setMarkerPos(location);
         map.panTo(location);
+        dispatch(setMarkerPos(location));
       } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
         setError(false);
         setIsZero(true);
@@ -175,7 +148,7 @@ const Map: React.FC = () => {
     (e) => {
       e.preventDefault();
       keywordSearch(keyword);
-      setRecentSearch([keyword, "장소"]);
+      setRecentSearch({ text: keyword, type: "장소" });
       setKeyword("");
     },
     [keywordSearch, keyword]
@@ -186,7 +159,7 @@ const Map: React.FC = () => {
     (e) => {
       e.preventDefault();
       addressSearch(address);
-      setRecentSearch([address, "주소"]);
+      setRecentSearch({ text: address, type: "주소" });
       setAddress("");
     },
     [addressSearch, address]
@@ -204,7 +177,7 @@ const Map: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div ref={MapEl} id="map" style={{ width: "500px", height: "400px" }} />
+      <div ref={mapEl} id="map" style={{ width: "500px", height: "400px" }} />
       <form onSubmit={onKeywordSubmit}>
         <input
           type="text"
@@ -222,10 +195,10 @@ const Map: React.FC = () => {
         />
       </form>
 
-      {recentSearch[0].toString().length !== 0 && (
+      {recentSearch.text.toString().length !== 0 && (
         <div className={styles["result"]}>
           <h2 className={styles["result__header"]}>
-            "{recentSearch[0]}" 에 대한 {recentSearch[1]} 검색 결과
+            "{recentSearch.text}" 에 대한 {recentSearch.type} 검색 결과
           </h2>
           {error && (
             <div className={styles["result__error"]}>
@@ -246,8 +219,10 @@ const Map: React.FC = () => {
                     key={i}
                     onClick={() => {
                       map.panTo(new window.kakao.maps.LatLng(el.y, el.x));
-                      map.setLevel(1);
-                      setMarkerPos(new window.kakao.maps.LatLng(el.y, el.x));
+                      map.setLevel(3);
+                      dispatch(
+                        setMarkerPos(new window.kakao.maps.LatLng(el.y, el.x))
+                      );
                       setSelected(i);
                     }}
                   >

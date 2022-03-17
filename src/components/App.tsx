@@ -1,8 +1,8 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import styles from "./App.module.scss";
 import Map from "./Map";
 
-const App: React.FC = () => {
+const App: React.FC = (): ReactElement => {
   return (
     <div className={styles.container}>
       <Map />
