@@ -4,9 +4,8 @@
 // 검색 결과 지도 중심 근처 우선
 // 검색 결과 페이지네이션
 // TODO:검색된 위치 표시 기능(미커)
-// 키워드 말고 주소 검색 기능도 추가
-
-// FIXME: 카카오 맵 api를 useEffect 없이 불러오기
+// 지도 드래그 시 드래그 된 지도 중심 위치로 마커(마커 드래그 이벤트 & 지도 중심 좌표 얻어오는 메소드 활용)
+// 해당 좌표를 리뷰 작성 페이지로 전달할 방법 생각해보기(redux에서 맵 컴포넌트로 데이터 뿌려주기?)
 
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
