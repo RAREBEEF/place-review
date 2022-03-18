@@ -1,4 +1,7 @@
 .container {
+  .loadingbar {
+    display: none;
+  }
   .result {
     .result__header {
     }
@@ -15,6 +18,14 @@
       &.selected {
         color: red !important;
       }
+    }
+  }
+  &.loading {
+    *:not(.loadingbar) {
+      display: none;
+    }
+    .loadingbar {
+      display: block;
     }
   }
 }

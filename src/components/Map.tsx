@@ -1,12 +1,6 @@
-// 현재까지 구현한 기능
-// 지도
-// 검색
-// 검색 결과 지도 중심 근처 우선
-// 검색 결과 페이지네이션
-// TODO:검색된 위치 표시 기능(미커)
 // 지도 드래그 시 드래그 된 지도 중심 위치로 마커(마커 드래그 이벤트 & 지도 중심 좌표 얻어오는 메소드 활용)
-// 해당 좌표를 리뷰 작성 페이지로 전달할 방법 생각해보기(redux에서 맵 컴포넌트로 데이터 뿌려주기?)
-// 지도 redux 이식 성공, 나머지 부가적인 지도 state들도 redux 이식 고려해보기
+// TODO:추가로 redux 이식할 state 체크
+// 로딩 시 검색 막을 방법
 
 import React, { ReactElement, useEffect, useRef } from "react";
 import { useState } from "react";
@@ -176,10 +170,12 @@ const Map: React.FC = (): ReactElement => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, loading && styles.loading)}>
+      <div className={styles.loadingbar}>Loading</div>
       <div ref={mapEl} id="map" style={{ width: "500px", height: "400px" }} />
       <form onSubmit={onKeywordSubmit}>
         <input
+          className={classNames(styles.search, styles["search--keyword"])}
           type="text"
           value={keyword}
           onChange={onKeywordChange}
@@ -188,6 +184,7 @@ const Map: React.FC = (): ReactElement => {
       </form>
       <form onSubmit={onAddressSubmit}>
         <input
+          className={classNames(styles.search, styles["search--address"])}
           type="text"
           value={address}
           onChange={onAddressChange}

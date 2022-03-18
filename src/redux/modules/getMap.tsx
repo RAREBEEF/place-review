@@ -6,11 +6,11 @@ import {
   setMarkerPosActionType,
 } from "../../types";
 
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
+// declare global {
+//   interface Window {
+//     kakao: any;
+//   }
+// }
 
 export const GET_MAP_START = "GET_MAP_START";
 export const GET_MAP_SUCCESS = "GET_MAP_SUCCESS";
@@ -100,7 +100,7 @@ export function getMapThunk(element: any): Function {
 }
 
 const initialState: mapDataType = {
-  loading: false,
+  loading: true,
   data: { map: {}, places: {}, geocoder: {} },
   error: null,
   markerPos: null,
