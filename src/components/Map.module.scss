@@ -1,20 +1,13 @@
 .container {
-  .result {
-    .result__header {
+  .loadingbar {
+    display: none;
+  }
+  &.loading {
+    #map {
+      display: none;
     }
-    .result__error {
-    }
-    .result__zero {
-    }
-    .result__list {
-      cursor: pointer;
-      .result__place-name {
-      }
-      .result__address {
-      }
-      &.selected {
-        color: red !important;
-      }
+    .loadingbar {
+      display: block;
     }
   }
 }
