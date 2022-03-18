@@ -66,6 +66,16 @@ export function getMapThunk(element: any): Function {
           const places = new window.kakao.maps.services.Places(map);
           const geocoder = new window.kakao.maps.services.Geocoder();
 
+          window.kakao.maps.event.addListener(map, "dragend", () => {
+            const location = map.getCenter();
+            dispatch(setMarkerPos(location));
+          });
+
+          // window.kakao.maps.event.addListner(map, "click", (e: any) => {
+          //   const location = e.latLng;
+          //   dispatch(setMarkerPos(location));
+          // });
+
           dispatch(getMapSuccess({ map, places, geocoder }, location));
           dispatch(setMarkerPos(location));
         } catch (error) {
@@ -84,6 +94,16 @@ export function getMapThunk(element: any): Function {
         const map = await new window.kakao.maps.Map(element, options);
         const places = new window.kakao.maps.services.Places(map);
         const geocoder = new window.kakao.maps.services.Geocoder();
+
+        window.kakao.maps.event.addListener(map, "dragend", () => {
+          const location = map.getCenter();
+          dispatch(setMarkerPos(location));
+        });
+
+        // window.kakao.maps.event.addListner(map, "click", (e: any) => {
+        //   const location = e.latLng;
+        //   dispatch(setMarkerPos(location));
+        // });
 
         dispatch(
           getMapSuccess(

@@ -2,26 +2,8 @@
   .loadingbar {
     display: none;
   }
-  .result {
-    .result__header {
-    }
-    .result__error {
-    }
-    .result__zero {
-    }
-    .result__list {
-      cursor: pointer;
-      .result__place-name {
-      }
-      .result__address {
-      }
-      &.selected {
-        color: red !important;
-      }
-    }
-  }
   &.loading {
-    *:not(.loadingbar) {
+    #map {
       display: none;
     }
     .loadingbar {
