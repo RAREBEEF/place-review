@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./components/App";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import { fireBase } from "./fbase";
 
 declare global {
   interface Window {
     kakao: any;
   }
 }
+
+console.log(fireBase);
 
 ReactDOM.render(
   <React.StrictMode>

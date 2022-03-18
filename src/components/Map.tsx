@@ -8,13 +8,14 @@ import styles from "./Map.module.scss";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { getMapThunk } from "../redux/modules/getMap";
-import { mapDataType } from "../types";
+import { stateType } from "../types";
+import Loading from "./Loading";
 
 const Map: React.FC = (): ReactElement => {
   console.log("rendered");
   const dispatch = useDispatch();
   const { loading, data, markerPos } = useSelector(
-    (state: mapDataType) => state
+    (state: stateType) => state.getMap
   );
   const map = data.map;
 
@@ -44,8 +45,12 @@ const Map: React.FC = (): ReactElement => {
 
   return (
     <div className={classNames(styles.container, loading && styles.loading)}>
-      <div className={styles.loadingbar}>Loading</div>
-      <div ref={mapEl} id="map" style={{ width: "500px", height: "400px" }} />
+      {loading && <Loading />}
+      <div
+        ref={mapEl}
+        id="map"
+        style={{ width: "500px", height: "400px" }}
+      />
     </div>
   );
 };

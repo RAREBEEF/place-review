@@ -1,13 +1,10 @@
 .container {
-  .loadingbar {
-    display: none;
-  }
   &.loading {
+    max-height: 100vh;
+    overflow: hidden;
     #map {
       display: none;
-    }
-    .loadingbar {
-      display: block;
+      height: 0 !important;
     }
   }
 }

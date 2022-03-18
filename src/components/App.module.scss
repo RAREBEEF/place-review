@@ -1,4 +1,10 @@
-#id {
-  width: 500px;
-  height: 500px;
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 100vw;
+  footer {
+    height: 30px;
+    line-height: 30px;
+  }
 }

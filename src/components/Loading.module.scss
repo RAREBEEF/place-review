@@ -1,0 +1,27 @@
+.container {
+  border: 1px solid red;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 40px);
+  min-width: 100vw;
+  .loading {
+    transform-origin: center;
+    animation: loading linear 5s infinite;
+    @keyframes loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    font-size: 100px;
+    // line-height: 100px;
+    // height: 100px;
+    font-weight: 900;
+    // border: 1px solid red;
+    padding-top: 10px;
+  }
+}

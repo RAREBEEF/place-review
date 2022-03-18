@@ -4,14 +4,14 @@ import { ReactElement, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMarkerPos } from "../redux/modules/getMap";
 import {
-  mapDataType,
   paginationStateType,
   recentSearchStateType,
+  stateType,
 } from "../types";
 
 const Search: React.FC = (): ReactElement => {
   const dispatch = useDispatch();
-  const { loading, data } = useSelector((state: mapDataType) => state);
+  const { loading, data } = useSelector((state: stateType) => state.getMap);
 
   const map = data.map;
   const places = data.places;

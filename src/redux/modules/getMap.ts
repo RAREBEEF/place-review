@@ -2,8 +2,9 @@ import {
   getMapFailActionType,
   getMapStartActionType,
   getMapSuccessActionType,
-  mapDataType,
+  getMapStateType,
   setMarkerPosActionType,
+  loginProcessStateType,
 } from "../../types";
 
 // declare global {
@@ -119,14 +120,17 @@ export function getMapThunk(element: any): Function {
   };
 }
 
-const initialState: mapDataType = {
+const initialState: getMapStateType = {
   loading: true,
   data: { map: {}, places: {}, geocoder: {} },
   error: null,
   markerPos: null,
 };
 
-const reducer = (state: any = initialState, action: any): mapDataType => {
+const reducer = (
+  state: getMapStateType = initialState,
+  action: any
+): getMapStateType => {
   switch (action.type) {
     case GET_MAP_START:
       return { ...state, loading: true, error: null };
