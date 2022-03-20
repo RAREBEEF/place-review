@@ -1,17 +1,11 @@
+import { useSelector } from "react-redux";
 import {
   getMapFailActionType,
   getMapStartActionType,
   getMapSuccessActionType,
   getMapStateType,
   setMarkerPosActionType,
-  loginProcessStateType,
 } from "../../types";
-
-// declare global {
-//   interface Window {
-//     kakao: any;
-//   }
-// }
 
 export const GET_MAP_START = "GET_MAP_START";
 export const GET_MAP_SUCCESS = "GET_MAP_SUCCESS";
@@ -25,12 +19,12 @@ export function getMapStart(): getMapStartActionType {
 }
 export function getMapSuccess(
   data: any,
-  markerPos: any
+  currentLocation: any
 ): getMapSuccessActionType {
   return {
     type: GET_MAP_SUCCESS,
     data,
-    markerPos,
+    currentLocation,
   };
 }
 export function getMapFail(error: any): getMapFailActionType {
@@ -72,13 +66,7 @@ export function getMapThunk(element: any): Function {
             dispatch(setMarkerPos(location));
           });
 
-          // window.kakao.maps.event.addListner(map, "click", (e: any) => {
-          //   const location = e.latLng;
-          //   dispatch(setMarkerPos(location));
-          // });
-
           dispatch(getMapSuccess({ map, places, geocoder }, location));
-          dispatch(setMarkerPos(location));
         } catch (error) {
           dispatch(getMapFail(error));
         }
@@ -101,18 +89,7 @@ export function getMapThunk(element: any): Function {
           dispatch(setMarkerPos(location));
         });
 
-        // window.kakao.maps.event.addListner(map, "click", (e: any) => {
-        //   const location = e.latLng;
-        //   dispatch(setMarkerPos(location));
-        // });
-
-        dispatch(
-          getMapSuccess(
-            { map, places, geocoder },
-            new window.kakao.maps.LatLng(0, 0)
-          )
-        );
-        dispatch(setMarkerPos(location));
+        dispatch(getMapSuccess({ map, places, geocoder }, null));
       } catch (error) {
         dispatch(getMapFail(error));
       }
@@ -124,6 +101,7 @@ const initialState: getMapStateType = {
   loading: true,
   data: { map: {}, places: {}, geocoder: {} },
   error: null,
+  currentPos: null,
   markerPos: null,
 };
 
@@ -140,12 +118,15 @@ const reducer = (
         loading: false,
         error: null,
         data: action.data,
-        markerPos: action.markerPos,
+        markerPos:
+          action.currentLocation === null
+            ? new window.kakao.maps.LatLng(0, 0)
+            : action.currentLocation,
+        currentPos: action.currentLocation,
       };
     case GET_MAP_FAIL:
       return { ...state, loading: false, error: action.error };
     case SET_MARKER_POS:
-      console.log(action.markerPos);
       return {
         ...state,
         data: {

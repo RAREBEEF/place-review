@@ -23,34 +23,61 @@ const Map: React.FC = (): ReactElement => {
 
   const mapEl = useRef(null);
 
+  const [crossActive, setCrossActive] = useState<boolean>(false);
+
+  // state.data.geocoder.coord2Address(
+  //   action.markerPos.getLng(),
+  //   action.markerPos.getLat(),
+  //   (result: any, status: any) => {
+  //     if (status === window.kakao.maps.services.Status.OK) {
+  //       console.log(result);
+  //     }
+  //   }
+  // );
+
   useEffect((): void => {
     dispatch(getMapThunk(mapEl.current));
   }, [dispatch]);
 
+  useEffect(() => {
+    if (Object.keys(map).length !== 0) {
+      window.kakao.maps.event.addListener(map, "dragstart", () => {
+        setCrossActive(true);
+      });
+      window.kakao.maps.event.addListener(map, "dragend", () => {
+        setCrossActive(false);
+      });
+    }
+  }, [map]);
+
   useEffect((): void => {
     if (markerPos) {
       marker?.setMap(null);
-      const displayMarker = (position: any) => {
-        setMarker(
-          new window.kakao.maps.Marker({
-            map: map,
-            position: position,
-          })
-        );
-      };
-      displayMarker(markerPos);
+      setMarker(
+        new window.kakao.maps.Marker({
+          map: map,
+          position: markerPos,
+        })
+      );
+      // const displayMarker = (position: any) => {
+      //   setMarker(
+      //     new window.kakao.maps.Marker({
+      //       map: map,
+      //       position: position,
+      //     })
+      //   );
+      // };
+      // displayMarker(markerPos);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, markerPos]);
 
   return (
     <div className={classNames(styles.container, loading && styles.loading)}>
-      {loading && <Loading />}
-      <div
-        ref={mapEl}
-        id="map"
-        style={{ width: "500px", height: "400px" }}
-      />
+      <div ref={mapEl} id="map" style={{ width: "70vw", height: "90vh" }}>
+        {loading && <Loading />}
+      </div>
+      {crossActive && <div className={styles.cross}>+</div>}
     </div>
   );
 };

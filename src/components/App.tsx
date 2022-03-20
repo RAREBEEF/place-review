@@ -9,6 +9,7 @@ import { authService } from "../fbase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setLogin } from "../redux/modules/loginProcess";
 import Loading from "./Loading";
+import Home from "../routes/Home";
 const App: React.FC = (): ReactElement => {
   const { isLogin } = useSelector((state: stateType) => state.loginProcess);
   const dispatch = useDispatch();
@@ -29,18 +30,7 @@ const App: React.FC = (): ReactElement => {
 
   return (
     <div className={styles.container}>
-      {init ? (
-        !isLogin ? (
-          <Login />
-        ) : (
-          <>
-            <Map />
-            <Search />
-          </>
-        )
-      ) : (
-        <Loading />
-      )}
+      {init ? !isLogin ? <Login /> : <Home /> : <Loading />}
       <footer>
         &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
       </footer>
@@ -51,3 +41,4 @@ const App: React.FC = (): ReactElement => {
 export default App;
 
 //TODO:컴포넌트 트리 정리할 수 있으면 하기 + 페이지 구분해서 라우터 설정하기
+// 지도 로딩 화면 예쁘게 출력할 방법 찾기

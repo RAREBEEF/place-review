@@ -15,6 +15,7 @@ export interface getMapStateType {
   loading: boolean;
   data: mapDataInnerdataType;
   error: null | Error;
+  currentPos: any;
   markerPos: any;
 }
 export interface getMapStartActionType {
@@ -23,7 +24,7 @@ export interface getMapStartActionType {
 export interface getMapSuccessActionType {
   type: string;
   data: Object;
-  markerPos: any;
+  currentLocation: any;
 }
 export interface getMapFailActionType {
   type: string;
