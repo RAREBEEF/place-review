@@ -1,0 +1,14 @@
+@media screen and (max-width: 1000px) {
+  .container {
+    .wrapper {
+      flex-direction: column-reverse;
+      align-items: center;
+    }
+  }
+}
+
+.container {
+  .wrapper {
+    display: flex;
+  }
+}

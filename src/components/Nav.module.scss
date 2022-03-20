@@ -1,0 +1,17 @@
+.container {
+  z-index: 999;
+  background-color: white;
+  border-bottom: 1px solid gray;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  .item {
+    border: 1px solid red;
+    margin: 10px;
+    width: 100px;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+  }
+}

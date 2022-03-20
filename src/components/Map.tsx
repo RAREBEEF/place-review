@@ -14,16 +14,19 @@ import Loading from "./Loading";
 const Map: React.FC = (): ReactElement => {
   console.log("rendered");
   const dispatch = useDispatch();
-  const { loading, data, markerPos } = useSelector(
+  const { loading, data, markerPos, currentPos } = useSelector(
     (state: stateType) => state.getMap
   );
   const map = data.map;
+  const geocoder = data.geocoder;
 
   const [marker, setMarker] = useState<any>();
 
   const mapEl = useRef(null);
 
   const [crossActive, setCrossActive] = useState<boolean>(false);
+
+  const [currentAddress, setCurrentAddress] = useState<any>({});
 
   // state.data.geocoder.coord2Address(
   //   action.markerPos.getLng(),
@@ -34,6 +37,23 @@ const Map: React.FC = (): ReactElement => {
   //     }
   //   }
   // );
+
+  useEffect(() => {
+    if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
+      geocoder.coord2Address(
+        currentPos.getLng(),
+        currentPos.getLat(),
+        (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setCurrentAddress({
+              address: result[0].address.address_name,
+              roadAddress: result[0].road_address?.address_name,
+            });
+          }
+        }
+      );
+    }
+  }, [currentPos, geocoder]);
 
   useEffect((): void => {
     dispatch(getMapThunk(mapEl.current));
@@ -73,7 +93,10 @@ const Map: React.FC = (): ReactElement => {
   }, [map, markerPos]);
 
   return (
-    <div className={classNames(styles.container, loading && styles.loading)}>
+    <div className={classNames(styles.container)}>
+        <div className={styles["current-address"]}>
+          현재 위치 : {currentAddress.address}
+        </div>
       <div ref={mapEl} id="map" style={{ width: "70vw", height: "90vh" }}>
         {loading && <Loading />}
       </div>
