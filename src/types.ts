@@ -38,9 +38,16 @@ export interface setMarkerPosActionType {
 export interface setLoginActionType {
   type: string;
   isLogin: boolean;
+  userObj: any;
 }
+export interface setUserObjActionType {
+  type: string;
+  userObj: any;
+}
+
 export interface loginProcessStateType {
   isLogin: boolean;
+  userObj: any;
 }
 
 // Map.ts

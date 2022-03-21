@@ -21,6 +21,7 @@
     "redux-thunk": "^2.4.1",
     "sass": "^1.49.9",
     "typescript": "^4.6.2",
+    "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -48,6 +49,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-redux": "^7.1.23"
+    "@types/react-redux": "^7.1.23",
+    "@types/uuid": "^8.3.4"
   }
 }

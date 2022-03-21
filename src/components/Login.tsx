@@ -23,7 +23,12 @@ const Login: React.FC = () => {
           .then((userCredential) => {
             const user = userCredential.user;
             console.log(user);
-            dispatch(setLogin(true));
+            dispatch(
+              setLogin(true, {
+                displayName: user.displayName ? user.displayName : "익명", // 신규 가입시 닉네임 --> "익명"
+                uid: user.uid,
+              })
+            );
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -36,7 +41,12 @@ const Login: React.FC = () => {
             .then((userCredential) => {
               const user = userCredential.user;
               console.log(user);
-              dispatch(setLogin(true));
+              dispatch(
+                setLogin(true, {
+                  displayName: user.displayName ? user.displayName : "익명", // 신규 가입시 닉네임 --> "익명"
+                  uid: user.uid,
+                })
+              );
             })
             .catch((error) => {
               const errorCode = error.code;

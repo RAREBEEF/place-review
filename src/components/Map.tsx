@@ -97,7 +97,7 @@ const Map: React.FC = (): ReactElement => {
         <div className={styles["current-address"]}>
           현재 위치 : {currentAddress.address}
         </div>
-      <div ref={mapEl} id="map" style={{ width: "70vw", height: "90vh" }}>
+      <div ref={mapEl} id="map" style={{ width: "70vw", height: "90vh", minHeight: "500px" }}>
         {loading && <Loading />}
       </div>
       {crossActive && <div className={styles.cross}>+</div>}

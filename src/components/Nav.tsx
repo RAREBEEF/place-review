@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 const Nav: React.FC = (): ReactElement => {
   const [isFindTab, setIsFindTab] = useState(
-    Boolean(window.location.href.indexOf("new"))
+    Boolean(window.location.href.indexOf("new") !== -1)
   );
-
+  console.log(isFindTab);
   const onItemClick = useCallback(() => {
     setIsFindTab((prev) => !prev);
   }, []);
