@@ -5,7 +5,7 @@ import styles from "./App.module.scss";
 import Login from "./Login";
 import { authService } from "../fbase";
 import { onAuthStateChanged } from "firebase/auth";
-import { setLogin, setUserObj } from "../redux/modules/loginProcess";
+import { setLogin } from "../redux/modules/loginProcess";
 import Loading from "./Loading";
 import Home from "../pages/Home";
 const App: React.FC = (): ReactElement => {
@@ -57,3 +57,4 @@ export default App;
 // 파이어스토어 로직 정리 좀 하기
 // 사이드바 컴포넌트 정리하기, 유지할지 버릴지
 // SET_USER_OBJ 액션 필요 여부 판단하기
+// url 검증 로직 체크하기 true false

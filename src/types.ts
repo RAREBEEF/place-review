@@ -60,3 +60,18 @@ export interface paginationStateType {
   prevClick: MouseEventHandler<HTMLButtonElement>;
   totalCount: number;
 }
+
+export interface NavPropType {
+  isFindTab: boolean;
+  setIsFindTab: Function;
+}
+
+export interface SearchPropType {
+  setIsFindTab: Function;
+}
+
+export interface FindReviewPropType {
+  viewAllReview: boolean;
+  setViewAllReview: Function;
+  setIsFindTab: Function;
+}

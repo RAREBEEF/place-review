@@ -3,16 +3,12 @@ import classNames from "classnames";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMarkerPos } from "../redux/modules/getMap";
-import {
-  paginationStateType,
-  recentSearchStateType,
-  stateType,
-} from "../types";
+import { paginationStateType, SearchPropType, stateType } from "../types";
 import { Routes, Route } from "react-router-dom";
 import FindReview from "./FindReview";
 import NewReview from "./NewReview";
 
-const Search: React.FC = (): ReactElement => {
+const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
   const dispatch = useDispatch();
   const { loading, data, currentPos, markerPos } = useSelector(
     (state: stateType) => state.getMap
@@ -44,13 +40,14 @@ const Search: React.FC = (): ReactElement => {
 
   const [selected, setSelected] = useState<number>(0);
 
-  // const [markerControll, setMarkerControll] = useState<boolean>(false);
+  const [viewAllReview, setViewAllReview] = useState<boolean>(true);
 
   // 검색 콜백
   const searchCallback = useCallback(
     (result: any, status: any, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
         console.log(result);
+        setViewAllReview(false);
         setError(false);
         setIsZero(false);
         setSearchResult(result);
@@ -106,12 +103,10 @@ const Search: React.FC = (): ReactElement => {
       setCurrentPage(1);
       setSelected(0);
       if (searchKeywordText === "") {
-        // setRecentSearch({ text: "", type: "" });
         map.setCenter(currentPos);
         dispatch(setMarkerPos(currentPos));
       } else if (searchKeywordText !== "") {
         keywordSearch(searchKeywordText);
-        // setRecentSearch({ text: searchKeywordText, type: "장소" });
       }
     },
     [searchKeywordText, map, currentPos, dispatch, keywordSearch]
@@ -125,7 +120,6 @@ const Search: React.FC = (): ReactElement => {
   const onCurrentPosBtnClick = useCallback(
     (e?) => {
       e?.preventDefault();
-      // setRecentSearch({ text: "", type: "" });
       map.setCenter(currentPos);
       dispatch(setMarkerPos(currentPos));
       setCurrentPage(1);
@@ -137,7 +131,6 @@ const Search: React.FC = (): ReactElement => {
           (result: any, status: any) => {
             if (status === window.kakao.maps.services.Status.OK) {
               keywordSearch(result[0].address.address_name);
-              // setRecentSearch({ text: "현재 위치", type: "주소" });
               setSearchKeywordText(result[0].address.address_name);
             }
           }
@@ -154,34 +147,11 @@ const Search: React.FC = (): ReactElement => {
     }
   }, [currentPos, geocoder, onCurrentPosBtnClick]);
 
-  // 마커 위치 변경 시 주소
-  // useEffect(() => {
-  //   if (Object.keys(map).length !== 0) {
-  //     geocoder.coord2Address(
-  //       markerPos.getLng(),
-  //       markerPos.getLat(),
-  //       (result: any, status: any) => {
-  //         if (status === window.kakao.maps.services.Status.OK) {
-  //           // setAddress((prev: any) => ({
-  //           //   address: result[0].address.address_name,
-  //           //   roadAddress: result[0].road_address?.address_name,
-  //           // }));
-  //           keywordSearch(result[0].address.address_name);
-  //           setRecentSearch({ text: "현재 위치", type: "주소" });
-  //           // setSearchKeywordText(result[0].address.address_name);
-  //         }
-  //       }
-  //     );
-  //   }
-  // }, [markerPos, geocoder, map]);
-
   useEffect(() => {
     if (Object.keys(map).length !== 0) {
       window.kakao.maps.event.addListener(map, "dragend", () => {
         const location = map.getCenter();
-        // if (markerControll) {
-        //   dispatch(setMarkerPos(location));
-        // } else {
+
         geocoder.coord2Address(
           location.getLng(),
           location.getLat(),
@@ -190,24 +160,17 @@ const Search: React.FC = (): ReactElement => {
               setCurrentPage(1);
               setSelected(0);
               keywordSearch(result[0].address.address_name);
-              // setRecentSearch({ text: "현재 위치", type: "주소" });
               setSearchKeywordText(result[0].address.address_name);
               dispatch(setMarkerPos(location));
             }
           }
         );
-        // }
       });
     }
-  }, [dispatch, geocoder, keywordSearch, map /* markerControll */]);
+  }, [dispatch, geocoder, keywordSearch, map]);
 
   return (
     <div className={classNames(styles.container, loading && styles.loading)}>
-      {/* <div className={styles["marker-pos"]}>
-        마커 위치 : {address.address}
-        {address.roadAddress && ` (${address.roadAddress})`}
-        
-      </div> */}
       <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles["input--text-wrapper"]}>
           <input
@@ -278,7 +241,16 @@ const Search: React.FC = (): ReactElement => {
         </div>
       </div>
       <Routes>
-        <Route path="/" element={<FindReview />}></Route>
+        <Route
+          path="/"
+          element={
+            <FindReview
+              viewAllReview={viewAllReview}
+              setViewAllReview={setViewAllReview}
+              setIsFindTab={setIsFindTab}
+            />
+          }
+        ></Route>
         <Route path="/new" element={<NewReview />}></Route>
       </Routes>
     </div>

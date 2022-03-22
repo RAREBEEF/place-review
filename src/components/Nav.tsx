@@ -1,26 +1,24 @@
-import { ReactElement, useCallback, useState } from "react";
+import { ReactElement, useCallback } from "react";
 import styles from "./Nav.module.scss";
 import { Link } from "react-router-dom";
+import { NavPropType } from "../types";
 
-const Nav: React.FC = (): ReactElement => {
-  const [isFindTab, setIsFindTab] = useState(
-    Boolean(window.location.href.indexOf("new") !== -1)
-  );
-  console.log(isFindTab);
+const Nav: React.FC<NavPropType> = ({
+  isFindTab,
+  setIsFindTab,
+}): ReactElement => {
   const onItemClick = useCallback(() => {
-    setIsFindTab((prev) => !prev);
-  }, []);
+    setIsFindTab((prev: boolean) => !prev);
+  }, [setIsFindTab]);
 
   return (
     <ul className={styles.container}>
       <Link onClick={onItemClick} to={isFindTab === false ? "/new" : "/"}>
         <li className={styles.item}>
-          {isFindTab === false ? "New Review" : "Search Review"}
+          {isFindTab ? "Search Review" : "New Review"}
         </li>
       </Link>
-      {/* <Link to="/"> */}
       <li className={styles.item}>Profile</li>
-      {/* </Link> */}
     </ul>
   );
 };

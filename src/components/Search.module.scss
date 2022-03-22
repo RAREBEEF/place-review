@@ -1,4 +1,16 @@
+@media screen and (max-width: 1000px) {
+  .container {
+    width: 70vw !important;
+  }
+}
+
 .container {
+  width: 30vw;
+  height: 90vh;
+  min-width: 300px;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
   .form {
     display: flex;
     .input--text-wrapper {
