@@ -25,7 +25,7 @@ const Login: React.FC = () => {
             console.log(user);
             dispatch(
               setLogin(true, {
-                displayName: user.displayName ? user.displayName : "익명", // 신규 가입시 닉네임 --> "익명"
+                displayName: user.displayName ? user.displayName : "익명",
                 uid: user.uid,
               })
             );
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
               console.log(user);
               dispatch(
                 setLogin(true, {
-                  displayName: user.displayName ? user.displayName : "익명", // 신규 가입시 닉네임 --> "익명"
+                  displayName: user.displayName ? user.displayName : "익명",
                   uid: user.uid,
                 })
               );

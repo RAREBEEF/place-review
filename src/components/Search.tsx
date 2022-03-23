@@ -7,6 +7,7 @@ import { paginationStateType, SearchPropType, stateType } from "../types";
 import { Routes, Route } from "react-router-dom";
 import FindReview from "./FindReview";
 import NewReview from "./NewReview";
+import Button from "./Button";
 
 const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
   const dispatch = useDispatch();
@@ -46,7 +47,6 @@ const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
   const searchCallback = useCallback(
     (result: any, status: any, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        console.log(result);
         setViewAllReview(false);
         setError(false);
         setIsZero(false);
@@ -181,8 +181,8 @@ const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
             placeholder="장소 검색"
           />
         </div>
-        <input type="submit" value="검색" />
-        <button onClick={onCurrentPosBtnClick}>현위치로</button>
+        <Button text="검색" />
+        <Button onClick={onCurrentPosBtnClick} text="현위치로" />
       </form>
 
       <div className={styles["result"]}>
@@ -230,14 +230,14 @@ const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
           </ul>
         )}
         <div className={styles["resut__pagination"]}>
-          <button onClick={pagination.prevClick}>prev</button>
+          <Button onClick={pagination.prevClick} text="prev" />
           <span>
             {currentPage} /{" "}
             {Math.ceil(pagination.totalCount / 15) === 0
               ? 1
               : Math.ceil(pagination.totalCount / 15)}
           </span>
-          <button onClick={pagination.nextClick}>next</button>
+          <Button onClick={pagination.nextClick} text="next" />
         </div>
       </div>
       <Routes>
@@ -248,10 +248,14 @@ const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
               viewAllReview={viewAllReview}
               setViewAllReview={setViewAllReview}
               setIsFindTab={setIsFindTab}
+              onCurrentPosBtnClick={onCurrentPosBtnClick}
             />
           }
         ></Route>
-        <Route path="/new" element={<NewReview />}></Route>
+        <Route
+          path="/new"
+          element={<NewReview setIsFindTab={setIsFindTab} />}
+        ></Route>
       </Routes>
     </div>
   );

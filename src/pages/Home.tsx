@@ -7,7 +7,7 @@ import Search from "../components/Search";
 
 const Home: React.FC = () => {
   const [isFindTab, setIsFindTab] = useState(
-    Boolean(window.location.href.indexOf("new") !== -1)
+    Boolean(window.location.href.indexOf("new") === -1)
   );
   return (
     <Router>

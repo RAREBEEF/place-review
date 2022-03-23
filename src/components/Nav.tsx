@@ -13,9 +13,9 @@ const Nav: React.FC<NavPropType> = ({
 
   return (
     <ul className={styles.container}>
-      <Link onClick={onItemClick} to={isFindTab === false ? "/new" : "/"}>
+      <Link onClick={onItemClick} to={isFindTab ? "/new" : "/"}>
         <li className={styles.item}>
-          {isFindTab ? "Search Review" : "New Review"}
+          {isFindTab ? "New Review" : "Search Review"}
         </li>
       </Link>
       <li className={styles.item}>Profile</li>

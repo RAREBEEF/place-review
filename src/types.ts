@@ -74,4 +74,14 @@ export interface FindReviewPropType {
   viewAllReview: boolean;
   setViewAllReview: Function;
   setIsFindTab: Function;
+  onCurrentPosBtnClick: Function;
+}
+
+export interface NewReviewPropType {
+  setIsFindTab: Function;
+}
+
+export interface ButtonPropType {
+  text: string;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }

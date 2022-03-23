@@ -1,5 +1,22 @@
 .container {
-  height: 500px;
+  border: 1px solid blue;
+  height: calc(90vh - 230px);
   display: flex;
   flex-direction: column;
+  width: inherit;
+  min-height: 270px;
+  .attachment-wrapper {
+    img {
+      max-width: 30vw;
+      max-height: 100px;
+    }
+  }
+  .input--memo {
+    // height: 100px;
+    flex-grow: 1;
+    max-height: 100px;
+  }
+}
+.rating {
+  position: relative;
 }

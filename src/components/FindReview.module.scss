@@ -1,6 +1,26 @@
-.no-review {
-  display: block;
-  &:not(:nth-child(3)) {
-    display: none;
+.container {
+  border: 1px solid blue;
+  height: calc(90vh - 230px);
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+  .btn-wrapper {
+  }
+  .search-wrapper {
+  }
+  .review__list {
+    border: 3px solid green;
+    overflow-y: auto;
+    .no-review {
+      display: block;
+      &:not(:first-child) {
+        display: none;
+      }
+    }
+    .review {
+      .review__photo {
+        width: 100%;
+      }
+    }
   }
 }

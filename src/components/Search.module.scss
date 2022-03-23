@@ -5,6 +5,7 @@
 }
 
 .container {
+  border: 1px solid red;
   width: 30vw;
   height: 90vh;
   min-width: 300px;
@@ -28,7 +29,7 @@
     flex-grow: 1;
     flex-direction: column;
     min-height: 200px;
-    height: calc(90vh - 330px);
+    height: calc(90vh - 830px);
     justify-content: space-between;
     .result__list {
       overflow-y: scroll;
