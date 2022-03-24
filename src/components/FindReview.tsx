@@ -7,6 +7,7 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
+  orderBy,
 } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
 import { FindReviewPropType, stateType } from "../types";
@@ -19,7 +20,6 @@ const FindReview: React.FC<FindReviewPropType> = ({
   viewAllReview,
   setViewAllReview,
   setIsFindTab,
-  onCurrentPosBtnClick,
 }) => {
   const mapData = useSelector((state: stateType) => state.getMap);
   const userObj = useSelector((state: stateType) => state.loginProcess.userObj);
@@ -30,7 +30,10 @@ const FindReview: React.FC<FindReviewPropType> = ({
   const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    const q = query(collection(dbService, "reviews"));
+    const q = query(
+      collection(dbService, "reviews"),
+      orderBy("createdAt", "desc")
+    );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const reviews: Array<any> = [];
       querySnapshot.forEach((doc) => {
@@ -38,54 +41,50 @@ const FindReview: React.FC<FindReviewPropType> = ({
       });
       setReviews(reviews);
     });
-
+    setViewAllReview(false);
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [setViewAllReview]);
 
   const onChange = useCallback((e) => {
     setText(e.target.value);
   }, []);
   console.log(text);
 
-  const onClick = useCallback(() => {
+  const onFilterClick = useCallback(() => {
     if (viewAllReview) {
       setViewAllReview(false);
-      // onCurrentPosBtnClick();
     } else {
       setViewAllReview(true);
     }
   }, [viewAllReview, setViewAllReview]);
 
-  const onDeleteClick = useCallback(async (e, review) => {
-    e.preventDefault();
-    console.log(review);
-    const ok = window.confirm("삭제하시겠습니까?");
-    if (ok) {
-      // await dbService.doc(`mebs/${e.target.review.id}`).delete();
+  const onDeleteClick = useCallback(
+    async (e, review) => {
+      e.preventDefault();
+      console.log(review);
+      const ok = window.confirm("삭제하시겠습니까?");
+      if (ok) {
+        await deleteDoc(doc(dbService, `reviews/${review.id}`));
 
-      await deleteDoc(doc(dbService, `reviews/${review.id}`));
-
-      if (review.attachmentUrl !== "") {
-        // await storageService.refFromURL(e.target.review.attachmentUrl).delete();
-        const attachmentRef = ref(
-          storageService,
-          `${userObj.uid}/${review.attachmentId}`
-        );
-        await deleteObject(attachmentRef);
+        if (review.attachmentUrl !== "") {
+          const attachmentRef = ref(
+            storageService,
+            `${userObj.uid}/${review.attachmentId}`
+          );
+          await deleteObject(attachmentRef);
+        }
       }
-    }
-    // if (typeof setDoUpdate === "function") {
-    //   setDoUpdate((prev) => prev + 1);
-    // }
-  }, []);
+    },
+    [userObj.uid]
+  );
 
   return (
     <div className={styles.container}>
       <div className={styles["btn-wrapper"]}>
         <Button
-          onClick={onClick}
+          onClick={onFilterClick}
           text={viewAllReview ? "해당 위치 리뷰 보기" : "전체 리뷰 보기"}
         />
         <Link to="/new">
@@ -130,7 +129,6 @@ const FindReview: React.FC<FindReviewPropType> = ({
               onClick={() => {
                 dispatch(setMarkerPos(location));
                 map.setCenter(location);
-                console.log(location);
               }}
             >
               <div className={styles["review__title"]}>{review.title}</div>
@@ -141,31 +139,31 @@ const FindReview: React.FC<FindReviewPropType> = ({
                 <span
                   className="fa fa-star"
                   style={{
-                    color: review.rating >= 1 ? "orange" : "gray",
+                    color: review.rating >= 1 ? "orange" : "lightgray",
                   }}
                 ></span>
                 <span
                   className="fa fa-star"
                   style={{
-                    color: review.rating >= 2 ? "orange" : "gray",
+                    color: review.rating >= 2 ? "orange" : "lightgray",
                   }}
                 ></span>
                 <span
                   className="fa fa-star"
                   style={{
-                    color: review.rating >= 3 ? "orange" : "gray",
+                    color: review.rating >= 3 ? "orange" : "lightgray",
                   }}
                 ></span>
                 <span
                   className="fa fa-star"
                   style={{
-                    color: review.rating >= 4 ? "orange" : "gray",
+                    color: review.rating >= 4 ? "orange" : "lightgray",
                   }}
                 ></span>
                 <span
                   className="fa fa-star"
                   style={{
-                    color: review.rating >= 5 ? "orange" : "gray",
+                    color: review.rating >= 5 ? "orange" : "lightgray",
                   }}
                 ></span>
               </div>

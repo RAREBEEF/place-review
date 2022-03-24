@@ -131,17 +131,11 @@ const NewReview: React.FC<NewReviewPropType> = ({
         onChange={onTitleChange}
       ></input>
       <label htmlFor="rating">별점</label>
-      {/* <input
-        id="rating"
-        type="number"
-        value={review.rating}
-        onChange={onRatingChange}
-      ></input> */}
       <div className={styles["rating"]}>
         <span
           className="fa fa-star"
           style={{
-            color: review.rating >= 1 ? "orange" : "gray",
+            color: review.rating >= 1 ? "orange" : "lightgray",
             cursor: "pointer",
           }}
           onClick={() => {
@@ -154,7 +148,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
         <span
           className="fa fa-star"
           style={{
-            color: review.rating >= 2 ? "orange" : "gray",
+            color: review.rating >= 2 ? "orange" : "lightgray",
             cursor: "pointer",
           }}
           onClick={() => {
@@ -167,7 +161,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
         <span
           className="fa fa-star"
           style={{
-            color: review.rating >= 3 ? "orange" : "gray",
+            color: review.rating >= 3 ? "orange" : "lightgray",
             cursor: "pointer",
           }}
           onClick={() => {
@@ -180,7 +174,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
         <span
           className="fa fa-star"
           style={{
-            color: review.rating >= 4 ? "orange" : "gray",
+            color: review.rating >= 4 ? "orange" : "lightgray",
             cursor: "pointer",
           }}
           onClick={() => {
@@ -193,7 +187,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
         <span
           className="fa fa-star"
           style={{
-            color: review.rating === 5 ? "orange" : "gray",
+            color: review.rating === 5 ? "orange" : "lightgray",
             cursor: "pointer",
           }}
           onClick={() => {
