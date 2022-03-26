@@ -1,24 +1,17 @@
 import Map from "../components/Map";
 import styles from "./Home.module.scss";
-import { BrowserRouter as Router } from "react-router-dom";
-import Nav from "../components/Nav";
-import { useState } from "react";
+import { ReactElement } from "react";
 import Search from "../components/Search";
+import { HomePropType } from "../types";
 
-const Home: React.FC = () => {
-  const [isFindTab, setIsFindTab] = useState(
-    Boolean(window.location.href.indexOf("new") === -1)
-  );
+const Home: React.FC<HomePropType> = (): ReactElement => {
   return (
-    <Router>
-      <div className={styles.container}>
-        <Nav isFindTab={isFindTab} setIsFindTab={setIsFindTab} />
-        <div className={styles.wrapper}>
-          <Search setIsFindTab={setIsFindTab} />
-          <Map />
-        </div>
+    <div className={styles.container}>
+      <div className={styles.wrapper}>
+        <Search />
+        <Map />
       </div>
-    </Router>
+    </div>
   );
 };
 

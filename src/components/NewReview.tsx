@@ -10,9 +10,7 @@ import styles from "./NewReview.module.scss";
 import Button from "./Button";
 import { Link, useNavigate } from "react-router-dom";
 
-const NewReview: React.FC<NewReviewPropType> = ({
-  setIsFindTab,
-}): ReactElement => {
+const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
   const navigation = useNavigate();
   const location = useSelector((state: stateType) => state.getMap.markerPos);
   const userObj = useSelector((state: stateType) => state.loginProcess.userObj);
@@ -36,13 +34,6 @@ const NewReview: React.FC<NewReviewPropType> = ({
     setReview((prev) => ({
       ...prev,
       title: e.target.value,
-    }));
-  }, []);
-
-  const onRatingChange = useCallback((e) => {
-    setReview((prev) => ({
-      ...prev,
-      rating: e.target.value,
     }));
   }, []);
 
@@ -236,12 +227,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
       <div className={styles["btn-wrapper"]}>
         <input type="submit" />
         <Link to="/">
-          <Button
-            onClick={() => {
-              setIsFindTab(true);
-            }}
-            text="돌아가기"
-          />
+          <Button text="돌아가기" />
         </Link>
       </div>
     </form>

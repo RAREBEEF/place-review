@@ -1,18 +1,10 @@
-import {
-  loginProcessStateType,
-  setLoginActionType,
-  setUserObjActionType,
-} from "../../types";
+import { loginProcessStateType, setLoginActionType } from "../../types";
 
 export const SET_LOGIN = "SET_LOGIN";
 export const SET_USER_OBJ = "SET_USER_OBJ";
 
 export function setLogin(isLogin: boolean, userObj: any): setLoginActionType {
   return { type: SET_LOGIN, isLogin, userObj };
-}
-
-export function setUserObj(userObj: Object): setUserObjActionType {
-  return { type: SET_LOGIN, userObj };
 }
 
 const initialState: loginProcessStateType = { isLogin: false, userObj: {} };

@@ -9,9 +9,9 @@ import FindReview from "./FindReview";
 import NewReview from "./NewReview";
 import Button from "./Button";
 
-const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
+const Search: React.FC<SearchPropType> = (): ReactElement => {
   const dispatch = useDispatch();
-  const { loading, data, currentPos, markerPos } = useSelector(
+  const { loading, data, currentPos } = useSelector(
     (state: stateType) => state.getMap
   );
 
@@ -22,11 +22,6 @@ const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
   const [searchKeywordText, setSearchKeywordText] = useState<string | number>(
     ""
   );
-
-  // const [recentSearch, setRecentSearch] = useState<recentSearchStateType>({
-  //   text: "",
-  //   type: "",
-  // });
 
   const [searchResult, setSearchResult] = useState<Array<any>>([]);
   const [isZero, setIsZero] = useState<boolean>(false);
@@ -247,15 +242,11 @@ const Search: React.FC<SearchPropType> = ({ setIsFindTab }): ReactElement => {
             <FindReview
               viewAllReview={viewAllReview}
               setViewAllReview={setViewAllReview}
-              setIsFindTab={setIsFindTab}
               onCurrentPosBtnClick={onCurrentPosBtnClick}
             />
           }
         ></Route>
-        <Route
-          path="/new"
-          element={<NewReview setIsFindTab={setIsFindTab} />}
-        ></Route>
+        <Route path="/new" element={<NewReview />}></Route>
       </Routes>
     </div>
   );

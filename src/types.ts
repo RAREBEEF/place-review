@@ -34,17 +34,13 @@ export interface setMarkerPosActionType {
   type: string;
   markerPos: any;
 }
+
 // loginProcess
 export interface setLoginActionType {
   type: string;
   isLogin: boolean;
   userObj: any;
 }
-export interface setUserObjActionType {
-  type: string;
-  userObj: any;
-}
-
 export interface loginProcessStateType {
   isLogin: boolean;
   userObj: any;
@@ -61,27 +57,26 @@ export interface paginationStateType {
   totalCount: number;
 }
 
-export interface NavPropType {
-  isFindTab: boolean;
-  setIsFindTab: Function;
-}
+export interface NavPropType {}
 
-export interface SearchPropType {
-  setIsFindTab: Function;
-}
+export interface SearchPropType {}
 
 export interface FindReviewPropType {
   viewAllReview: boolean;
   setViewAllReview: Function;
-  setIsFindTab: Function;
   onCurrentPosBtnClick: Function;
 }
 
-export interface NewReviewPropType {
-  setIsFindTab: Function;
-}
+export interface NewReviewPropType {}
 
 export interface ButtonPropType {
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }
+
+export interface ReviewPropType {
+  location: any;
+  review: any;
+}
+
+export interface HomePropType {}

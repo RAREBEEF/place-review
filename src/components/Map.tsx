@@ -9,7 +9,7 @@ import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { getMapThunk } from "../redux/modules/getMap";
 import { stateType } from "../types";
-import Loading from "./Loading";
+import Loading from "../pages/Loading";
 
 const Map: React.FC = (): ReactElement => {
   console.log("rendered");
