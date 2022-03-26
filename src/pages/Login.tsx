@@ -19,7 +19,7 @@ const Login: React.FC = () => {
     async (e) => {
       e.preventDefault();
       if (formAction === "login") {
-        signInWithEmailAndPassword(authService, email, password)
+        await signInWithEmailAndPassword(authService, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
             console.log(user);
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
           });
       } else if (formAction === "signUp") {
         if (password === passwordCheck) {
-          createUserWithEmailAndPassword(authService, email, password)
+          await createUserWithEmailAndPassword(authService, email, password)
             .then((userCredential) => {
               const user = userCredential.user;
               console.log(user);

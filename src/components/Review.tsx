@@ -42,8 +42,12 @@ const Review: React.FC<ReviewPropType> = ({
     <li
       className={styles.review}
       onClick={() => {
-        dispatch(setMarkerPos(location));
-        map.setCenter(location);
+        if (!map.setCenter) {
+          return;
+        } else {
+          dispatch(setMarkerPos(location));
+          map.setCenter(location);
+        }
       }}
     >
       <div className={styles["review__title"]}>{review.title}</div>

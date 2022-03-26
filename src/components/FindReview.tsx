@@ -46,6 +46,7 @@ const FindReview: React.FC<FindReviewPropType> = ({
       setViewAllReview(true);
     }
   }, [viewAllReview, setViewAllReview]);
+  
 
   return (
     <div className={styles.container}>

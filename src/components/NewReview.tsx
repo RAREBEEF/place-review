@@ -82,20 +82,24 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     let attachmentId = "";
     // 이미지 있을 경우
     if (attachment !== "") {
-      attachmentId = uuidv4();
-      const attachmentRef = ref(
-        storageService,
-        `${userObj.uid}/${attachmentId}`
-      );
-      const response = await uploadString(
-        attachmentRef,
-        attachment,
-        "data_url"
-      );
-      console.log(response);
-      attachmentUrl = await getDownloadURL(
-        ref(storageService, `${userObj.uid}/${attachmentId}`)
-      );
+      try {
+        attachmentId = uuidv4();
+        const attachmentRef = ref(
+          storageService,
+          `${userObj.uid}/${attachmentId}`
+        );
+        const response = await uploadString(
+          attachmentRef,
+          attachment,
+          "data_url"
+        );
+        console.log(response);
+        attachmentUrl = await getDownloadURL(
+          ref(storageService, `${userObj.uid}/${attachmentId}`)
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     // 업로드 할 데이터
@@ -108,7 +112,13 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
       attachmentId,
     };
 
-    await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj });
+    await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj })
+      .then(() => {
+        console.log("Uploaded");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     navigation("/");
   };
