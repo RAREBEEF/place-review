@@ -51,6 +51,8 @@ const Review: React.FC<ReviewPropType> = ({
       }}
     >
       <div className={styles["review__title"]}>{review.title}</div>
+      <div className={styles["review__address"]}>{review.address.address}</div>
+      <div className={styles["review__road-address"]}>{review.address.roadAddress}</div>
       <div className={styles["review__date"]}>
         {new Date(review.createdAt).getFullYear().toString().slice(-2)}/
         {("0" + (new Date(review.createdAt).getMonth() + 1))

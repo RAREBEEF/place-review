@@ -143,25 +143,30 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   }, [currentPos, geocoder, onCurrentPosBtnClick]);
 
   useEffect(() => {
-    if (Object.keys(map).length !== 0) {
-      window.kakao.maps.event.addListener(map, "dragend", () => {
-        const location = map.getCenter();
+    const dragCallback = () => {
+      const location = map.getCenter();
 
-        geocoder.coord2Address(
-          location.getLng(),
-          location.getLat(),
-          (result: any, status: any) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              setCurrentPage(1);
-              setSelected(0);
-              keywordSearch(result[0].address.address_name);
-              setSearchKeywordText(result[0].address.address_name);
-              dispatch(setMarkerPos(location));
-            }
+      geocoder.coord2Address(
+        location.getLng(),
+        location.getLat(),
+        (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setCurrentPage(1);
+            setSelected(0);
+            keywordSearch(result[0].address.address_name);
+            setSearchKeywordText(result[0].address.address_name);
+            dispatch(setMarkerPos(location));
           }
-        );
-      });
+        }
+      );
+    };
+
+    if (Object.keys(map).length !== 0) {
+      window.kakao.maps.event.addListener(map, "dragend", dragCallback);
     }
+    // return () => {
+    //   window.kakao.maps.event.removeListener(map, "dragend", dragCallback);
+    // };
   }, [dispatch, geocoder, keywordSearch, map]);
 
   return (

@@ -80,3 +80,7 @@ export interface ReviewPropType {
 }
 
 export interface HomePropType {}
+
+export interface RouterPropType {
+  init: boolean;
+}

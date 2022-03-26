@@ -60,14 +60,24 @@ const Map: React.FC = (): ReactElement => {
   }, [dispatch]);
 
   useEffect(() => {
+    const dragStartCallback = () => {
+      setCrossActive(true);
+    };
+    const dragEndCallback = () => {
+      setCrossActive(false);
+    };
     if (Object.keys(map).length !== 0) {
-      window.kakao.maps.event.addListener(map, "dragstart", () => {
-        setCrossActive(true);
-      });
-      window.kakao.maps.event.addListener(map, "dragend", () => {
-        setCrossActive(false);
-      });
+      window.kakao.maps.event.addListener(map, "dragstart", dragStartCallback);
+      window.kakao.maps.event.addListener(map, "dragend", dragEndCallback);
     }
+    // return () => {
+    //   window.kakao.maps.event.removeListener(
+    //     map,
+    //     "dragstart",
+    //     dragStartCallback
+    //   );
+    //   window.kakao.maps.event.removeListener(map, "dragend", dragEndCallback);
+    // };
   }, [map]);
 
   useEffect((): void => {
@@ -79,25 +89,20 @@ const Map: React.FC = (): ReactElement => {
           position: markerPos,
         })
       );
-      // const displayMarker = (position: any) => {
-      //   setMarker(
-      //     new window.kakao.maps.Marker({
-      //       map: map,
-      //       position: position,
-      //     })
-      //   );
-      // };
-      // displayMarker(markerPos);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, markerPos]);
 
   return (
     <div className={classNames(styles.container)}>
-        <div className={styles["current-address"]}>
-          현재 위치 : {currentAddress.address}
-        </div>
-      <div ref={mapEl} id="map" style={{ width: "70vw", height: "90vh", minHeight: "500px" }}>
+      <div className={styles["current-address"]}>
+        현재 위치 : {currentAddress.address}
+      </div>
+      <div
+        ref={mapEl}
+        id="map"
+        style={{ width: "70vw", height: "90vh", minHeight: "500px" }}
+      >
         {loading && <Loading />}
       </div>
       {crossActive && <div className={styles.cross}>+</div>}

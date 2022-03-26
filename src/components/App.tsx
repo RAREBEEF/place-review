@@ -2,15 +2,11 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { stateType } from "../types";
 import styles from "./App.module.scss";
-import Login from "../pages/Login";
 import { authService } from "../fbase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setLogin } from "../redux/modules/loginProcess";
-import Loading from "../pages/Loading";
-import Home from "../pages/Home";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Profile from "../pages/Profile";
-import Nav from "./Nav";
+import Router from "./Router";
+import Login from "../pages/Login";
 
 const App: React.FC = (): ReactElement => {
   const { isLogin } = useSelector((state: stateType) => state.loginProcess);
@@ -36,21 +32,12 @@ const App: React.FC = (): ReactElement => {
   }, [dispatch]);
 
   return (
-    <Router>
-      <div className={styles.container}>
-        <Nav />
-        <Routes>
-          <Route path="/profile" element={<Profile />} />
-          <Route
-            path="/*"
-            element={init ? !isLogin ? <Login /> : <Home /> : <Loading />}
-          />
-        </Routes>
-        <footer>
-          &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
-        </footer>
-      </div>
-    </Router>
+    <div className={styles.container}>
+      {isLogin ? <Router init={init} /> : <Login />}
+      <footer>
+        &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
+      </footer>
+    </div>
   );
 };
 

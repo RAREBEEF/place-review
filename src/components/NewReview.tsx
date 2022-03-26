@@ -13,22 +13,52 @@ import { Link, useNavigate } from "react-router-dom";
 const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
   const navigation = useNavigate();
   const location = useSelector((state: stateType) => state.getMap.markerPos);
-  const userObj = useSelector((state: stateType) => state.loginProcess.userObj);
+  const { geocoder } = useSelector((state: stateType) => state.getMap.data);
+  const { userObj } = useSelector((state: stateType) => state.loginProcess);
   const [review, setReview] = useState({
     title: "",
     rating: 5,
     memo: "",
     location: { ...location },
+    address: {},
   });
   const [attachment, setAttachment] = useState("");
   const attachmentInputRef = useRef<any>();
 
   useEffect(() => {
-    setReview((prev) => ({
-      ...prev,
-      location: { ...location },
-    }));
-  }, [location]);
+    if (!location) {
+      return;
+    }
+    geocoder.coord2Address(
+      location.getLng(),
+      location.getLat(),
+      (result: any, status: any) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          setReview((prev) => ({
+            ...prev,
+            location: { ...location },
+            address: {
+              address: result[0].address.address_name,
+              roadAddress: !result[0].road_address
+                ? ""
+                : result[0].road_address.address_name,
+            },
+          }));
+          console.log(status);
+        } else {
+          setReview((prev) => ({
+            ...prev,
+            location: { ...location },
+            address: {
+              address: "",
+              roadAddress: "",
+            },
+          }));
+          console.log("error");
+        }
+      }
+    );
+  }, [geocoder, location]);
 
   const onTitleChange = useCallback((e) => {
     setReview((prev) => ({
@@ -103,7 +133,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     }
 
     // 업로드 할 데이터
-    const reviewObj = {
+    let reviewObj = {
       ...review,
       createdAt: Date.now(),
       creatorId: userObj.uid,
@@ -112,6 +142,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
       attachmentId,
     };
 
+    console.log("done", reviewObj);
     await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj })
       .then(() => {
         console.log("Uploaded");

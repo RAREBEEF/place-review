@@ -4,13 +4,18 @@ import { setLogin } from "../redux/modules/loginProcess";
 import { authService } from "../fbase";
 import {
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import Button from "../components/Button";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
 
-  const [formAction, setFormAction] = useState<"login" | "signUp">("login");
+  const [formAction, setFormAction] = useState<"login" | "signUp" | "findPw">(
+    "login"
+  );
+  const [alert, setAlert] = useState<any>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
@@ -31,9 +36,7 @@ const Login: React.FC = () => {
             );
           })
           .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
+            setAlert(error.message);
           });
       } else if (formAction === "signUp") {
         if (password === passwordCheck) {
@@ -49,10 +52,17 @@ const Login: React.FC = () => {
               );
             })
             .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              console.log(errorCode, errorMessage);
+              setAlert(error.message);
             });
+        }
+      } else if (formAction === "findPw") {
+        console.log("findPw");
+        try {
+          sendPasswordResetEmail(authService, email).then(() => {
+            setAlert("메일이 발송되었습니다.");
+          });
+        } catch (error) {
+          setAlert(error);
         }
       }
     },
@@ -71,24 +81,36 @@ const Login: React.FC = () => {
     setPasswordCheck(e.target.value);
   }, []);
 
-  const onFormActionClick = useCallback(() => {
-    if (formAction === "signUp") {
-      setFormAction("login");
-    } else if (formAction === "login") {
-      setFormAction("signUp");
-    }
-  }, [formAction]);
+  const onFormChangeClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (formAction === "login") {
+        setFormAction("signUp");
+      } else {
+        setFormAction("login");
+      }
+    },
+    [formAction]
+  );
+
+  const onFindPwBtnClick = useCallback((e) => {
+    e.preventDefault();
+    setFormAction("findPw");
+  }, []);
 
   return (
     <div>
       <h1>Login</h1>
+      <div>{alert}</div>
       <form onSubmit={onSubmit}>
         <input type="text" onChange={onEmailChange} autoComplete="username" />
-        <input
-          type="password"
-          onChange={onPasswordChange}
-          autoComplete="current-password"
-        />
+        {formAction !== "findPw" && (
+          <input
+            type="password"
+            onChange={onPasswordChange}
+            autoComplete="current-password"
+          />
+        )}
         {formAction === "signUp" && (
           <input
             type="password"
@@ -97,10 +119,22 @@ const Login: React.FC = () => {
             autoComplete="current-password"
           />
         )}
-        <input type="submit" value="Login" />
-        <button onClick={onFormActionClick}>
-          {formAction === "login" ? "회원가입" : "로그인"}
-        </button>
+        <Button
+          text={
+            formAction === "login"
+              ? "로그인"
+              : formAction === "findPw"
+              ? "재설정 메일 발송"
+              : "회원가입"
+          }
+        />
+        <div>
+          <Button
+            text={formAction === "login" ? "회원가입" : "돌아가기"}
+            onClick={onFormChangeClick}
+          />
+          <Button onClick={onFindPwBtnClick} text="비밀번호 재설정" />
+        </div>
       </form>
     </div>
   );
