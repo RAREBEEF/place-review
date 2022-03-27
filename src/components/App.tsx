@@ -34,9 +34,9 @@ const App: React.FC = (): ReactElement => {
   return (
     <div className={styles.container}>
       {isLogin ? <Router init={init} /> : <Login />}
-      <footer>
+      {/* <footer>
         &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
-      </footer>
+      </footer> */}
     </div>
   );
 };

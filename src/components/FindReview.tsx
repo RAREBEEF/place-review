@@ -11,6 +11,8 @@ import Review from "./Review";
 const FindReview: React.FC<FindReviewPropType> = ({
   viewAllReview,
   setViewAllReview,
+  selected,
+  setSelected,
 }) => {
   const mapData = useSelector((state: stateType) => state.getMap);
   const markerPos = mapData.markerPos;
@@ -46,7 +48,6 @@ const FindReview: React.FC<FindReviewPropType> = ({
       setViewAllReview(true);
     }
   }, [viewAllReview, setViewAllReview]);
-  
 
   return (
     <div className={styles.container}>
@@ -54,17 +55,25 @@ const FindReview: React.FC<FindReviewPropType> = ({
         <Button
           onClick={onFilterClick}
           text={viewAllReview ? "해당 위치 리뷰 보기" : "전체 리뷰 보기"}
+          className={["FindReview__filter"]}
         />
         <Link to="/new">
-          <Button text="리뷰 작성" />
+          <Button text="리뷰 작성" className={["FindReview__new-review"]} />
         </Link>
       </div>
       <div className={styles["search-wrapper"]}>
-        <label htmlFor="search-review">리뷰 검색</label>
-        <input value={text} onChange={onChange} />
+        {/* <label htmlFor="search-review" className={styles["label--search"]}>
+          리뷰 검색
+        </label> */}
+        <input
+          value={text}
+          onChange={onChange}
+          className={styles["input--search"]}
+          placeholder="리뷰 검색"
+        />
       </div>
       <ul className={styles["review__list"]}>
-        {reviews?.map((review): ReactElement | null => {
+        {reviews?.map((review, i): ReactElement | null => {
           const location = new window.kakao.maps.LatLng(
             review.location.Ma,
             review.location.La
@@ -73,8 +82,10 @@ const FindReview: React.FC<FindReviewPropType> = ({
           if (viewAllReview) {
             if (text !== "") {
               if (
-                review.title.indexOf(text) === -1 ||
-                review.memo.indexOf(text) === -1
+                review.title.indexOf(text) === -1 &&
+                review.memo.indexOf(text) === -1 &&
+                review.address.address.indexOf(text) === -1 &&
+                review.address.roadAddress.indexOf(text) === -1
               ) {
                 return null;
               }
@@ -85,7 +96,16 @@ const FindReview: React.FC<FindReviewPropType> = ({
           ) {
             return null;
           }
-          return <Review location={location} review={review} key={review.id} />;
+          return (
+            <Review
+              location={location}
+              review={review}
+              key={review.id}
+              selected={selected}
+              setSelected={setSelected}
+              i={i}
+            />
+          );
         })}
         <div className={styles["no-review"]}>
           해당 위치에 리뷰가 존재하지 않습니다.

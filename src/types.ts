@@ -65,6 +65,8 @@ export interface FindReviewPropType {
   viewAllReview: boolean;
   setViewAllReview: Function;
   onCurrentPosBtnClick: Function;
+  selected: any;
+  setSelected: Function;
 }
 
 export interface NewReviewPropType {}
@@ -72,15 +74,26 @@ export interface NewReviewPropType {}
 export interface ButtonPropType {
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
+  className?: any;
 }
 
 export interface ReviewPropType {
   location: any;
   review: any;
+  selected?: any;
+  setSelected?: Function;
+  i?: number;
 }
 
 export interface HomePropType {}
 
 export interface RouterPropType {
   init: boolean;
+}
+
+export interface SearchResultPropType {
+  selected: any;
+  setSelected: Function;
+  place: any;
+  i: number;
 }

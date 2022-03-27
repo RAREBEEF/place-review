@@ -1,25 +1,60 @@
 .container {
-  border: 1px solid blue;
-  height: calc(90vh - 230px);
+  height: calc(90vh - 270px);
   display: flex;
   flex-direction: column;
   width: inherit;
+
   .btn-wrapper {
+    margin: {
+      left: 20px;
+      right: 20px;
+      top: 10px;
+      bottom: 10px;
+    }
+    text-align: center;
   }
   .search-wrapper {
+    text-align: center;
+    margin: {
+      left: 20px;
+      right: 20px;
+    }
+
+    .input--search {
+      height: 30px;
+      width: 100%;
+      padding: {
+        left: 10px;
+      }
+      margin: {
+        right: 5px;
+      }
+      color: #fffcf2;
+      background-color: #252422;
+      outline: none;
+      border: none;
+      border: 1px solid #ccc5b9;
+      border-radius: 5px;
+    }
   }
   .review__list {
-    border: 3px solid green;
+    flex-grow: 1;
+    background-color: #252422;
+    min-height: 130px;
+    border-radius: 5px;
     overflow-y: auto;
+    margin: 10px 20px 20px;
     .no-review {
       display: block;
+      font-size: 16px;
+      margin: {
+        top: 20px;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+      }
       &:not(:first-child) {
         display: none;
-      }
-    }
-    .review {
-      .review__photo {
-        width: 100%;
       }
     }
   }

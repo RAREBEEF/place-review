@@ -8,6 +8,7 @@ import { Routes, Route } from "react-router-dom";
 import FindReview from "./FindReview";
 import NewReview from "./NewReview";
 import Button from "./Button";
+import SearchResult from "./SearchResult";
 
 const Search: React.FC<SearchPropType> = (): ReactElement => {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   });
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const [selected, setSelected] = useState<number>(0);
+  const [selected, setSelected] = useState<any>({ section: null, index: 0 });
 
   const [viewAllReview, setViewAllReview] = useState<boolean>(true);
 
@@ -60,17 +61,19 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         setIsZero(false);
       }
 
+      console.log(result);
+
       setPagination({
         nextClick: () => {
           if (pagination.hasNextPage) {
-            setSelected(0);
+            setSelected({ section: "place", index: 0 });
             setCurrentPage((prevState) => prevState + 1);
             pagination.nextPage();
           }
         },
         prevClick: () => {
           if (pagination.hasPrevPage) {
-            setSelected(0);
+            setSelected({ section: "place", index: 0 });
             setCurrentPage((prevState) => prevState - 1);
             pagination.prevPage();
           }
@@ -96,7 +99,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     (e) => {
       e.preventDefault();
       setCurrentPage(1);
-      setSelected(0);
+      setSelected({ section: "place", index: 0 });
       if (searchKeywordText === "") {
         map.setCenter(currentPos);
         dispatch(setMarkerPos(currentPos));
@@ -118,7 +121,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
       map.setCenter(currentPos);
       dispatch(setMarkerPos(currentPos));
       setCurrentPage(1);
-      setSelected(0);
+      setSelected({ section: "place", index: 0 });
       if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
         geocoder.coord2Address(
           currentPos.getLng(),
@@ -152,7 +155,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         (result: any, status: any) => {
           if (status === window.kakao.maps.services.Status.OK) {
             setCurrentPage(1);
-            setSelected(0);
+            setSelected({ section: "place", index: 0 });
             keywordSearch(result[0].address.address_name);
             setSearchKeywordText(result[0].address.address_name);
             dispatch(setMarkerPos(location));
@@ -172,66 +175,44 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   return (
     <div className={classNames(styles.container, loading && styles.loading)}>
       <form className={styles.form} onSubmit={onSubmit}>
-        <div className={styles["input--text-wrapper"]}>
-          <input
-            className={classNames(styles.search, styles["search--keyword"])}
-            type="text"
-            value={searchKeywordText}
-            onChange={onKeywordChange}
-            placeholder="장소 검색"
-          />
-        </div>
-        <Button text="검색" />
-        <Button onClick={onCurrentPosBtnClick} text="현위치로" />
+        <input
+          className={classNames(styles["input--search"])}
+          type="text"
+          value={searchKeywordText}
+          onChange={onKeywordChange}
+          placeholder="장소 검색"
+        />
+        <Button text="검색" className={["Search__search"]} />
+        <Button
+          onClick={onCurrentPosBtnClick}
+          text="현위치로"
+          className={["Search__current-pos"]}
+        />
       </form>
 
       <div className={styles["result"]}>
         {error ? (
-          <div className={styles["result--error"]}>
+          <div className={styles["result__error"]}>
             오류가 발생했습니다. 잠시 후 다시 시도해주세요.
           </div>
         ) : isZero ? (
-          <div className={styles["result--zero"]}>검색 결과가 없습니다.</div>
+          <div className={styles["result__zero"]}>검색 결과가 없습니다.</div>
         ) : (
           <ul className={styles["result__list"]}>
             {searchResult.map((el: any, i: any) => (
-              <li
-                className={classNames(
-                  styles["result__list__item"],
-                  selected === i && styles.selected
-                )}
+              <SearchResult
                 key={i}
-                onClick={() => {
-                  map.setCenter(new window.kakao.maps.LatLng(el.y, el.x));
-                  map.setLevel(3);
-                  dispatch(
-                    setMarkerPos(new window.kakao.maps.LatLng(el.y, el.x))
-                  );
-                  setSelected(i);
-                }}
-              >
-                <div className={styles["result__place-name"]}>
-                  {el.place_name}
-                </div>
-                <div className={styles["result__address"]}>
-                  {el.place_name
-                    ? `- ${el.address_name}`
-                    : `${el.address_name}`}
-                </div>
-                {el.road_address_name && (
-                  <div className={styles["result__road-address"]}>
-                    {el.place_name
-                      ? `(${el.road_address_name})`
-                      : `(${el.road_address_name})`}
-                  </div>
-                )}
-              </li>
+                i={i}
+                selected={selected}
+                setSelected={setSelected}
+                place={el}
+              />
             ))}
           </ul>
         )}
-        <div className={styles["resut__pagination"]}>
+        <div className={styles["result__pagination"]}>
           <Button onClick={pagination.prevClick} text="prev" />
-          <span>
+          <span className={styles["pagination__count"]}>
             {currentPage} /{" "}
             {Math.ceil(pagination.totalCount / 15) === 0
               ? 1
@@ -248,6 +229,8 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
               viewAllReview={viewAllReview}
               setViewAllReview={setViewAllReview}
               onCurrentPosBtnClick={onCurrentPosBtnClick}
+              selected={selected}
+              setSelected={setSelected}
             />
           }
         ></Route>

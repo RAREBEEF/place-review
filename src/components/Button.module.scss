@@ -1,0 +1,47 @@
+.btn {
+  padding: {
+    top: 3px;
+    left: 5px;
+    right: 5px;
+    bottom: 3px;
+  }
+  transition: all 0.3s;
+  cursor: pointer;
+  background-color: #252422;
+  border: none;
+  border: 1px solid #ccc5b9;
+  border-radius: 5px;
+  color: #fffcf2;
+  font-size: 14px;
+  &:hover {
+    background-color: rgb(73, 73, 73);
+  }
+}
+
+.Search__search {
+  margin: {
+    right: 5px;
+  }
+}
+
+.FindReview__filter {
+  margin: {
+    right: 10px;
+  }
+}
+.FindReview__new-review {
+}
+.NewReview__delete {
+  width: 70px;
+  margin: {
+    // top: 5px;
+    // left: 15px;
+    right: 15px;
+  }
+}
+.NewReview__submit {
+  margin: {
+    top: 10px;
+    right: 10px;
+  }
+}

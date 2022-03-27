@@ -156,108 +156,126 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
 
   return (
     <form className={styles.container} onSubmit={onSubmit}>
-      <label htmlFor="storeName">상호명</label>
+      <label className={styles.label} htmlFor="storeName">
+        상호명
+      </label>
       <input
+        className={styles["input--store-name"]}
         id="storeName"
         value={review.title}
         onChange={onTitleChange}
       ></input>
-      <label htmlFor="rating">별점</label>
-      <div className={styles["rating"]}>
-        <span
-          className="fa fa-star"
-          style={{
-            color: review.rating >= 1 ? "orange" : "lightgray",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setReview((prev) => ({
-              ...prev,
-              rating: 1,
-            }));
-          }}
-        ></span>
-        <span
-          className="fa fa-star"
-          style={{
-            color: review.rating >= 2 ? "orange" : "lightgray",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setReview((prev) => ({
-              ...prev,
-              rating: 2,
-            }));
-          }}
-        ></span>
-        <span
-          className="fa fa-star"
-          style={{
-            color: review.rating >= 3 ? "orange" : "lightgray",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setReview((prev) => ({
-              ...prev,
-              rating: 3,
-            }));
-          }}
-        ></span>
-        <span
-          className="fa fa-star"
-          style={{
-            color: review.rating >= 4 ? "orange" : "lightgray",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setReview((prev) => ({
-              ...prev,
-              rating: 4,
-            }));
-          }}
-        ></span>
-        <span
-          className="fa fa-star"
-          style={{
-            color: review.rating === 5 ? "orange" : "lightgray",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setReview((prev) => ({
-              ...prev,
-              rating: 5,
-            }));
-          }}
-        ></span>
-      </div>
-      <div className={styles["attachment-wrapper"]}>
-        <input
-          id="attachmentInput"
-          onChange={onFileChange}
-          type="file"
-          accept="image/*"
-          ref={attachmentInputRef}
-          style={{ display: "none" }}
-        />
-        {attachment && (
-          <img
-            className={styles["photo-preview"]}
-            src={attachment}
-            alt={attachment}
-          />
-        )}
-        {attachment ? (
-          <Button text="DELETE" onClick={onClearAttachmentClick}></Button>
-        ) : (
-          <label
-            htmlFor="attachmentInput"
-            className={classNames(styles["input--file"], styles.btn)}
-          >
-            PHOTO
+      <div className={styles["middle-wrapper"]}>
+        <div className={styles["rating-wrapper"]}>
+          <label className={styles.label} htmlFor="rating">
+            별점
           </label>
-        )}
+          <div className={styles["rating"]}>
+            <span
+              className="fa fa-star"
+              style={{
+                color: review.rating >= 1 ? "#eb5e28" : "lightgray",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setReview((prev) => ({
+                  ...prev,
+                  rating: 1,
+                }));
+              }}
+            ></span>
+            <span
+              className="fa fa-star"
+              style={{
+                color: review.rating >= 2 ? "#eb5e28" : "lightgray",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setReview((prev) => ({
+                  ...prev,
+                  rating: 2,
+                }));
+              }}
+            ></span>
+            <span
+              className="fa fa-star"
+              style={{
+                color: review.rating >= 3 ? "#eb5e28" : "lightgray",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setReview((prev) => ({
+                  ...prev,
+                  rating: 3,
+                }));
+              }}
+            ></span>
+            <span
+              className="fa fa-star"
+              style={{
+                color: review.rating >= 4 ? "#eb5e28" : "lightgray",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setReview((prev) => ({
+                  ...prev,
+                  rating: 4,
+                }));
+              }}
+            ></span>
+            <span
+              className="fa fa-star"
+              style={{
+                color: review.rating === 5 ? "#eb5e28" : "lightgray",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                setReview((prev) => ({
+                  ...prev,
+                  rating: 5,
+                }));
+              }}
+            ></span>
+          </div>
+        </div>
+
+        <div className={styles["attachment-wrapper"]}>
+          <div className={styles.label}>사진 첨부</div>
+          <input
+            id="attachmentInput"
+            onChange={onFileChange}
+            type="file"
+            accept="image/*"
+            ref={attachmentInputRef}
+            style={{ display: "none" }}
+          />
+          {/* {attachment && (
+            <img
+              className={styles["photo-preview"]}
+              src={attachment}
+              alt={attachment}
+            />
+          )} */}
+          {attachment ? (
+            <Button
+              text="사진 삭제"
+              onClick={onClearAttachmentClick}
+              className={["NewReview__delete"]}
+            ></Button>
+          ) : (
+            <label
+              htmlFor="attachmentInput"
+              className={classNames(styles["input--file"])}
+            >
+              찾아보기
+            </label>
+          )}
+        </div>
       </div>
-      <label htmlFor="memo">메모</label>
+
+      <label className={styles.label} htmlFor="memo">
+        메모
+      </label>
       <input
         id="memo"
         className={styles["input--memo"]}
@@ -266,9 +284,9 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
         onChange={onMemoChange}
       ></input>
       <div className={styles["btn-wrapper"]}>
-        <input type="submit" />
+        <Button text="등록" className={["NewReview__submit"]} />
         <Link to="/">
-          <Button text="돌아가기" />
+          <Button text="돌아가기" className={["NewReview__cancel"]} />
         </Link>
       </div>
     </form>

@@ -6,8 +6,10 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  signInWithRedirect,
 } from "firebase/auth";
 import Button from "../components/Button";
+import { GoogleAuthProvider } from "firebase/auth";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -98,6 +100,12 @@ const Login: React.FC = () => {
     setFormAction("findPw");
   }, []);
 
+  const onGoogleClick = useCallback((e) => {
+    e.preventDefault();
+    const provider = new GoogleAuthProvider();
+    signInWithRedirect(authService, provider);
+  }, []);
+
   return (
     <div>
       <h1>Login</h1>
@@ -134,6 +142,9 @@ const Login: React.FC = () => {
             onClick={onFormChangeClick}
           />
           <Button onClick={onFindPwBtnClick} text="비밀번호 재설정" />
+        </div>
+        <div>
+          <Button text="Continue with Google" onClick={onGoogleClick} />
         </div>
       </form>
     </div>

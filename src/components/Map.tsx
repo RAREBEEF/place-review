@@ -27,16 +27,7 @@ const Map: React.FC = (): ReactElement => {
   const [crossActive, setCrossActive] = useState<boolean>(false);
 
   const [currentAddress, setCurrentAddress] = useState<any>({});
-
-  // state.data.geocoder.coord2Address(
-  //   action.markerPos.getLng(),
-  //   action.markerPos.getLat(),
-  //   (result: any, status: any) => {
-  //     if (status === window.kakao.maps.services.Status.OK) {
-  //       console.log(result);
-  //     }
-  //   }
-  // );
+  const [markerAddress, setMarkerAddress] = useState<any>({});
 
   useEffect(() => {
     if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
@@ -52,8 +43,20 @@ const Map: React.FC = (): ReactElement => {
           }
         }
       );
+      geocoder.coord2Address(
+        markerPos.getLng(),
+        markerPos.getLat(),
+        (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setMarkerAddress({
+              address: result[0].address.address_name,
+              roadAddress: result[0].road_address?.address_name,
+            });
+          }
+        }
+      );
     }
-  }, [currentPos, geocoder]);
+  }, [currentPos, geocoder, markerPos]);
 
   useEffect((): void => {
     dispatch(getMapThunk(mapEl.current));
@@ -70,14 +73,6 @@ const Map: React.FC = (): ReactElement => {
       window.kakao.maps.event.addListener(map, "dragstart", dragStartCallback);
       window.kakao.maps.event.addListener(map, "dragend", dragEndCallback);
     }
-    // return () => {
-    //   window.kakao.maps.event.removeListener(
-    //     map,
-    //     "dragstart",
-    //     dragStartCallback
-    //   );
-    //   window.kakao.maps.event.removeListener(map, "dragend", dragEndCallback);
-    // };
   }, [map]);
 
   useEffect((): void => {
@@ -95,13 +90,19 @@ const Map: React.FC = (): ReactElement => {
 
   return (
     <div className={classNames(styles.container)}>
-      <div className={styles["current-address"]}>
-        현재 위치 : {currentAddress.address}
+      <div className={styles["address"]}>
+        <div>현재 위치 : {currentAddress.address}</div>
+        <div> 마커 위치 : {markerAddress.address}</div>
       </div>
+
       <div
         ref={mapEl}
         id="map"
-        style={{ width: "70vw", height: "90vh", minHeight: "500px" }}
+        style={{
+          width: "70vw",
+          height: "calc(100vh - 60px)",
+          minHeight: "500px",
+        }}
       >
         {loading && <Loading />}
       </div>
