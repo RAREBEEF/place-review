@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import Button from "../components/Button";
 import { GoogleAuthProvider } from "firebase/auth";
+import styles from "./Login.module.scss";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -107,27 +108,40 @@ const Login: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Login</h1>
-      <div>{alert}</div>
-      <form onSubmit={onSubmit}>
-        <input type="text" onChange={onEmailChange} autoComplete="username" />
+    <div className={styles.container}>
+      <h1 className={styles.logo}>
+        <span className={styles["logo__place"]}>Place</span>{" "}
+        <span className={styles["logo__review"]}>Review</span>
+      </h1>
+      <div className={styles.alert}>{alert}</div>
+      <form onSubmit={onSubmit} className={styles.form}>
+        <input
+          className={styles["input--email"]}
+          type="text"
+          onChange={onEmailChange}
+          placeholder="이메일"
+        />
         {formAction !== "findPw" && (
           <input
+            className={styles["input--password"]}
             type="password"
             onChange={onPasswordChange}
             autoComplete="current-password"
+            placeholder="비밀번호"
           />
         )}
         {formAction === "signUp" && (
           <input
+            className={styles["input--password-check"]}
             type="password"
             value={passwordCheck}
             onChange={onPasswordCheckChange}
             autoComplete="current-password"
+            placeholder="비밀번호 확인"
           />
         )}
         <Button
+          className={["Login__submit"]}
           text={
             formAction === "login"
               ? "로그인"
@@ -136,17 +150,29 @@ const Login: React.FC = () => {
               : "회원가입"
           }
         />
+      </form>
+      <div className={styles["btn-wrapper"]}>
+        <Button
+          text={formAction === "login" ? "회원가입" : "돌아가기"}
+          onClick={onFormChangeClick}
+          className={["Login__form-change"]}
+        />
+        <Button
+          onClick={onFindPwBtnClick}
+          text="비밀번호 재설정"
+          className={["Login__reset-pw"]}
+        />
         <div>
           <Button
-            text={formAction === "login" ? "회원가입" : "돌아가기"}
-            onClick={onFormChangeClick}
+            text="Continue with Google"
+            onClick={onGoogleClick}
+            className={["Login__google"]}
           />
-          <Button onClick={onFindPwBtnClick} text="비밀번호 재설정" />
         </div>
-        <div>
-          <Button text="Continue with Google" onClick={onGoogleClick} />
-        </div>
-      </form>
+      </div>
+      <footer className={styles.footer}>
+        &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
+      </footer>
     </div>
   );
 };
