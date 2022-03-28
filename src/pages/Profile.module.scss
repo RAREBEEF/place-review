@@ -1,0 +1,87 @@
+.container {
+  max-width: 70vw;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .edit-profile-wrapper {
+    padding: {
+      top: 80px;
+    }
+    .edit-profile-header {
+      text-align: center;
+      font-size: 25px;
+    }
+    .form-header {
+      font-size: 20px;
+      text-align: center;
+      margin: {
+        top: 30px;
+        bottom: 15px;
+      }
+    }
+    .alert {
+      margin: {
+        top: 20px;
+        left: 20px;
+        bottom: 20px;
+      }
+      text-align: center;
+      height: 14px;
+      color: #ccc5b9;
+    }
+    .input {
+      padding: {
+        left: 10px;
+      }
+      margin: {
+        right: 15px;
+      }
+      color: #fffcf2;
+      flex-grow: 1;
+      background-color: #252422;
+      outline: none;
+      border: none;
+      border: 1px solid #ccc5b9;
+      border-radius: 5px;
+      height: 30px;
+    }
+    .display-name-wrapper {
+      margin: {
+        top: 20px;
+        left: 20px;
+        bottom: 20px;
+      }
+      .input--display-name {
+      }
+    }
+    .password-wrapper {
+      margin: {
+        top: 20px;
+        left: 20px;
+        bottom: 20px;
+      }
+      .input--email {
+      }
+    }
+    .btn-wrapper {
+      margin: {
+        top: 20px;
+        left: 20px;
+        bottom: 20px;
+      }
+      text-align: center;
+    }
+  }
+  .my-review-wrapper {
+    padding: {
+      top: 80px;
+    }
+    .my-review-header {
+      text-align: center;
+      font-size: 25px;
+    }
+    .my-review-list {
+    }
+  }
+}

@@ -19,6 +19,8 @@ import {
 } from "firebase/firestore";
 import Review from "../components/Review";
 import { useNavigate } from "react-router-dom";
+import styles from "./Profile.module.scss";
+import classNames from "classnames";
 
 const Profile: React.FC = (): ReactElement => {
   const { userObj } = useSelector((state: stateType) => state.loginProcess);
@@ -28,7 +30,7 @@ const Profile: React.FC = (): ReactElement => {
   const [alert, setAlert] = useState<any>("");
   const navigate = useNavigate();
 
-  const ondiplayNameChange = useCallback((e) => {
+  const ondisplayNameChange = useCallback((e) => {
     setDisplayName(e.target.value);
   }, []);
 
@@ -36,10 +38,15 @@ const Profile: React.FC = (): ReactElement => {
     setEmailCheck(e.target.value);
   }, []);
 
-  const onSubmitClick = useCallback(
+  const onDisplayNameChangeClick = useCallback(
     async (e) => {
+      e.preventDefault();
       if (authService.currentUser) {
-        if (displayName !== "") {
+        if (displayName === "") {
+          setAlert("닉네임을 입력해주세요.");
+        } else if (displayName === userObj.displayName) {
+          setAlert("닉네임에 변경 사항이 없습니다.");
+        } else if (displayName !== "") {
           updateProfile(authService.currentUser, {
             displayName,
           });
@@ -51,14 +58,16 @@ const Profile: React.FC = (): ReactElement => {
               });
             }
           });
+          setAlert("닉네임이 변경되었습니다.");
         }
       }
     },
-    [displayName, myReviews]
+    [displayName, myReviews, userObj]
   );
 
   const onResetPwClick = useCallback(
     async (e) => {
+      e.preventDefault();
       if (authService.currentUser) {
         if (authService.currentUser.email !== emailCheck) {
           setAlert("메일이 일치하지 않습니다.");
@@ -120,37 +129,66 @@ const Profile: React.FC = (): ReactElement => {
   }, [userObj.uid]);
 
   return (
-    <div>
-      {/* alert는 높이 고정 필요 (텍스트 없을 때도)*/}
-      <div>{alert}</div>
-      <form>
-        <input
-          placeholder={userObj.displayName}
-          value={displayName}
-          onChange={ondiplayNameChange}
-        />
-        <Button text="변경" onClick={onSubmitClick} />
-      </form>
-      <form>
-        <input
-          placeholder="email"
-          value={emailCheck}
-          onChange={onEmailCheckChange}
-          type="email"
-        />
-        <Button text="비밀번호 재설정" onClick={onResetPwClick} />
-      </form>
-      <Button text="회원 탈퇴" onClick={onDeleteClick} />
-      <Button text="로그아웃" onClick={onLogOutClick} />
-      <ul>
-        {myReviews.map((review) => {
-          const location = new window.kakao.maps.LatLng(
-            review.location.Ma,
-            review.location.La
-          );
-          return <Review key={review.id} location={location} review={review} />;
-        })}
-      </ul>
+    <div className={styles.container}>
+      <div className={styles["edit-profile-wrapper"]}>
+        <h2 className={styles["edit-profile-header"]}>프로필 수정</h2>
+        <div className={styles.alert}>{alert}</div>
+        <form className={styles["display-name-wrapper"]}>
+          <h3 className={styles["form-header"]}>닉네임 변경</h3>
+          <input
+            placeholder={userObj.displayName}
+            value={displayName}
+            onChange={ondisplayNameChange}
+            className={classNames(styles["input--display-name"], styles.input)}
+          />
+          <Button
+            text="변경"
+            onClick={onDisplayNameChangeClick}
+            className={["Profile__display-name"]}
+          />
+        </form>
+        <form className={styles["password-wrapper"]}>
+          <h3 className={styles["form-header"]}>비밀번호 재설정</h3>
+          <input
+            className={classNames(styles["input--email"], styles.input)}
+            placeholder="email"
+            value={emailCheck}
+            onChange={onEmailCheckChange}
+            type="email"
+          />
+          <Button
+            text="재설정 메일 발송"
+            onClick={onResetPwClick}
+            className={["Profile__password"]}
+          />
+        </form>
+        <div className={styles["btn-wrapper"]}>
+          <Button
+            text="회원 탈퇴"
+            onClick={onDeleteClick}
+            className={["Profile__delete-account"]}
+          />
+          <Button
+            text="로그아웃"
+            onClick={onLogOutClick}
+            className={["Profile__log-out"]}
+          />
+        </div>
+      </div>
+      <div className={styles["my-review-wrapper"]}>
+        <h2 className={styles["my-review-header"]}>내가 쓴 리뷰</h2>
+        <ul className={styles["my-review-list"]}>
+          {myReviews.map((review) => {
+            const location = new window.kakao.maps.LatLng(
+              review.location.Ma,
+              review.location.La
+            );
+            return (
+              <Review key={review.id} location={location} review={review} />
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };

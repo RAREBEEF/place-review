@@ -7,10 +7,10 @@ import classNames from "classnames";
 const Nav: React.FC<NavPropType> = (): ReactElement => {
   return (
     <ul className={styles.container}>
-      <li className={classNames(styles.logo, styles.item)}>
+      <h1 className={classNames(styles.logo, styles.item)}>
         <span className={styles["logo__place"]}>Place</span>{" "}
         <span className={styles["logo__review"]}>Review</span>
-      </li>
+      </h1>
       <Link to="/" className={styles.item}>
         <li>Search review</li>
       </Link>
