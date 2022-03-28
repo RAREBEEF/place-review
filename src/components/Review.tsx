@@ -46,7 +46,9 @@ const Review: React.FC<ReviewPropType> = ({
     <li
       className={classNames(
         styles.review,
-        selected?.section === "review" && selected.index === i && styles.selected
+        selected?.section === "review" &&
+          selected.index === i &&
+          styles.selected
       )}
       onClick={() => {
         if (!map.setCenter) {
@@ -119,7 +121,7 @@ const Review: React.FC<ReviewPropType> = ({
         <span className={styles["footer__author"]}>{review.displayName}</span>
         {userObj.uid === review.creatorId && (
           <Button
-            text="DELETE"
+            text="삭제"
             onClick={(e) => {
               onDeleteClick(e, review);
             }}

@@ -13,7 +13,7 @@
       font-size: 25px;
     }
     .form-header {
-      font-size: 20px;
+      font-size: 18px;
       text-align: center;
       margin: {
         top: 30px;
@@ -48,7 +48,7 @@
       margin: {
         top: 20px;
         left: 20px;
-        bottom: 20px;
+        bottom: 50px;
       }
       .input--display-name {
       }
@@ -72,12 +72,16 @@
     }
   }
   .my-review-wrapper {
+    width: 70vw;
     padding: {
       top: 80px;
     }
     .my-review-header {
       text-align: center;
       font-size: 25px;
+      margin: {
+        bottom: 50px;
+      }
     }
     .my-review-list {
     }
