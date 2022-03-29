@@ -1,12 +1,5 @@
 import classNames from "classnames";
-import {
-  memo,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { NewReviewPropType, stateType } from "../types";
 import { v4 as uuidv4 } from "uuid";
@@ -31,6 +24,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
   });
   const [attachment, setAttachment] = useState("");
   const attachmentInputRef = useRef<any>();
+  const [uploading, setUploading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!location) {
@@ -107,9 +101,10 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-
+    setUploading(true);
     // 작성 내용 없을 경우 return
     if (review.title === "" || review.memo === "") {
+      setUploading(false);
       return;
     }
 
@@ -155,7 +150,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
       .catch((error) => {
         console.log(error);
       });
-
+    setUploading(false);
     navigation("/");
   };
 
@@ -180,7 +175,6 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
         id="storeName"
         value={review.title}
         onChange={onTitleChange}
-        // placeholder="최대 20자"
       ></input>
       <div className={styles["middle-wrapper"]}>
         <div className={styles["rating-wrapper"]}>
@@ -304,7 +298,10 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
         onChange={onMemoChange}
       ></textarea>
       <div className={styles["btn-wrapper"]}>
-        <Button text="등록" className={["NewReview__submit"]} />
+        <Button
+          text="등록"
+          className={["NewReview__submit", uploading && "disable"]}
+        />
         <Link to="/">
           <Button text="돌아가기" className={["NewReview__cancel"]} />
         </Link>

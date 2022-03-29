@@ -44,6 +44,10 @@
     top: 10px;
     right: 10px;
   }
+  &.disable {
+    cursor: default;
+    pointer-events: none;
+  }
 }
 .Profile__display-name {
 }
