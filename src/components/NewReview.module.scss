@@ -1,9 +1,27 @@
 .container {
-  height: calc(90vh - 230px);
+  height: calc(100vh - 340px);
   display: flex;
   flex-direction: column;
   width: inherit;
   min-height: 230px;
+  .header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin: {
+      left: 20px;
+      right: 20px;
+      top: 20px;
+      bottom: 5px;
+    }
+    .label {
+      margin: 0;
+    }
+    .counter {
+      &.over {
+        color: #eb5e28;
+      }
+    }
+  }
   .label {
     margin: {
       left: 15px;
@@ -60,7 +78,7 @@
       .label {
         margin-top: 5px;
       }
-   
+
       .input--file {
         margin: {
           right: 15px;
@@ -92,12 +110,15 @@
 
   .input--memo {
     padding: {
+      top: 10px;
       left: 10px;
+      right: 10px;
     }
     margin: {
       left: 15px;
       right: 15px;
     }
+    resize: none;
     color: #fffcf2;
     flex-grow: 1;
     background-color: #252422;
@@ -113,6 +134,18 @@
       left: 15px;
       right: 15px;
       bottom: 20px;
+    }
+  }
+  .footer {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    color: #ccc5b9;
+    font-size: 14px;
+    flex-grow: 1;
+    margin: {
+      bottom: 5px;
     }
   }
 }

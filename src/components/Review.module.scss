@@ -23,6 +23,7 @@
       font-size: 16px;
     }
     .header__rating {
+      white-space: nowrap;
     }
   }
 
@@ -72,7 +73,6 @@
   }
   &.selected {
     background-color: #fffcf2;
-    // background-color: #ccc5b9;
     .review__header {
       .header__title {
         font-weight: 700;

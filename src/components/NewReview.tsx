@@ -1,5 +1,12 @@
 import classNames from "classnames";
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import {
+  memo,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { NewReviewPropType, stateType } from "../types";
 import { v4 as uuidv4 } from "uuid";
@@ -44,7 +51,6 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
                 : result[0].road_address.address_name,
             },
           }));
-          console.log(status);
         } else {
           setReview((prev) => ({
             ...prev,
@@ -54,7 +60,6 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
               roadAddress: "",
             },
           }));
-          console.log("error");
         }
       }
     );
@@ -156,14 +161,26 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
 
   return (
     <form className={styles.container} onSubmit={onSubmit}>
-      <label className={styles.label} htmlFor="storeName">
-        상호명
-      </label>
+      <div className={styles["header-wrapper"]}>
+        <label className={styles.label} htmlFor="memo">
+          상호명
+        </label>
+        <span
+          className={classNames(
+            styles.counter,
+            review.title.length >= 20 && styles.over
+          )}
+        >
+          {review.title.length} / 20
+        </span>
+      </div>
       <input
+        maxLength={20}
         className={styles["input--store-name"]}
         id="storeName"
         value={review.title}
         onChange={onTitleChange}
+        // placeholder="최대 20자"
       ></input>
       <div className={styles["middle-wrapper"]}>
         <div className={styles["rating-wrapper"]}>
@@ -249,13 +266,6 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
             ref={attachmentInputRef}
             style={{ display: "none" }}
           />
-          {/* {attachment && (
-            <img
-              className={styles["photo-preview"]}
-              src={attachment}
-              alt={attachment}
-            />
-          )} */}
           {attachment ? (
             <Button
               text="사진 삭제"
@@ -272,23 +282,36 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
           )}
         </div>
       </div>
-
-      <label className={styles.label} htmlFor="memo">
-        메모
-      </label>
-      <input
+      <div className={styles["header-wrapper"]}>
+        <label className={styles.label} htmlFor="memo">
+          메모
+        </label>
+        <span
+          className={classNames(
+            styles.counter,
+            review.memo.length >= 120 && styles.over
+          )}
+        >
+          {" "}
+          {review.memo.length} / 120
+        </span>
+      </div>
+      <textarea
+        maxLength={120}
         id="memo"
         className={styles["input--memo"]}
-        type="text"
         value={review.memo}
         onChange={onMemoChange}
-      ></input>
+      ></textarea>
       <div className={styles["btn-wrapper"]}>
         <Button text="등록" className={["NewReview__submit"]} />
         <Link to="/">
           <Button text="돌아가기" className={["NewReview__cancel"]} />
         </Link>
       </div>
+      <footer className={styles.footer}>
+        &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
+      </footer>
     </form>
   );
 };

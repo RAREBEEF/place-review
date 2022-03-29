@@ -86,4 +86,16 @@
     .my-review-list {
     }
   }
+  .footer {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    color: #ccc5b9;
+    font-size: 14px;
+    margin: {
+      top: 15px;
+      bottom: 15px;
+    }
+  }
 }

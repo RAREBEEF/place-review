@@ -139,6 +139,8 @@ const Profile: React.FC = (): ReactElement => {
             placeholder={userObj.displayName}
             value={displayName}
             onChange={ondisplayNameChange}
+            maxLength={12}
+            minLength={1}
             className={classNames(styles["input--display-name"], styles.input)}
           />
           <Button
@@ -189,6 +191,9 @@ const Profile: React.FC = (): ReactElement => {
           })}
         </ul>
       </div>
+      <footer className={styles.footer}>
+        &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
+      </footer>
     </div>
   );
 };

@@ -110,7 +110,7 @@ const Login: React.FC = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.logo}>
-        <span className={styles["logo__place"]}>Place</span>{" "}
+        <span className={styles["logo__place"]}>Place</span>
         <span className={styles["logo__review"]}>Review</span>
       </h1>
       <div className={styles.alert}>{alert}</div>

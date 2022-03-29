@@ -5,7 +5,9 @@
   display: flex;
   justify-content: flex-end;
   background-color: #403d39;
-  .item {
+  .selected,
+  .deselect,
+  .logo {
     transition: background-color 0.3s;
     margin: {
       left: 10px;
@@ -16,8 +18,13 @@
     height: 60px;
     text-align: center;
     line-height: 60px;
-    &:hover:not(.logo) {
+    &:hover:not(.item) {
       background-color: rgb(73, 73, 73);
+    }
+    &.selected {
+      > li {
+        color: #eb5e28;
+      }
     }
 
     &.logo {

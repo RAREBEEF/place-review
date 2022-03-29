@@ -42,6 +42,11 @@ export function setMarkerPos(markerPos: any): setMarkerPosActionType {
 export function getMapThunk(element: any): Function {
   return async (dispatch: any) => {
     if (window.navigator) {
+      const timeout = setTimeout(() => {
+        window.alert(
+          "로딩이 계속될 경우 위치 정보 액세스 차단 여부를 확인해 주세요."
+        );
+      }, 10000);
       window.navigator.geolocation.getCurrentPosition(async (pos) => {
         try {
           dispatch(getMapStart());
@@ -60,18 +65,17 @@ export function getMapThunk(element: any): Function {
           const places = new window.kakao.maps.services.Places(map);
           const geocoder = new window.kakao.maps.services.Geocoder();
 
-          // window.kakao.maps.event.addListener(map, "dragend", () => {
-          //   const location = map.getCenter();
-          //   dispatch(setMarkerPos(location));
-          // });
-
           dispatch(getMapSuccess({ map, places, geocoder }, location));
+          clearTimeout(timeout);
         } catch (error) {
+          console.log(error);
           dispatch(getMapFail(error));
         }
       });
     } else {
       try {
+        console.log("try");
+        dispatch(getMapStart());
         const location = new window.kakao.maps.LatLng(0, 0);
 
         const options = {
@@ -82,11 +86,6 @@ export function getMapThunk(element: any): Function {
         const map = await new window.kakao.maps.Map(element, options);
         const places = new window.kakao.maps.services.Places(map);
         const geocoder = new window.kakao.maps.services.Geocoder();
-
-        // window.kakao.maps.event.addListener(map, "dragend", () => {
-        //   const location = map.getCenter();
-        //   dispatch(setMarkerPos(location));
-        // });
 
         dispatch(getMapSuccess({ map, places, geocoder }, null));
       } catch (error) {

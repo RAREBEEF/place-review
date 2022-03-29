@@ -62,9 +62,6 @@ const FindReview: React.FC<FindReviewPropType> = ({
         </Link>
       </div>
       <div className={styles["search-wrapper"]}>
-        {/* <label htmlFor="search-review" className={styles["label--search"]}>
-          리뷰 검색
-        </label> */}
         <input
           value={text}
           onChange={onChange}
@@ -111,6 +108,9 @@ const FindReview: React.FC<FindReviewPropType> = ({
           해당 위치에 리뷰가 존재하지 않습니다.
         </div>
       </ul>
+      <footer className={styles.footer}>
+        &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
+      </footer>
     </div>
   );
 };

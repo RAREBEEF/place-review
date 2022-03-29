@@ -1,9 +1,8 @@
 .container {
-  height: calc(90vh - 270px);
+  height: calc(100vh - 340px);
   display: flex;
   flex-direction: column;
   width: inherit;
-
   .btn-wrapper {
     margin: {
       left: 20px;
@@ -40,7 +39,7 @@
   .review__list {
     flex-grow: 1;
     background-color: #252422;
-    min-height: 130px;
+    min-height: 100px;
     border-radius: 5px;
     overflow-y: auto;
     margin: 10px 20px 20px;
@@ -56,6 +55,17 @@
       &:not(:first-child) {
         display: none;
       }
+    }
+  }
+  .footer {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ccc5b9;
+    font-size: 14px;
+    margin: {
+      bottom: 5px;
     }
   }
 }

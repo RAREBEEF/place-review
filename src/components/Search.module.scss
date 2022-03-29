@@ -1,6 +1,10 @@
 @media screen and (max-width: 1000px) {
   .container {
+    height: calc(100vh - 30px) !important;
     width: 70vw !important;
+    padding: {
+      top: 30px;
+    }
   }
 }
 
