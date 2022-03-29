@@ -17,8 +17,13 @@
     width: 130px;
     height: 60px;
     text-align: center;
-    line-height: 60px;
-    &:hover:not(.item) {
+    &:not(.logo) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &:hover:not(.logo) {
       background-color: rgb(73, 73, 73);
     }
     &.selected {
@@ -29,6 +34,7 @@
 
     &.logo {
       min-width: 160px;
+      line-height: 60px;
       flex-grow: 1;
       text-align: left;
       font-size: 25px;
