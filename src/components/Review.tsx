@@ -18,18 +18,17 @@ const Review: React.FC<ReviewPropType> = ({
 }): ReactElement => {
   const dispatch = useDispatch();
   const state = useSelector((state: stateType) => state);
-
   const { userObj } = state.loginProcess;
   const { map } = state.getMap.data;
 
   const onDeleteClick = useCallback(
     async (e, review) => {
       e.preventDefault();
-      console.log(review);
+
       const ok = window.confirm("삭제하시겠습니까?");
+
       if (ok) {
         await deleteDoc(doc(dbService, `reviews/${review.id}`));
-
         if (review.attachmentUrl !== "") {
           const attachmentRef = ref(
             storageService,

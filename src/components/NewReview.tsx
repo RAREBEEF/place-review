@@ -30,6 +30,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     if (!location) {
       return;
     }
+
     geocoder.coord2Address(
       location.getLng(),
       location.getLat(),
@@ -73,14 +74,11 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     }));
   }, []);
 
-  // 첨부 이미지 읽기
   const onFileChange = (e: any) => {
     const {
       target: { files },
     } = e;
-
     const file = files[0];
-
     const reader = new FileReader();
 
     reader.onloadend = (e: any) => {
@@ -93,7 +91,6 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     reader.readAsDataURL(file);
   };
 
-  // 첨부파일 삭제
   const onClearAttachmentClick = () => {
     setAttachment("");
     attachmentInputRef.current.value = null;
@@ -101,8 +98,9 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
+
     setUploading(true);
-    // 작성 내용 없을 경우 return
+
     if (review.title === "" || review.memo === "") {
       setUploading(false);
       return;
@@ -110,29 +108,26 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
 
     let attachmentUrl = "";
     let attachmentId = "";
-    // 이미지 있을 경우
+
     if (attachment !== "") {
       try {
         attachmentId = uuidv4();
+
         const attachmentRef = ref(
           storageService,
           `${userObj.uid}/${attachmentId}`
         );
-        const response = await uploadString(
-          attachmentRef,
-          attachment,
-          "data_url"
-        );
-        console.log(response);
+
+        await uploadString(attachmentRef, attachment, "data_url");
+
         attachmentUrl = await getDownloadURL(
           ref(storageService, `${userObj.uid}/${attachmentId}`)
         );
       } catch (error) {
-        console.log(error);
+        throw error;
       }
     }
 
-    // 업로드 할 데이터
     let reviewObj = {
       ...review,
       createdAt: Date.now(),
@@ -142,14 +137,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
       attachmentId,
     };
 
-    console.log("done", reviewObj);
-    await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj })
-      .then(() => {
-        console.log("Uploaded");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj }).catch(
+      (error) => {
+        throw error;
+      }
+    );
+
     setUploading(false);
     navigation("/");
   };

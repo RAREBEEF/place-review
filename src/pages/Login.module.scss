@@ -1,4 +1,5 @@
 .container {
+  font-family: "IBM Plex Sans KR", sans-serif;
   margin: auto;
   max-width: 70vw;
   min-height: 99vh;
@@ -6,43 +7,49 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   .logo {
+    margin: {
+      top: -50px;
+    }
     flex-grow: 2;
     font-size: 50px;
     display: flex;
     align-items: end;
     justify-content: space-between;
-    margin: {
-      top: -50px;
-    }
+
     .logo__place {
       &::after {
         content: " ";
         padding: 5px;
       }
     }
+
     .logo__review {
       color: #eb5e28;
     }
   }
+
   .alert {
-    color: #ccc5b9;
-    height: 16px;
     margin: {
       top: 20px;
       bottom: 20px;
     }
+    color: #ccc5b9;
+    height: 16px;
   }
+
   .form {
+    margin: {
+      bottom: 56px;
+    }
     width: 70vw;
     max-width: 400px;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: {
-      bottom: 56px;
-    }
+
     .input--email,
     .input--password,
     .input--password-check {
@@ -59,12 +66,8 @@
       border-radius: 5px;
       height: 30px;
     }
-
-    .input--email {
-    }
-    .input--password-check {
-    }
   }
+  
   .btn-wrapper {
     margin: {
       bottom: 30px;

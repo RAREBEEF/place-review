@@ -1,25 +1,30 @@
 .container {
+  font-family: "IBM Plex Sans KR", sans-serif;
   max-width: 70vw;
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+
   .edit-profile-wrapper {
     padding: {
       top: 80px;
     }
+
     .edit-profile-header {
       text-align: center;
       font-size: 25px;
     }
+
     .form-header {
-      font-size: 18px;
-      text-align: center;
       margin: {
         top: 30px;
         bottom: 15px;
       }
+      font-size: 18px;
+      text-align: center;
     }
+
     .alert {
       margin: {
         top: 20px;
@@ -30,6 +35,7 @@
       height: 14px;
       color: #ccc5b9;
     }
+
     .input {
       padding: {
         left: 10px;
@@ -44,24 +50,23 @@
       border-radius: 5px;
       height: 30px;
     }
+
     .display-name-wrapper {
       margin: {
         top: 20px;
         left: 20px;
         bottom: 50px;
       }
-      .input--display-name {
-      }
     }
+
     .password-wrapper {
       margin: {
         top: 20px;
         left: 20px;
         bottom: 20px;
       }
-      .input--email {
-      }
     }
+
     .btn-wrapper {
       margin: {
         top: 20px;
@@ -71,31 +76,32 @@
       text-align: center;
     }
   }
+
   .my-review-wrapper {
-    width: 70vw;
     padding: {
       top: 80px;
     }
+    width: 70vw;
+
     .my-review-header {
-      text-align: center;
-      font-size: 25px;
       margin: {
         bottom: 50px;
       }
-    }
-    .my-review-list {
+      text-align: center;
+      font-size: 25px;
     }
   }
+
   .footer {
+    margin: {
+      top: 15px;
+      bottom: 15px;
+    }
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: end;
     color: #ccc5b9;
     font-size: 14px;
-    margin: {
-      top: 15px;
-      bottom: 15px;
-    }
   }
 }

@@ -1,7 +1,3 @@
-// 지도 드래그 시 드래그 된 지도 중심 위치로 마커(마커 드래그 이벤트 & 지도 중심 좌표 얻어오는 메소드 활용)
-// TODO:추가로 redux 이식할 state 체크
-// 로딩 시 검색 막을 방법
-
 import React, { ReactElement, useEffect, useRef } from "react";
 import { useState } from "react";
 import styles from "./Map.module.scss";
@@ -12,49 +8,47 @@ import { stateType } from "../types";
 import Loading from "../pages/Loading";
 
 const Map: React.FC = (): ReactElement => {
-  console.log("rendered");
   const dispatch = useDispatch();
   const { loading, data, markerPos, currentPos } = useSelector(
     (state: stateType) => state.getMap
   );
   const map = data.map;
   const geocoder = data.geocoder;
-
   const [marker, setMarker] = useState<any>();
-
-  const mapEl = useRef(null);
-
   const [crossActive, setCrossActive] = useState<boolean>(false);
-
   const [currentAddress, setCurrentAddress] = useState<any>({});
   const [markerAddress, setMarkerAddress] = useState<any>({});
+  const mapEl = useRef(null);
 
   useEffect(() => {
-    if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
-      geocoder.coord2Address(
-        currentPos.getLng(),
-        currentPos.getLat(),
-        (result: any, status: any) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            setCurrentAddress({
-              address: result[0].address.address_name,
-              roadAddress: result[0].road_address?.address_name,
-            });
+    if (geocoder !== {}) {
+      if (currentPos !== null) {
+        geocoder.coord2Address(
+          currentPos.getLng(),
+          currentPos.getLat(),
+          (result: any, status: any) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              setCurrentAddress({
+                address: result[0].address.address_name,
+                roadAddress: result[0].road_address?.address_name,
+              });
+            }
           }
-        }
-      );
-      geocoder.coord2Address(
-        markerPos.getLng(),
-        markerPos.getLat(),
-        (result: any, status: any) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            setMarkerAddress({
-              address: result[0].address.address_name,
-              roadAddress: result[0].road_address?.address_name,
-            });
+        );
+      } else {
+        geocoder.coord2Address(
+          markerPos.getLng(),
+          markerPos.getLat(),
+          (result: any, status: any) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              setMarkerAddress({
+                address: result[0].address.address_name,
+                roadAddress: result[0].road_address?.address_name,
+              });
+            }
           }
-        }
-      );
+        );
+      }
     }
   }, [currentPos, geocoder, markerPos]);
 

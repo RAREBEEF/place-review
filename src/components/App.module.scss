@@ -1,15 +1,6 @@
-// @media screen and (max-width: 1000px) {
-//   .container {
-//     footer {
-//       width: 70vw !important;
-//     }
-//   }
-// }
-
 .container {
   display: flex;
   flex-direction: column;
-  // min-height: 500px;
   min-height: fit-content;
   min-width: 100vw;
 }

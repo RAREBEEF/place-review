@@ -5,6 +5,7 @@
     right: 5px;
     bottom: 3px;
   }
+  font-family: "IBM Plex Sans KR", sans-serif;
   transition: all 0.3s;
   cursor: pointer;
   background-color: #252422;
@@ -29,13 +30,10 @@
     right: 10px;
   }
 }
-.FindReview__new-review {
-}
+
 .NewReview__delete {
   width: 70px;
   margin: {
-    // top: 5px;
-    // left: 15px;
     right: 15px;
   }
 }
@@ -48,8 +46,6 @@
     cursor: default;
     pointer-events: none;
   }
-}
-.Profile__display-name {
 }
 .Profile__delete-account {
   margin: {

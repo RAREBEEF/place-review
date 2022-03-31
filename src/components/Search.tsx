@@ -15,31 +15,24 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   const { loading, data, currentPos } = useSelector(
     (state: stateType) => state.getMap
   );
-
   const map = data.map;
   const places = data.places;
   const geocoder = data.geocoder;
-
   const [searchKeywordText, setSearchKeywordText] = useState<string | number>(
     ""
   );
-
   const [searchResult, setSearchResult] = useState<Array<any>>([]);
   const [isZero, setIsZero] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-
   const [pagination, setPagination] = useState<paginationStateType>({
     nextClick: () => {},
     prevClick: () => {},
     totalCount: 0,
   });
   const [currentPage, setCurrentPage] = useState<number>(1);
-
   const [selected, setSelected] = useState<any>({ section: null, index: 0 });
-
   const [viewAllReview, setViewAllReview] = useState<boolean>(true);
 
-  // 검색 콜백
   const searchCallback = useCallback(
     (result: any, status: any, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
@@ -60,8 +53,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         setError(true);
         setIsZero(false);
       }
-
-      console.log(result);
 
       setPagination({
         nextClick: () => {
@@ -84,7 +75,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [map, dispatch]
   );
 
-  // 장소 검색
   const keywordSearch = useCallback(
     (keyword: string | number) => {
       places.keywordSearch(keyword, searchCallback, {
@@ -94,12 +84,13 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [places, searchCallback, currentPos]
   );
 
-  // 장소 검색 submit
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
+
       setCurrentPage(1);
       setSelected({ section: "place", index: 0 });
+
       if (searchKeywordText === "") {
         map.setCenter(currentPos);
         dispatch(setMarkerPos(currentPos));
@@ -112,16 +103,19 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
 
   const onKeywordChange = useCallback((e) => {
     e.preventDefault();
+
     setSearchKeywordText(e.target.value);
   }, []);
 
   const onCurrentPosBtnClick = useCallback(
     (e?) => {
       e?.preventDefault();
+
       map.setCenter(currentPos);
       dispatch(setMarkerPos(currentPos));
       setCurrentPage(1);
       setSelected({ section: "place", index: 0 });
+
       if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
         geocoder.coord2Address(
           currentPos.getLng(),
@@ -138,7 +132,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [currentPos, dispatch, geocoder, keywordSearch, map]
   );
 
-  // 최초 위치 주소
   useEffect(() => {
     if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
       onCurrentPosBtnClick();
@@ -167,9 +160,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     if (Object.keys(map).length !== 0) {
       window.kakao.maps.event.addListener(map, "dragend", dragCallback);
     }
-    // return () => {
-    //   window.kakao.maps.event.removeListener(map, "dragend", dragCallback);
-    // };
   }, [dispatch, geocoder, keywordSearch, map]);
 
   return (

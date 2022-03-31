@@ -1,22 +1,25 @@
 .container {
+  font-family: "IBM Plex Sans KR", sans-serif;
   z-index: 999;
   height: 60px;
   position: relative;
   display: flex;
   justify-content: flex-end;
   background-color: #403d39;
+
   .selected,
   .deselect,
   .logo {
-    transition: background-color 0.3s;
     margin: {
       left: 10px;
       right: 10px;
     }
-    font-weight: 700;
+    transition: background-color 0.3s;
+    font-weight: 600;
     width: 130px;
     height: 60px;
     text-align: center;
+
     &:not(.logo) {
       display: flex;
       justify-content: center;
@@ -26,6 +29,7 @@
     &:hover:not(.logo) {
       background-color: rgb(73, 73, 73);
     }
+
     &.selected {
       > li {
         color: #eb5e28;
@@ -33,16 +37,14 @@
     }
 
     &.logo {
+      margin: {
+        left: 20px;
+      }
       min-width: 160px;
       line-height: 60px;
       flex-grow: 1;
       text-align: left;
       font-size: 25px;
-      margin: {
-        left: 20px;
-      }
-      .logo__place {
-      }
       .logo__review {
         color: #eb5e28;
       }

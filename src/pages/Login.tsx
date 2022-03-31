@@ -14,7 +14,6 @@ import styles from "./Login.module.scss";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
-
   const [formAction, setFormAction] = useState<"login" | "signUp" | "findPw">(
     "login"
   );
@@ -26,11 +25,12 @@ const Login: React.FC = () => {
   const onSubmit = useCallback(
     async (e) => {
       e.preventDefault();
+
       if (formAction === "login") {
         await signInWithEmailAndPassword(authService, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
-            console.log(user);
+
             dispatch(
               setLogin(true, {
                 displayName: user.displayName ? user.displayName : "익명",
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
           await createUserWithEmailAndPassword(authService, email, password)
             .then((userCredential) => {
               const user = userCredential.user;
-              console.log(user);
+
               dispatch(
                 setLogin(true, {
                   displayName: user.displayName ? user.displayName : "익명",
@@ -59,7 +59,6 @@ const Login: React.FC = () => {
             });
         }
       } else if (formAction === "findPw") {
-        console.log("findPw");
         try {
           sendPasswordResetEmail(authService, email).then(() => {
             setAlert("메일이 발송되었습니다.");
@@ -98,12 +97,15 @@ const Login: React.FC = () => {
 
   const onFindPwBtnClick = useCallback((e) => {
     e.preventDefault();
+
     setFormAction("findPw");
   }, []);
 
   const onGoogleClick = useCallback((e) => {
     e.preventDefault();
+
     const provider = new GoogleAuthProvider();
+
     signInWithRedirect(authService, provider);
   }, []);
 
