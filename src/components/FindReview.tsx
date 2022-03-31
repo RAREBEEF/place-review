@@ -1,60 +1,42 @@
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import React, { ReactElement, useCallback, useState } from "react";
 import styles from "./FindReview.module.scss";
-import { dbService } from "../fbase";
-import { collection, query, onSnapshot, orderBy } from "firebase/firestore";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FindReviewPropType, stateType } from "../types";
 import { Link } from "react-router-dom";
 import Button from "./Button";
 import Review from "./Review";
+import { setFilter } from "../redux/modules/getReviews";
 
 const FindReview: React.FC<FindReviewPropType> = ({
-  viewAllReview,
-  setViewAllReview,
   selected,
   setSelected,
 }) => {
+  const dispatch = useDispatch();
   const mapData = useSelector((state: stateType) => state.getMap);
+  const { reviews, filter } = useSelector(
+    (state: stateType) => state.getReviews
+  );
   const markerPos = mapData.markerPos;
-  const [reviews, setReviews] = useState<Array<any>>([]);
   const [text, setText] = useState<string>("");
-
-  useEffect(() => {
-    const q = query(
-      collection(dbService, "reviews"),
-      orderBy("createdAt", "desc")
-    );
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const reviews: Array<any> = [];
-      querySnapshot.forEach((doc) => {
-        reviews.push({ id: doc.id, ...doc.data() });
-      });
-      setReviews(reviews);
-    });
-    setViewAllReview(false);
-    return () => {
-      unsubscribe();
-    };
-  }, [setViewAllReview]);
 
   const onChange = useCallback((e) => {
     setText(e.target.value);
   }, []);
 
   const onFilterClick = useCallback(() => {
-    if (viewAllReview) {
-      setViewAllReview(false);
+    if (filter === "ALL") {
+      dispatch(setFilter("HERE"));
     } else {
-      setViewAllReview(true);
+      dispatch(setFilter("ALL"));
     }
-  }, [viewAllReview, setViewAllReview]);
+  }, [dispatch, filter]);
 
   return (
     <div className={styles.container}>
       <div className={styles["btn-wrapper"]}>
         <Button
           onClick={onFilterClick}
-          text={viewAllReview ? "해당 위치 리뷰 보기" : "전체 리뷰 보기"}
+          text={filter === "ALL" ? "해당 위치 리뷰 보기" : "전체 리뷰 보기"}
           className={["FindReview__filter"]}
         />
         <Link to="/new">
@@ -70,13 +52,13 @@ const FindReview: React.FC<FindReviewPropType> = ({
         />
       </div>
       <ul className={styles["review__list"]}>
-        {reviews?.map((review, i): ReactElement | null => {
+        {reviews?.map((review: any, i: number): ReactElement | null => {
           const location = new window.kakao.maps.LatLng(
             review.location.Ma,
             review.location.La
           );
 
-          if (viewAllReview) {
+          if (filter === "ALL") {
             if (text !== "") {
               if (
                 review.title.indexOf(text) === -1 &&

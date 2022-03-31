@@ -21,34 +21,31 @@ const Map: React.FC = (): ReactElement => {
   const mapEl = useRef(null);
 
   useEffect(() => {
-    if (geocoder !== {}) {
-      if (currentPos !== null) {
-        geocoder.coord2Address(
-          currentPos.getLng(),
-          currentPos.getLat(),
-          (result: any, status: any) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              setCurrentAddress({
-                address: result[0].address.address_name,
-                roadAddress: result[0].road_address?.address_name,
-              });
-            }
+    if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
+      geocoder.coord2Address(
+        currentPos.getLng(),
+        currentPos.getLat(),
+        (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setCurrentAddress({
+              address: result[0].address.address_name,
+              roadAddress: result[0].road_address?.address_name,
+            });
           }
-        );
-      } else {
-        geocoder.coord2Address(
-          markerPos.getLng(),
-          markerPos.getLat(),
-          (result: any, status: any) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              setMarkerAddress({
-                address: result[0].address.address_name,
-                roadAddress: result[0].road_address?.address_name,
-              });
-            }
+        }
+      );
+      geocoder.coord2Address(
+        markerPos.getLng(),
+        markerPos.getLat(),
+        (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setMarkerAddress({
+              address: result[0].address.address_name,
+              roadAddress: result[0].road_address?.address_name,
+            });
           }
-        );
-      }
+        }
+      );
     }
   }, [currentPos, geocoder, markerPos]);
 

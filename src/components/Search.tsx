@@ -9,6 +9,7 @@ import FindReview from "./FindReview";
 import NewReview from "./NewReview";
 import Button from "./Button";
 import SearchResult from "./SearchResult";
+import { setFilter } from "../redux/modules/getReviews";
 
 const Search: React.FC<SearchPropType> = (): ReactElement => {
   const dispatch = useDispatch();
@@ -31,12 +32,11 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   });
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selected, setSelected] = useState<any>({ section: null, index: 0 });
-  const [viewAllReview, setViewAllReview] = useState<boolean>(true);
 
   const searchCallback = useCallback(
     (result: any, status: any, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        setViewAllReview(false);
+        dispatch(setFilter("HERE"));
         setError(false);
         setIsZero(false);
         setSearchResult(result);
@@ -216,8 +216,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
           path="/"
           element={
             <FindReview
-              viewAllReview={viewAllReview}
-              setViewAllReview={setViewAllReview}
               onCurrentPosBtnClick={onCurrentPosBtnClick}
               selected={selected}
               setSelected={setSelected}

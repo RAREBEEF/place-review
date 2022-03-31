@@ -8,15 +8,7 @@ import {
 import { useSelector } from "react-redux";
 import { stateType } from "../types";
 import Button from "../components/Button";
-import {
-  collection,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import Review from "../components/Review";
 import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.scss";
@@ -24,8 +16,11 @@ import classNames from "classnames";
 
 const Profile: React.FC = (): ReactElement => {
   const { userObj } = useSelector((state: stateType) => state.loginProcess);
-  const [displayName, setDisplayName] = useState<string>("");
+  const allReviews = useSelector(
+    (state: stateType) => state.getReviews.reviews
+  );
   const [myReviews, setMyReviews] = useState<Array<any>>([]);
+  const [displayName, setDisplayName] = useState<string>("");
   const [emailCheck, setEmailCheck] = useState<string>("");
   const [alert, setAlert] = useState<any>("");
   const navigate = useNavigate();
@@ -107,26 +102,14 @@ const Profile: React.FC = (): ReactElement => {
   };
 
   useEffect(() => {
-    if (userObj.uid === undefined) {
+    if (userObj.uid === undefined || allReviews.length === 0) {
       return;
     }
-    const q = query(
-      collection(dbService, "reviews"),
-      where("creatorId", "==", userObj.uid),
-      orderBy("createdAt", "desc")
-    );
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const reviews: Array<any> = [];
-      querySnapshot.forEach((doc) => {
-        reviews.push({ id: doc.id, ...doc.data() });
-      });
-      setMyReviews(reviews);
-    });
 
-    return () => {
-      unsubscribe();
-    };
-  }, [userObj.uid]);
+    setMyReviews(
+      allReviews.filter((review: any) => review.creatorId === userObj.uid)
+    );
+  }, [allReviews, userObj.uid]);
 
   return (
     <div className={styles.container}>

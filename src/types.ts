@@ -4,7 +4,9 @@ import { MouseEventHandler } from "react";
 export interface stateType {
   getMap: any;
   loginProcess: any;
+  getReviews: any;
 }
+
 // getMap
 export interface mapDataInnerdataType {
   map: any;
@@ -46,6 +48,20 @@ export interface loginProcessStateType {
   userObj: any;
 }
 
+// getReviews
+export interface getReviewsStateType {
+  filter: string;
+  reviews: Array<any>;
+}
+export interface setReviewsActionType {
+  type: string;
+  reviews: Array<any>;
+}
+export interface setFilterActionType {
+  type: string;
+  filter: string;
+}
+
 // Map.ts
 export interface recentSearchStateType {
   text: string | number;
@@ -62,8 +78,6 @@ export interface NavPropType {}
 export interface SearchPropType {}
 
 export interface FindReviewPropType {
-  viewAllReview: boolean;
-  setViewAllReview: Function;
   onCurrentPosBtnClick: Function;
   selected: any;
   setSelected: Function;

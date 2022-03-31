@@ -2,16 +2,20 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { stateType } from "../types";
 import styles from "./App.module.scss";
-import { authService } from "../fbase";
+import { authService, dbService } from "../fbase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setLogin } from "../redux/modules/loginProcess";
 import Router from "./Router";
 import Login from "../pages/Login";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { setFilter, setReviews } from "../redux/modules/getReviews";
 
 const App: React.FC = (): ReactElement => {
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state: stateType) => state.loginProcess);
   const [init, setInit] = useState(false);
+
+  useEffect(() => {}, [dispatch]);
 
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
@@ -28,6 +32,26 @@ const App: React.FC = (): ReactElement => {
         setInit(true);
       }
     });
+
+    const q = query(
+      collection(dbService, "reviews"),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const reviews: Array<any> = [];
+
+      querySnapshot.forEach((doc) => {
+        reviews.push({ id: doc.id, ...doc.data() });
+      });
+      dispatch(setReviews(reviews));
+    });
+
+    dispatch(setFilter("HERE"));
+
+    return () => {
+      unsubscribe();
+    };
   }, [dispatch]);
 
   return (
