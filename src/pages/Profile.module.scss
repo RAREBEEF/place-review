@@ -1,3 +1,31 @@
+@media screen and (max-width: 400px) {
+  .container {
+    .alert {
+      margin: {
+        left: auto !important;
+        right: auto !important;
+      }
+    }
+    .input {
+      // margin: auto !important;
+      margin-bottom: 10px !important;
+    }
+    .display-name-wrapper {
+      margin: auto !important;
+      text-align: center;
+    }
+    .password-wrapper {
+      margin: auto !important;
+      text-align: center;
+    }
+    .btn-wrapper {
+      margin: auto !important;
+      margin-top: 20px !important;
+      text-align: center;
+    }
+  }
+}
+
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
   max-width: 70vw;
@@ -5,7 +33,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  min-width: 300px;
   .edit-profile-wrapper {
     padding: {
       top: 80px;
@@ -82,6 +110,7 @@
       top: 80px;
     }
     width: 70vw;
+    min-width: 300px;
 
     .my-review-header {
       margin: {

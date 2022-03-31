@@ -5,6 +5,11 @@
     }
     height: calc(100vh - 30px) !important;
     width: 70vw !important;
+    min-width: none !important;
+    .form {
+      width: 90%;
+      margin: auto !important;
+    }
   }
 }
 
@@ -17,12 +22,13 @@
   min-height: 500px;
   display: flex;
   flex-direction: column;
-
+  margin: auto;
   .form {
     margin: {
       left: 20px;
       right: 20px;
     }
+
     display: flex;
 
     .input--search {

@@ -9,11 +9,11 @@
   transition: all 0.3s;
   cursor: pointer;
   background-color: #252422;
-  border: none;
   border: 1px solid #ccc5b9;
   border-radius: 5px;
   color: #fffcf2;
   font-size: 14px;
+  white-space: nowrap;
   &:hover {
     background-color: rgb(73, 73, 73);
   }

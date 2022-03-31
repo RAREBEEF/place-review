@@ -1,3 +1,12 @@
+@media screen and (max-width: 400px) {
+  .container {
+    min-width: 280px;
+    .logo {
+      font-size: 40px !important;
+    }
+  }
+}
+
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
   margin: auto;
@@ -67,7 +76,7 @@
       height: 30px;
     }
   }
-  
+
   .btn-wrapper {
     margin: {
       bottom: 30px;
@@ -78,7 +87,9 @@
 }
 
 .footer {
+  min-width: 280px;
   flex-grow: 1;
   display: flex;
   align-items: flex-end;
+  text-align: center;
 }

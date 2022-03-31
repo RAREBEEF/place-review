@@ -7,6 +7,7 @@
   font-family: "IBM Plex Sans KR", sans-serif;
   transition: all 0.3s;
   max-width: inherit;
+  min-width: 250px;
   cursor: pointer;
   &:nth-child(2n) {
     background-color: #2e2c2a;

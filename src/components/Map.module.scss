@@ -17,11 +17,11 @@
     position: absolute;
     top: 0;
     right: 0;
-    height: 40px;
+    height: fit-content;
     padding: 5px;
     background-color: rgba(37, 36, 34, 0.5);
-    &.marker-address {
-      top: 30px;
+    .address__current {
+      margin-bottom: 5px;
     }
   }
 

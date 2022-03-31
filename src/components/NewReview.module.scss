@@ -3,8 +3,9 @@
   height: calc(100vh - 340px);
   display: flex;
   flex-direction: column;
-  width: inherit;
   min-height: 230px;
+  margin: auto;
+  width: 100%;
 
   .header-wrapper {
     margin: {
@@ -75,7 +76,7 @@
 
       .rating {
         margin: {
-          left: 15px;
+          left: 5px;
         }
       }
     }
@@ -86,7 +87,10 @@
       align-items: flex-start;
 
       .label {
-        margin-top: 5px;
+        margin: {
+          top: 5px;
+          right: 5px;
+        }
       }
 
       .input--file {
@@ -145,7 +149,7 @@
       bottom: 20px;
     }
   }
-  
+
   .footer {
     text-align: center;
     display: flex;

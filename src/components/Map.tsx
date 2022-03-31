@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getMapThunk } from "../redux/modules/getMap";
 import { stateType } from "../types";
 import Loading from "../pages/Loading";
+import markerImg from "../images/marker100.png";
 
 const Map: React.FC = (): ReactElement => {
   const dispatch = useDispatch();
@@ -79,11 +80,26 @@ const Map: React.FC = (): ReactElement => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, markerPos]);
 
+  useEffect(() => {
+    const icon = new window.kakao.maps.MarkerImage(
+      markerImg,
+      new window.kakao.maps.Size(40, 48),
+      {
+        alt: "Place Review marker",
+      }
+    );
+    marker?.setImage(icon);
+  }, [marker]);
+
   return (
     <div className={classNames(styles.container)}>
       <div className={styles["address"]}>
-        <div>현재 위치 : {currentAddress.address}</div>
-        <div> 마커 위치 : {markerAddress.address}</div>
+        <div className={styles["address__current"]}>
+          현재 위치 : {currentAddress.address}
+        </div>
+        <div className={styles["address__marker"]}>
+          마커 위치 : {markerAddress.address}
+        </div>
       </div>
 
       <div
