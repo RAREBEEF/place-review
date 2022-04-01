@@ -57,12 +57,15 @@ const App: React.FC = (): ReactElement => {
 
   return (
     <div className={styles.container}>
-      {isLogin ? <Router init={init} /> : <Login />}
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Login />} />
-        </Routes>
-      </BrowserRouter>
+      {isLogin ? (
+        <Router init={init} />
+      ) : (
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      )}
     </div>
   );
 };

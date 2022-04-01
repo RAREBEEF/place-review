@@ -7,6 +7,11 @@
       }
     }
     .input {
+      display: block;
+      margin: {
+        left: auto !important;
+        right: auto !important;
+      }
     }
     .display-name-wrapper {
     }
@@ -87,7 +92,7 @@
         top: 20px;
         left: auto;
         right: auto;
-        bottom: 20px;
+        bottom: 70px;
       }
       text-align: center;
     }

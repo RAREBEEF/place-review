@@ -104,9 +104,6 @@ const Profile: React.FC = (): ReactElement => {
   };
 
   useEffect((): void => {
-    if (!authService.currentUser) {
-      navigate("/");
-    }
     if (userObj.uid === undefined || allReviews.length === 0) {
       return;
     }
