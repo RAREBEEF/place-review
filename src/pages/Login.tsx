@@ -122,6 +122,7 @@ const Login: React.FC = () => {
           type="text"
           onChange={onEmailChange}
           placeholder="이메일"
+          autoComplete="email"
         />
         {formAction !== "findPw" && (
           <input
