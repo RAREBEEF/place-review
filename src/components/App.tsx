@@ -10,6 +10,7 @@ import Login from "../pages/Login";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { setFilter, setReviews } from "../redux/modules/getReviews";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Loading from "../pages/Loading";
 
 const App: React.FC = (): ReactElement => {
   const dispatch = useDispatch();
@@ -57,15 +58,19 @@ const App: React.FC = (): ReactElement => {
 
   return (
     <div className={styles.container}>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
-        {isLogin ? (
-          <Router init={init} />
-        ) : (
-          <Routes>
-            <Route path="/*" element={<Login />} />
-          </Routes>
-        )}
-      </BrowserRouter>
+      {init ? (
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
+          {isLogin ? (
+            <Router />
+          ) : (
+            <Routes>
+              <Route path="/*" element={<Login />} />
+            </Routes>
+          )}
+        </BrowserRouter>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };

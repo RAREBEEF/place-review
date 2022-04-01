@@ -93,9 +93,7 @@ export interface ReviewPropType {
   i?: number;
 }
 export interface HomePropType {}
-export interface RouterPropType {
-  init: boolean;
-}
+export interface RouterPropType {}
 export interface SearchResultPropType {
   selected: { section: string | null; index: number };
   setSelected: Function;

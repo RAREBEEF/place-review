@@ -6,13 +6,13 @@ import Profile from "../pages/Profile";
 import { RouterPropType } from "../types";
 import Nav from "./Nav";
 
-const Router: React.FC<RouterPropType> = ({ init }): ReactElement => {
+const Router: React.FC<RouterPropType> = (): ReactElement => {
   return (
     <>
       <Nav />
       <Routes>
         <Route path="/profile" element={<Profile />} />
-        <Route path="/*" element={init ? <Home /> : <Loading />} />
+        <Route path="*" element={<Home />} />
       </Routes>
     </>
   );
