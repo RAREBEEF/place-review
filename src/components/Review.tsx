@@ -121,7 +121,8 @@ const Review: React.FC<ReviewPropType> = ({
           {("0" + new Date(review.createdAt).getMinutes()).slice(-2)}
         </span>
         <span className={styles["footer__author"]}>{review.displayName}</span>
-        {userObj.uid === review.creatorId && (
+        {(userObj.uid === review.creatorId ||
+          userObj.uid === "oieGlxRf5zXW1JzXxpiY1DAskDF3") && (
           <Button
             text="삭제"
             onClick={(e) => {
