@@ -6,7 +6,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useSelector } from "react-redux";
-import { loginProcessStateType, reviewObjType, stateType } from "../types";
+import { reviewObjType, stateType } from "../types";
 import Button from "../components/Button";
 import { doc, setDoc } from "firebase/firestore";
 import Review from "../components/Review";
@@ -104,6 +104,9 @@ const Profile: React.FC = (): ReactElement => {
   };
 
   useEffect((): void => {
+    if (!authService.currentUser) {
+      navigate("/");
+    }
     if (userObj.uid === undefined || allReviews.length === 0) {
       return;
     }
@@ -113,7 +116,7 @@ const Profile: React.FC = (): ReactElement => {
         (review: reviewObjType): boolean => review.creatorId === userObj.uid
       )
     );
-  }, [allReviews, userObj.uid]);
+  }, [allReviews, navigate, userObj.uid]);
 
   return (
     <div className={styles.container}>
