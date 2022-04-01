@@ -93,7 +93,8 @@ const FindReview: React.FC<FindReviewPropType> = ({
           );
         })}
         <div className={styles["no-review"]}>
-          해당 위치에 리뷰가 존재하지 않습니다.
+          <div style={{ lineHeight: "23px" }}> 아직 리뷰가 없습니다.</div>
+          <div style={{ lineHeight: "23px" }}>첫 리뷰를 남겨보세요.</div>
         </div>
       </ul>
       <footer className={styles.footer}>

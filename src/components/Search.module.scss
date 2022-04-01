@@ -28,7 +28,7 @@
       left: 20px;
       right: 20px;
     }
-
+    flex-wrap: wrap;
     display: flex;
 
     .input--search {
@@ -37,6 +37,7 @@
       }
       margin: {
         right: 5px;
+        bottom: 5px;
       }
       color: #fffcf2;
       flex-grow: 1;
