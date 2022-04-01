@@ -1,6 +1,6 @@
 import styles from "./Search.module.scss";
 import classNames from "classnames";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMarkerPos } from "../redux/modules/getMap";
 import {
@@ -34,6 +34,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   });
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selected, setSelected] = useState<any>({ section: null, index: 0 });
+  const listElRef = useRef<any>(null);
 
   const searchCallback = useCallback(
     (result: Array<any>, status: string, pagination: any) => {
@@ -62,6 +63,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
             setSelected({ section: "place", index: 0 });
             setCurrentPage((prevState: number): number => prevState + 1);
             pagination.nextPage();
+            listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
           }
         },
         prevClick: (): void => {
@@ -69,12 +71,13 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
             setSelected({ section: "place", index: 0 });
             setCurrentPage((prevState: number): number => prevState - 1);
             pagination.prevPage();
+            listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
           }
         },
         totalCount: pagination.totalCount,
       });
     },
-    [map, dispatch]
+    [dispatch, map]
   );
 
   const keywordSearch = useCallback(
@@ -189,7 +192,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         ) : isZero ? (
           <div className={styles["result__zero"]}>검색 결과가 없습니다.</div>
         ) : (
-          <ul className={styles["result__list"]}>
+          <ul className={styles["result__list"]} ref={listElRef}>
             {searchResult.map((el: any, i: any) => (
               <SearchResult
                 key={i}
