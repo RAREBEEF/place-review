@@ -9,7 +9,7 @@ import Nav from "./Nav";
 
 const Router: React.FC<RouterPropType> = ({ init }): ReactElement => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Nav />
       <Routes>
         <Route path="/profile" element={<Profile />} />
