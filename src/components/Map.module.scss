@@ -7,7 +7,6 @@
 }
 @media screen and (max-width: 1000px) {
   .container {
-    height: 75vh !important;
     margin-top: -15vh;
     overflow: hidden;
     .address {
@@ -43,6 +42,6 @@
     font-weight: 400;
     color: rgba(0, 0, 0, 0.5);
     top: calc(50% - 25px);
-    left: calc(35vw - 25px);
+    left: calc(50% - 25px);
   }
 }

@@ -1,6 +1,12 @@
+@media screen and (max-width: 1000px) {
+  .container {
+    min-height: 330px !important;
+  }
+}
+
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 230px);
   display: flex;
   flex-direction: column;
   min-height: 360px;
@@ -157,7 +163,7 @@
     font-size: 14px;
     flex-grow: 1;
     margin: {
-      bottom: 5px;
+      bottom: 15px;
     }
   }
 }

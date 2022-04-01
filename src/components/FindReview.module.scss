@@ -1,7 +1,7 @@
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
   height: calc(100vh - 200px);
-  min-height: 360px;
+  min-height: 330px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -45,8 +45,6 @@
       right: 20px;
       bottom: 20px;
     }
-    flex-grow: 1;
-    min-height: 230px;
     border-radius: 5px;
     overflow-y: auto;
     background-color: #252422;
@@ -68,7 +66,7 @@
 
   .footer {
     margin: {
-      bottom: 5px;
+      bottom: 15px;
     }
     text-align: center;
     display: flex;
