@@ -57,15 +57,15 @@ const App: React.FC = (): ReactElement => {
 
   return (
     <div className={styles.container}>
-      {isLogin ? (
-        <Router init={init} />
-      ) : (
-        <BrowserRouter>
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        {isLogin ? (
+          <Router init={init} />
+        ) : (
           <Routes>
-            <Route path="*" element={<Login />} />
+            <Route path="/*" element={<Login />} />
           </Routes>
-        </BrowserRouter>
-      )}
+        )}
+      </BrowserRouter>
     </div>
   );
 };

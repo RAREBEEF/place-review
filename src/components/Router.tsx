@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Loading from "../pages/Loading";
 import Profile from "../pages/Profile";
@@ -8,13 +8,13 @@ import Nav from "./Nav";
 
 const Router: React.FC<RouterPropType> = ({ init }): ReactElement => {
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <>
       <Nav />
       <Routes>
         <Route path="/profile" element={<Profile />} />
         <Route path="/*" element={init ? <Home /> : <Loading />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 };
 
