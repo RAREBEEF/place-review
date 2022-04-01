@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/place-review/static/css/main.a4f0f862.css",
-    "main.js": "/place-review/static/js/main.17a335e5.js",
+    "main.js": "/place-review/static/js/main.f58f1d76.js",
     "index.html": "/place-review/index.html",
     "main.a4f0f862.css.map": "/place-review/static/css/main.a4f0f862.css.map",
-    "main.17a335e5.js.map": "/place-review/static/js/main.17a335e5.js.map"
+    "main.f58f1d76.js.map": "/place-review/static/js/main.f58f1d76.js.map"
   },
   "entrypoints": [
     "static/css/main.a4f0f862.css",
-    "static/js/main.17a335e5.js"
+    "static/js/main.f58f1d76.js"
   ]
 }
