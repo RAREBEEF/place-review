@@ -177,12 +177,14 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
           onChange={onKeywordChange}
           placeholder="장소 검색"
         />
-        <Button text="검색" className={["Search__search"]} />
-        <Button
-          onClick={onCurrentPosBtnClick}
-          text="현위치로"
-          className={["Search__current-pos"]}
-        />
+        <div className={styles["btn-wrapper"]}>
+          <Button text="검색" className={["Search__search"]} />
+          <Button
+            onClick={onCurrentPosBtnClick}
+            text="현위치로"
+            className={["Search__current-pos"]}
+          />
+        </div>
       </form>
       <div className={styles["result"]}>
         {error ? (

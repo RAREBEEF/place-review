@@ -36,8 +36,8 @@
         left: 10px;
       }
       margin: {
+        top: 5px;
         right: 5px;
-        bottom: 5px;
       }
       color: #fffcf2;
       flex-grow: 1;
@@ -46,6 +46,14 @@
       border: 1px solid #ccc5b9;
       border-radius: 5px;
       height: 30px;
+    }
+    .btn-wrapper {
+      text-align: center;
+      margin: {
+        left: auto;
+        right: auto;
+        top: 5px;
+      }
     }
   }
 
