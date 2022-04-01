@@ -166,6 +166,9 @@ const Profile: React.FC = (): ReactElement => {
       </div>
       <div className={styles["my-review-wrapper"]}>
         <h2 className={styles["my-review-header"]}>내가 쓴 리뷰</h2>
+        {myReviews.length === 0 && (
+          <div className={styles["zero"]}>작성한 리뷰가 없습니다.</div>
+        )}
         <ul className={styles["my-review-list"]}>
           {myReviews.map((review: reviewObjType): ReactElement => {
             const location = new window.kakao.maps.LatLng(

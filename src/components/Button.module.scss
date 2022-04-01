@@ -52,6 +52,16 @@
     pointer-events: none;
   }
 }
+.Profile__display-name {
+  margin: {
+    top: 5px;
+  }
+}
+.Profile__password {
+  margin: {
+    top: 5px;
+  }
+}
 .Profile__delete-account {
   margin: {
     right: 10px;
