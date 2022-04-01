@@ -1,9 +1,9 @@
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
-  height: calc(100vh - 340px);
+  height: calc(100vh - 200px);
+  min-height: 360px;
   display: flex;
   flex-direction: column;
-  margin: auto;
   width: 100%;
   .btn-wrapper {
     margin: {
@@ -46,7 +46,7 @@
       bottom: 20px;
     }
     flex-grow: 1;
-    min-height: 100px;
+    min-height: 230px;
     border-radius: 5px;
     overflow-y: auto;
     background-color: #252422;

@@ -165,7 +165,7 @@ const Login: React.FC = () => {
           text="비밀번호 재설정"
           className={["Login__reset-pw"]}
         />
-        <div>
+        <div className={styles["social"]}>
           <Button
             text="Continue with Google"
             onClick={onGoogleClick}

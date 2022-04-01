@@ -181,7 +181,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
           <Button text="검색" className={["Search__search"]} />
           <Button
             onClick={onCurrentPosBtnClick}
-            text="현위치로"
+            text="현위치"
             className={["Search__current-pos"]}
           />
         </div>

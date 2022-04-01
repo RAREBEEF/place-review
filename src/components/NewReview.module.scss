@@ -1,10 +1,9 @@
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
-  height: calc(100vh - 340px);
+  height: calc(100vh - 200px);
   display: flex;
   flex-direction: column;
-  min-height: 230px;
-  margin: auto;
+  min-height: 360px;
   width: 100%;
 
   .header-wrapper {
@@ -138,7 +137,6 @@
     outline: none;
     border: 1px solid #ccc5b9;
     border-radius: 5px;
-    max-height: 100px;
   }
 
   .btn-wrapper {

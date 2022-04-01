@@ -18,7 +18,7 @@
 
 .container {
   position: relative;
-
+  min-height: 640px;
   .address {
     z-index: 2;
     position: absolute;
@@ -42,7 +42,7 @@
     position: absolute;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.5);
-    top: calc(50vh - 55px);
+    top: calc(50% - 25px);
     left: calc(35vw - 25px);
   }
 }
