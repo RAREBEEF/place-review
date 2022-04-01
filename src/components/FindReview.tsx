@@ -1,7 +1,12 @@
 import React, { ReactElement, useCallback, useState } from "react";
 import styles from "./FindReview.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { FindReviewPropType, stateType } from "../types";
+import {
+  FindReviewPropType,
+  getMapStateType,
+  getReviewsStateType,
+  stateType,
+} from "../types";
 import { Link } from "react-router-dom";
 import Button from "./Button";
 import Review from "./Review";
@@ -12,18 +17,19 @@ const FindReview: React.FC<FindReviewPropType> = ({
   setSelected,
 }) => {
   const dispatch = useDispatch();
-  const mapData = useSelector((state: stateType) => state.getMap);
-  const { reviews, filter } = useSelector(
-    (state: stateType) => state.getReviews
+  const { markerPos } = useSelector(
+    (state: stateType): getMapStateType => state.getMap
   );
-  const markerPos = mapData.markerPos;
+  const { reviews, filter } = useSelector(
+    (state: stateType): getReviewsStateType => state.getReviews
+  );
   const [text, setText] = useState<string>("");
 
-  const onChange = useCallback((e) => {
+  const onChange = useCallback((e): void => {
     setText(e.target.value);
   }, []);
 
-  const onFilterClick = useCallback(() => {
+  const onFilterClick = useCallback((): void => {
     if (filter === "ALL") {
       dispatch(setFilter("HERE"));
     } else {

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { ReactElement } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMarkerPos } from "../redux/modules/getMap";
-import { SearchResultPropType, stateType } from "../types";
+import { getMapStateType, SearchResultPropType, stateType } from "../types";
 import styles from "./SearchResult.module.scss";
 
 const SearchResult: React.FC<SearchResultPropType> = ({
@@ -12,7 +12,9 @@ const SearchResult: React.FC<SearchResultPropType> = ({
   i,
 }): ReactElement => {
   const dispatch = useDispatch();
-  const { map } = useSelector((state: stateType) => state.getMap.data);
+  const {
+    data: { map },
+  } = useSelector((state: stateType): getMapStateType => state.getMap);
 
   return (
     <li
@@ -20,7 +22,7 @@ const SearchResult: React.FC<SearchResultPropType> = ({
         styles["item"],
         selected.section === "place" && selected.index === i && styles.selected
       )}
-      onClick={() => {
+      onClick={(): void => {
         map.setCenter(new window.kakao.maps.LatLng(place.y, place.x));
         map.setLevel(3);
         dispatch(setMarkerPos(new window.kakao.maps.LatLng(place.y, place.x)));

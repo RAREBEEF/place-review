@@ -8,14 +8,14 @@ export interface stateType {
 }
 
 // getMap
-export interface mapDataInnerdataType {
+export interface mapDataType {
   map: any;
   places: any;
   geocoder: any;
 }
 export interface getMapStateType {
   loading: boolean;
-  data: mapDataInnerdataType;
+  data: mapDataType;
   error: null | Error;
   currentPos: any;
   markerPos: any;
@@ -62,7 +62,7 @@ export interface setFilterActionType {
   filter: string;
 }
 
-// Map.ts
+// etc
 export interface recentSearchStateType {
   text: string | number;
   type: string;
@@ -72,42 +72,61 @@ export interface paginationStateType {
   prevClick: MouseEventHandler<HTMLButtonElement>;
   totalCount: number;
 }
-
 export interface NavPropType {}
-
 export interface SearchPropType {}
-
 export interface FindReviewPropType {
   onCurrentPosBtnClick: Function;
   selected: any;
   setSelected: Function;
 }
-
 export interface NewReviewPropType {}
-
 export interface ButtonPropType {
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: any;
 }
-
 export interface ReviewPropType {
   location: any;
-  review: any;
-  selected?: any;
+  review: reviewObjType;
+  selected?: { section: string | null; index: number };
   setSelected?: Function;
   i?: number;
 }
-
 export interface HomePropType {}
-
 export interface RouterPropType {
   init: boolean;
 }
-
 export interface SearchResultPropType {
-  selected: any;
+  selected: { section: string | null; index: number };
   setSelected: Function;
   place: any;
   i: number;
+}
+export interface currentAddressType {
+  address: string | null;
+  roadAddress: string | null;
+}
+export interface markerAddressType {
+  address: string | null;
+  roadAddress: string | null;
+}
+export interface reviewStateType {
+  title: string;
+  rating: number;
+  memo: string;
+  location: object;
+  address: object;
+}
+export interface reviewObjType {
+  id?: string;
+  title: string;
+  rating: number;
+  memo: string;
+  location: any;
+  address: any;
+  createdAt: number;
+  creatorId: string;
+  displayName: string;
+  attachmentUrl: string;
+  attachmentId: string;
 }

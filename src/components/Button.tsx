@@ -13,7 +13,7 @@ const Button: React.FC<ButtonPropType> = ({
       onClick={onClick}
       className={classNames(
         styles.btn,
-        className?.map((item: any) => styles[item])
+        className?.map((item: string): string => styles[item])
       )}
     >
       {text}

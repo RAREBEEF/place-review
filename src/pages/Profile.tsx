@@ -6,7 +6,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useSelector } from "react-redux";
-import { stateType } from "../types";
+import { loginProcessStateType, reviewObjType, stateType } from "../types";
 import Button from "../components/Button";
 import { doc, setDoc } from "firebase/firestore";
 import Review from "../components/Review";
@@ -15,27 +15,28 @@ import styles from "./Profile.module.scss";
 import classNames from "classnames";
 
 const Profile: React.FC = (): ReactElement => {
-  const { userObj } = useSelector((state: stateType) => state.loginProcess);
-  const allReviews = useSelector(
-    (state: stateType) => state.getReviews.reviews
-  );
+  const {
+    loginProcess: { userObj },
+    getReviews: { reviews: allReviews },
+  } = useSelector((state: stateType): stateType => state);
   const [myReviews, setMyReviews] = useState<Array<any>>([]);
   const [displayName, setDisplayName] = useState<string>("");
   const [emailCheck, setEmailCheck] = useState<string>("");
   const [alert, setAlert] = useState<any>("");
   const navigate = useNavigate();
 
-  const ondisplayNameChange = useCallback((e) => {
+  const ondisplayNameChange = useCallback((e): void => {
     setDisplayName(e.target.value);
   }, []);
 
-  const onEmailCheckChange = useCallback((e) => {
+  const onEmailCheckChange = useCallback((e): void => {
     setEmailCheck(e.target.value);
   }, []);
 
   const onDisplayNameChangeClick = useCallback(
-    async (e) => {
+    async (e): Promise<void> => {
       e.preventDefault();
+
       if (authService.currentUser) {
         if (displayName === "") {
           setAlert("닉네임을 입력해주세요.");
@@ -45,7 +46,7 @@ const Profile: React.FC = (): ReactElement => {
           updateProfile(authService.currentUser, {
             displayName,
           });
-          await myReviews.forEach((review) => {
+          await myReviews.forEach((review): void => {
             if (review.displayName !== displayName) {
               setDoc(doc(dbService, "reviews", review.id), {
                 ...review,
@@ -61,8 +62,9 @@ const Profile: React.FC = (): ReactElement => {
   );
 
   const onResetPwClick = useCallback(
-    async (e) => {
+    async (e): Promise<void> => {
       e.preventDefault();
+
       if (authService.currentUser) {
         if (authService.currentUser.email !== emailCheck) {
           setAlert("메일이 일치하지 않습니다.");
@@ -80,7 +82,7 @@ const Profile: React.FC = (): ReactElement => {
     [emailCheck]
   );
 
-  const onDeleteClick = useCallback(async () => {
+  const onDeleteClick = useCallback(async (): Promise<void> => {
     const ok = window.confirm(
       "정말 탈퇴하시겠습니까?\n작성한 글은 삭제되지 않습니다."
     );
@@ -90,24 +92,26 @@ const Profile: React.FC = (): ReactElement => {
         .then(() => {
           navigate("/");
         })
-        .catch((error) => {
+        .catch((error): void => {
           setAlert(error);
         });
     }
   }, [navigate]);
 
-  const onLogOutClick = () => {
+  const onLogOutClick = (): void => {
     authService.signOut();
     navigate("/");
   };
 
-  useEffect(() => {
+  useEffect((): void => {
     if (userObj.uid === undefined || allReviews.length === 0) {
       return;
     }
 
     setMyReviews(
-      allReviews.filter((review: any) => review.creatorId === userObj.uid)
+      allReviews.filter(
+        (review: reviewObjType): boolean => review.creatorId === userObj.uid
+      )
     );
   }, [allReviews, userObj.uid]);
 
@@ -163,7 +167,7 @@ const Profile: React.FC = (): ReactElement => {
       <div className={styles["my-review-wrapper"]}>
         <h2 className={styles["my-review-header"]}>내가 쓴 리뷰</h2>
         <ul className={styles["my-review-list"]}>
-          {myReviews.map((review) => {
+          {myReviews.map((review: reviewObjType): ReactElement => {
             const location = new window.kakao.maps.LatLng(
               review.location.Ma,
               review.location.La

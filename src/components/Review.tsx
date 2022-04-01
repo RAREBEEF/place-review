@@ -17,12 +17,15 @@ const Review: React.FC<ReviewPropType> = ({
   i,
 }): ReactElement => {
   const dispatch = useDispatch();
-  const state = useSelector((state: stateType) => state);
-  const { userObj } = state.loginProcess;
-  const { map } = state.getMap.data;
+  const {
+    getMap: {
+      data: { map },
+    },
+    loginProcess: { userObj },
+  } = useSelector((state: stateType): stateType => state);
 
   const onDeleteClick = useCallback(
-    async (e, review) => {
+    async (e, review): Promise<void> => {
       e.preventDefault();
 
       const ok = window.confirm("삭제하시겠습니까?");
@@ -49,7 +52,7 @@ const Review: React.FC<ReviewPropType> = ({
           selected.index === i &&
           styles.selected
       )}
-      onClick={() => {
+      onClick={(): void => {
         if (!map.setCenter) {
           return;
         } else {

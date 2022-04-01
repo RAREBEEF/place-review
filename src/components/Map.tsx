@@ -4,21 +4,33 @@ import styles from "./Map.module.scss";
 import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import { getMapThunk } from "../redux/modules/getMap";
-import { stateType } from "../types";
+import {
+  currentAddressType,
+  getMapStateType,
+  markerAddressType,
+  stateType,
+} from "../types";
 import Loading from "../pages/Loading";
 import markerImg from "../images/marker100.png";
 
 const Map: React.FC = (): ReactElement => {
   const dispatch = useDispatch();
-  const { loading, data, markerPos, currentPos } = useSelector(
-    (state: stateType) => state.getMap
-  );
-  const map = data.map;
-  const geocoder = data.geocoder;
+  const {
+    loading,
+    data: { map, geocoder },
+    markerPos,
+    currentPos,
+  } = useSelector((state: stateType): getMapStateType => state.getMap);
   const [marker, setMarker] = useState<any>();
   const [crossActive, setCrossActive] = useState<boolean>(false);
-  const [currentAddress, setCurrentAddress] = useState<any>({});
-  const [markerAddress, setMarkerAddress] = useState<any>({});
+  const [currentAddress, setCurrentAddress] = useState<currentAddressType>({
+    address: "",
+    roadAddress: "",
+  });
+  const [markerAddress, setMarkerAddress] = useState<markerAddressType>({
+    address: "",
+    roadAddress: "",
+  });
   const mapEl = useRef(null);
 
   useEffect(() => {
@@ -26,7 +38,7 @@ const Map: React.FC = (): ReactElement => {
       geocoder.coord2Address(
         currentPos.getLng(),
         currentPos.getLat(),
-        (result: any, status: any) => {
+        (result: Array<any>, status: string): void => {
           if (status === window.kakao.maps.services.Status.OK) {
             setCurrentAddress({
               address: result[0].address.address_name,
@@ -38,7 +50,7 @@ const Map: React.FC = (): ReactElement => {
       geocoder.coord2Address(
         markerPos.getLng(),
         markerPos.getLat(),
-        (result: any, status: any) => {
+        (result: Array<any>, status: string): void => {
           if (status === window.kakao.maps.services.Status.OK) {
             setMarkerAddress({
               address: result[0].address.address_name,
@@ -54,11 +66,11 @@ const Map: React.FC = (): ReactElement => {
     dispatch(getMapThunk(mapEl.current));
   }, [dispatch]);
 
-  useEffect(() => {
-    const dragStartCallback = () => {
+  useEffect((): void => {
+    const dragStartCallback = (): void => {
       setCrossActive(true);
     };
-    const dragEndCallback = () => {
+    const dragEndCallback = (): void => {
       setCrossActive(false);
     };
     if (Object.keys(map).length !== 0) {
@@ -80,7 +92,7 @@ const Map: React.FC = (): ReactElement => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, markerPos]);
 
-  useEffect(() => {
+  useEffect((): void => {
     const icon = new window.kakao.maps.MarkerImage(
       markerImg,
       new window.kakao.maps.Size(40, 48),
@@ -101,7 +113,6 @@ const Map: React.FC = (): ReactElement => {
           마커 위치 : {markerAddress.address}
         </div>
       </div>
-
       <div
         ref={mapEl}
         id="map"

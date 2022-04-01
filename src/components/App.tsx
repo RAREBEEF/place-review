@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { stateType } from "../types";
+import { loginProcessStateType, stateType } from "../types";
 import styles from "./App.module.scss";
 import { authService, dbService } from "../fbase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -12,17 +12,17 @@ import { setFilter, setReviews } from "../redux/modules/getReviews";
 
 const App: React.FC = (): ReactElement => {
   const dispatch = useDispatch();
-  const { isLogin } = useSelector((state: stateType) => state.loginProcess);
-  const [init, setInit] = useState(false);
-
-  useEffect(() => {}, [dispatch]);
+  const { isLogin } = useSelector(
+    (state: stateType): loginProcessStateType => state.loginProcess
+  );
+  const [init, setInit] = useState<boolean>(false);
 
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
       if (user) {
         dispatch(
           setLogin(true, {
-            displayName: user.displayName ? user.displayName : "익명", // 신규 가입시 닉네임 --> "익명"
+            displayName: user.displayName ? user.displayName : "익명",
             uid: user.uid,
           })
         );
@@ -38,7 +38,7 @@ const App: React.FC = (): ReactElement => {
       orderBy("createdAt", "desc")
     );
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const unsubscribe: Function = onSnapshot(q, (querySnapshot) => {
       const reviews: Array<any> = [];
 
       querySnapshot.forEach((doc) => {

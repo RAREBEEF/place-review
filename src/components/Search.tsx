@@ -3,7 +3,12 @@ import classNames from "classnames";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setMarkerPos } from "../redux/modules/getMap";
-import { paginationStateType, SearchPropType, stateType } from "../types";
+import {
+  getMapStateType,
+  paginationStateType,
+  SearchPropType,
+  stateType,
+} from "../types";
 import { Routes, Route } from "react-router-dom";
 import FindReview from "./FindReview";
 import NewReview from "./NewReview";
@@ -13,15 +18,12 @@ import { setFilter } from "../redux/modules/getReviews";
 
 const Search: React.FC<SearchPropType> = (): ReactElement => {
   const dispatch = useDispatch();
-  const { loading, data, currentPos } = useSelector(
-    (state: stateType) => state.getMap
-  );
-  const map = data.map;
-  const places = data.places;
-  const geocoder = data.geocoder;
-  const [searchKeywordText, setSearchKeywordText] = useState<string | number>(
-    ""
-  );
+  const {
+    loading,
+    data: { map, places, geocoder },
+    currentPos,
+  } = useSelector((state: stateType): getMapStateType => state.getMap);
+  const [searchText, setSearchText] = useState<string | number>("");
   const [searchResult, setSearchResult] = useState<Array<any>>([]);
   const [isZero, setIsZero] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -34,7 +36,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   const [selected, setSelected] = useState<any>({ section: null, index: 0 });
 
   const searchCallback = useCallback(
-    (result: any, status: any, pagination: any) => {
+    (result: Array<any>, status: string, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
         dispatch(setFilter("HERE"));
         setError(false);
@@ -55,17 +57,17 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
       }
 
       setPagination({
-        nextClick: () => {
+        nextClick: (): void => {
           if (pagination.hasNextPage) {
             setSelected({ section: "place", index: 0 });
-            setCurrentPage((prevState) => prevState + 1);
+            setCurrentPage((prevState: number): number => prevState + 1);
             pagination.nextPage();
           }
         },
-        prevClick: () => {
+        prevClick: (): void => {
           if (pagination.hasPrevPage) {
             setSelected({ section: "place", index: 0 });
-            setCurrentPage((prevState) => prevState - 1);
+            setCurrentPage((prevState: number): number => prevState - 1);
             pagination.prevPage();
           }
         },
@@ -76,7 +78,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   );
 
   const keywordSearch = useCallback(
-    (keyword: string | number) => {
+    (keyword: string | number): void => {
       places.keywordSearch(keyword, searchCallback, {
         location: currentPos,
       });
@@ -85,30 +87,30 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   );
 
   const onSubmit = useCallback(
-    (e) => {
+    (e): void => {
       e.preventDefault();
 
       setCurrentPage(1);
       setSelected({ section: "place", index: 0 });
 
-      if (searchKeywordText === "") {
+      if (searchText === "") {
         map.setCenter(currentPos);
         dispatch(setMarkerPos(currentPos));
-      } else if (searchKeywordText !== "") {
-        keywordSearch(searchKeywordText);
+      } else if (searchText !== "") {
+        keywordSearch(searchText);
       }
     },
-    [searchKeywordText, map, currentPos, dispatch, keywordSearch]
+    [searchText, map, currentPos, dispatch, keywordSearch]
   );
 
-  const onKeywordChange = useCallback((e) => {
+  const onKeywordChange = useCallback((e): void => {
     e.preventDefault();
 
-    setSearchKeywordText(e.target.value);
+    setSearchText(e.target.value);
   }, []);
 
   const onCurrentPosBtnClick = useCallback(
-    (e?) => {
+    (e?): void => {
       e?.preventDefault();
 
       map.setCenter(currentPos);
@@ -120,10 +122,10 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         geocoder.coord2Address(
           currentPos.getLng(),
           currentPos.getLat(),
-          (result: any, status: any) => {
+          (result: Array<any>, status: string) => {
             if (status === window.kakao.maps.services.Status.OK) {
               keywordSearch(result[0].address.address_name);
-              setSearchKeywordText(result[0].address.address_name);
+              setSearchText(result[0].address.address_name);
             }
           }
         );
@@ -132,25 +134,25 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [currentPos, dispatch, geocoder, keywordSearch, map]
   );
 
-  useEffect(() => {
+  useEffect((): void => {
     if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
       onCurrentPosBtnClick();
     }
   }, [currentPos, geocoder, onCurrentPosBtnClick]);
 
-  useEffect(() => {
-    const dragCallback = () => {
+  useEffect((): void => {
+    const dragCallback = (): void => {
       const location = map.getCenter();
 
       geocoder.coord2Address(
         location.getLng(),
         location.getLat(),
-        (result: any, status: any) => {
+        (result: Array<any>, status: string): void => {
           if (status === window.kakao.maps.services.Status.OK) {
             setCurrentPage(1);
             setSelected({ section: "place", index: 0 });
             keywordSearch(result[0].address.address_name);
-            setSearchKeywordText(result[0].address.address_name);
+            setSearchText(result[0].address.address_name);
             dispatch(setMarkerPos(location));
           }
         }
@@ -168,7 +170,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         <input
           className={classNames(styles["input--search"])}
           type="text"
-          value={searchKeywordText}
+          value={searchText}
           onChange={onKeywordChange}
           placeholder="장소 검색"
         />
@@ -179,7 +181,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
           className={["Search__current-pos"]}
         />
       </form>
-
       <div className={styles["result"]}>
         {error ? (
           <div className={styles["result__error"]}>

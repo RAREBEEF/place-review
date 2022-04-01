@@ -15,7 +15,7 @@ const Nav: React.FC<NavPropType> = (): ReactElement => {
       </h1>
       <NavLink
         to="/"
-        className={({ isActive }) =>
+        className={({ isActive }): string =>
           isActive ? styles.selected : styles.deselect
         }
       >
@@ -23,7 +23,7 @@ const Nav: React.FC<NavPropType> = (): ReactElement => {
       </NavLink>
       <NavLink
         to="/new"
-        className={({ isActive }) =>
+        className={({ isActive }): string =>
           isActive ? styles.selected : styles.deselect
         }
       >
@@ -31,7 +31,7 @@ const Nav: React.FC<NavPropType> = (): ReactElement => {
       </NavLink>
       <NavLink
         to="/profile"
-        className={({ isActive }) =>
+        className={({ isActive }): string =>
           isActive ? styles.selected : styles.deselect
         }
       >

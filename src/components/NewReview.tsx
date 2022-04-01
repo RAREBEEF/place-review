@@ -1,7 +1,14 @@
 import classNames from "classnames";
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { NewReviewPropType, stateType } from "../types";
+import {
+  getMapStateType,
+  loginProcessStateType,
+  NewReviewPropType,
+  reviewObjType,
+  reviewStateType,
+  stateType,
+} from "../types";
 import { v4 as uuidv4 } from "uuid";
 import { dbService, storageService } from "../fbase";
 import { doc, setDoc } from "firebase/firestore";
@@ -12,21 +19,25 @@ import { Link, useNavigate } from "react-router-dom";
 
 const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
   const navigation = useNavigate();
-  const location = useSelector((state: stateType) => state.getMap.markerPos);
-  const { geocoder } = useSelector((state: stateType) => state.getMap.data);
-  const { userObj } = useSelector((state: stateType) => state.loginProcess);
-  const [review, setReview] = useState({
+  const {
+    data: { geocoder },
+    markerPos: location,
+  } = useSelector((state: stateType): getMapStateType => state.getMap);
+  const { userObj } = useSelector(
+    (state: stateType): loginProcessStateType => state.loginProcess
+  );
+  const [review, setReview] = useState<reviewStateType>({
     title: "",
     rating: 5,
     memo: "",
     location: { ...location },
     address: {},
   });
-  const [attachment, setAttachment] = useState("");
+  const [attachment, setAttachment] = useState<string>("");
   const attachmentInputRef = useRef<any>();
   const [uploading, setUploading] = useState<boolean>(false);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (!location) {
       return;
     }
@@ -34,54 +45,62 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     geocoder.coord2Address(
       location.getLng(),
       location.getLat(),
-      (result: any, status: any) => {
+      (result: Array<any>, status: string) => {
         if (status === window.kakao.maps.services.Status.OK) {
-          setReview((prev) => ({
-            ...prev,
-            location: { ...location },
-            address: {
-              address: result[0].address.address_name,
-              roadAddress: !result[0].road_address
-                ? ""
-                : result[0].road_address.address_name,
-            },
-          }));
+          setReview(
+            (prev: reviewStateType): reviewStateType => ({
+              ...prev,
+              location: { ...location },
+              address: {
+                address: result[0].address.address_name,
+                roadAddress: !result[0].road_address
+                  ? ""
+                  : result[0].road_address.address_name,
+              },
+            })
+          );
         } else {
-          setReview((prev) => ({
-            ...prev,
-            location: { ...location },
-            address: {
-              address: "",
-              roadAddress: "",
-            },
-          }));
+          setReview(
+            (prev: reviewStateType): reviewStateType => ({
+              ...prev,
+              location: { ...location },
+              address: {
+                address: "",
+                roadAddress: "",
+              },
+            })
+          );
         }
       }
     );
   }, [geocoder, location]);
 
-  const onTitleChange = useCallback((e) => {
-    setReview((prev) => ({
-      ...prev,
-      title: e.target.value,
-    }));
+  const onTitleChange = useCallback((e): void => {
+    setReview(
+      (prev: reviewStateType): reviewStateType => ({
+        ...prev,
+        title: e.target.value,
+      })
+    );
   }, []);
 
-  const onMemoChange = useCallback((e) => {
-    setReview((prev) => ({
-      ...prev,
-      memo: e.target.value,
-    }));
+  const onMemoChange = useCallback((e): void => {
+    setReview(
+      (prev: reviewStateType): reviewStateType => ({
+        ...prev,
+        memo: e.target.value,
+      })
+    );
   }, []);
 
-  const onFileChange = (e: any) => {
+  const onFileChange = (e: any): void => {
     const {
       target: { files },
     } = e;
     const file = files[0];
     const reader = new FileReader();
 
-    reader.onloadend = (e: any) => {
+    reader.onloadend = (e: any): void => {
       const {
         currentTarget: { result },
       } = e;
@@ -91,12 +110,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     reader.readAsDataURL(file);
   };
 
-  const onClearAttachmentClick = () => {
+  const onClearAttachmentClick = (): void => {
     setAttachment("");
     attachmentInputRef.current.value = null;
   };
 
-  const onSubmit = async (e: any) => {
+  const onSubmit = async (e: any): Promise<void> => {
     e.preventDefault();
 
     setUploading(true);
@@ -128,7 +147,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
       }
     }
 
-    let reviewObj = {
+    let reviewObj: reviewObjType = {
       ...review,
       createdAt: Date.now(),
       creatorId: userObj.uid,
@@ -138,7 +157,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     };
 
     await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj }).catch(
-      (error) => {
+      (error): void => {
         throw error;
       }
     );
@@ -182,10 +201,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                setReview((prev) => ({
-                  ...prev,
-                  rating: 1,
-                }));
+                setReview(
+                  (prev: reviewStateType): reviewStateType => ({
+                    ...prev,
+                    rating: 1,
+                  })
+                );
               }}
             ></span>
             <span
@@ -195,10 +216,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                setReview((prev) => ({
-                  ...prev,
-                  rating: 2,
-                }));
+                setReview(
+                  (prev: reviewStateType): reviewStateType => ({
+                    ...prev,
+                    rating: 2,
+                  })
+                );
               }}
             ></span>
             <span
@@ -208,10 +231,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                setReview((prev) => ({
-                  ...prev,
-                  rating: 3,
-                }));
+                setReview(
+                  (prev: reviewStateType): reviewStateType => ({
+                    ...prev,
+                    rating: 3,
+                  })
+                );
               }}
             ></span>
             <span
@@ -221,10 +246,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                setReview((prev) => ({
-                  ...prev,
-                  rating: 4,
-                }));
+                setReview(
+                  (prev: reviewStateType): reviewStateType => ({
+                    ...prev,
+                    rating: 4,
+                  })
+                );
               }}
             ></span>
             <span
@@ -234,10 +261,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                setReview((prev) => ({
-                  ...prev,
-                  rating: 5,
-                }));
+                setReview(
+                  (prev: reviewStateType): reviewStateType => ({
+                    ...prev,
+                    rating: 5,
+                  })
+                );
               }}
             ></span>
           </div>

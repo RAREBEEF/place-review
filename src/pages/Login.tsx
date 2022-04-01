@@ -23,7 +23,7 @@ const Login: React.FC = () => {
   const [passwordCheck, setPasswordCheck] = useState<string>("");
 
   const onSubmit = useCallback(
-    async (e) => {
+    async (e): Promise<void> => {
       e.preventDefault();
 
       if (formAction === "login") {
@@ -38,7 +38,7 @@ const Login: React.FC = () => {
               })
             );
           })
-          .catch((error) => {
+          .catch((error): void => {
             setAlert(error.message);
           });
       } else if (formAction === "signUp") {
@@ -54,13 +54,13 @@ const Login: React.FC = () => {
                 })
               );
             })
-            .catch((error) => {
+            .catch((error): void => {
               setAlert(error.message);
             });
         }
       } else if (formAction === "findPw") {
         try {
-          sendPasswordResetEmail(authService, email).then(() => {
+          sendPasswordResetEmail(authService, email).then((): void => {
             setAlert("메일이 발송되었습니다.");
           });
         } catch (error) {
@@ -71,20 +71,20 @@ const Login: React.FC = () => {
     [email, password, dispatch, formAction, passwordCheck]
   );
 
-  const onEmailChange = useCallback((e) => {
+  const onEmailChange = useCallback((e): void => {
     setEmail(e.target.value);
   }, []);
 
-  const onPasswordChange = useCallback((e) => {
+  const onPasswordChange = useCallback((e): void => {
     setPassword(e.target.value);
   }, []);
 
-  const onPasswordCheckChange = useCallback((e) => {
+  const onPasswordCheckChange = useCallback((e): void => {
     setPasswordCheck(e.target.value);
   }, []);
 
   const onFormChangeClick = useCallback(
-    (e) => {
+    (e): void => {
       e.preventDefault();
       if (formAction === "login") {
         setFormAction("signUp");
@@ -95,13 +95,13 @@ const Login: React.FC = () => {
     [formAction]
   );
 
-  const onFindPwBtnClick = useCallback((e) => {
+  const onFindPwBtnClick = useCallback((e): void => {
     e.preventDefault();
 
     setFormAction("findPw");
   }, []);
 
-  const onGoogleClick = useCallback((e) => {
+  const onGoogleClick = useCallback((e): void => {
     e.preventDefault();
 
     const provider = new GoogleAuthProvider();
