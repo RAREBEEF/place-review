@@ -28,11 +28,10 @@ const App: React.FC = (): ReactElement => {
             uid: user.uid,
           })
         );
-        setInit(true);
       } else {
         dispatch(setLogin(false, {}));
-        setInit(true);
       }
+      setInit(true);
     });
 
     const q = query(

@@ -11,6 +11,7 @@ import {
 import Button from "../components/Button";
 import { GoogleAuthProvider } from "firebase/auth";
 import styles from "./Login.module.scss";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -109,9 +110,16 @@ const Login: React.FC = () => {
     signInWithRedirect(authService, provider);
   }, []);
 
+  const navigate = useNavigate();
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.logo}>
+      <h1
+        className={styles.logo}
+        onClick={() => {
+          navigate("/profile");
+        }}
+      >
         <span className={styles["logo__place"]}>Place</span>
         <span className={styles["logo__review"]}>Review</span>
       </h1>
