@@ -37,16 +37,16 @@ const Profile: React.FC = (): ReactElement => {
     async (e): Promise<void> => {
       e.preventDefault();
 
-      if (authService.currentUser) {
+      if (authService?.currentUser) {
         if (displayName === "") {
           setAlert("닉네임을 입력해주세요.");
-        } else if (displayName === userObj.displayName) {
+        } else if (displayName === userObj?.displayName) {
           setAlert("닉네임에 변경 사항이 없습니다.");
         } else if (displayName !== "") {
-          updateProfile(authService.currentUser, {
+          updateProfile(authService?.currentUser, {
             displayName,
           });
-          await myReviews.forEach((review): void => {
+          await myReviews?.forEach((review): void => {
             if (review.displayName !== displayName) {
               setDoc(doc(dbService, "reviews", review.id), {
                 ...review,
@@ -65,7 +65,7 @@ const Profile: React.FC = (): ReactElement => {
     async (e): Promise<void> => {
       e.preventDefault();
 
-      if (authService.currentUser) {
+      if (authService?.currentUser) {
         if (authService.currentUser.email !== emailCheck) {
           setAlert("메일이 일치하지 않습니다.");
           return;
@@ -87,7 +87,7 @@ const Profile: React.FC = (): ReactElement => {
       "정말 탈퇴하시겠습니까?\n작성한 글은 삭제되지 않습니다."
     );
 
-    if (ok && authService.currentUser) {
+    if (ok && authService?.currentUser) {
       deleteUser(authService.currentUser)
         .then(() => {
           navigate("/");
@@ -99,20 +99,20 @@ const Profile: React.FC = (): ReactElement => {
   }, [navigate]);
 
   const onLogOutClick = (): void => {
-    authService.signOut();
+    authService?.signOut();
     navigate("/");
   };
 
   useEffect((): void => {
-    if (!authService.currentUser) {
+    if (!authService?.currentUser) {
       navigate("/");
     }
-    if (userObj.uid === undefined || allReviews.length === 0) {
+    if (userObj?.uid === undefined || allReviews?.length === 0) {
       return;
     }
 
     setMyReviews(
-      allReviews.filter(
+      allReviews?.filter(
         (review: reviewObjType): boolean => review.creatorId === userObj.uid
       )
     );
@@ -125,19 +125,24 @@ const Profile: React.FC = (): ReactElement => {
         <div className={styles.alert}>{alert}</div>
         <form className={styles["display-name-wrapper"]}>
           <h3 className={styles["form-header"]}>닉네임 변경</h3>
-          <input
-            placeholder={userObj.displayName}
-            value={displayName}
-            onChange={ondisplayNameChange}
-            maxLength={12}
-            minLength={1}
-            className={classNames(styles["input--display-name"], styles.input)}
-          />
-          <Button
-            text="변경"
-            onClick={onDisplayNameChangeClick}
-            className={["Profile__display-name"]}
-          />
+          <div>
+            <input
+              placeholder={userObj.displayName}
+              value={displayName}
+              onChange={ondisplayNameChange}
+              maxLength={12}
+              minLength={1}
+              className={classNames(
+                styles["input--display-name"],
+                styles.input
+              )}
+            />
+            <Button
+              text="변경"
+              onClick={onDisplayNameChangeClick}
+              className={["Profile__display-name"]}
+            />
+          </div>
         </form>
         <form className={styles["password-wrapper"]}>
           <h3 className={styles["form-header"]}>비밀번호 재설정</h3>
