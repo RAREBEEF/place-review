@@ -120,6 +120,7 @@ const Map: React.FC = (): ReactElement => {
           width: "70vw",
           height: "calc(100vh - 60px)",
           minHeight: "640px",
+          minWidth: "300px"
         }}
       >
         {loading && <Loading />}
