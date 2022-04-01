@@ -9,6 +9,7 @@ import Router from "./Router";
 import Login from "../pages/Login";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { setFilter, setReviews } from "../redux/modules/getReviews";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const App: React.FC = (): ReactElement => {
   const dispatch = useDispatch();
@@ -57,6 +58,11 @@ const App: React.FC = (): ReactElement => {
   return (
     <div className={styles.container}>
       {isLogin ? <Router init={init} /> : <Login />}
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Login />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 };
