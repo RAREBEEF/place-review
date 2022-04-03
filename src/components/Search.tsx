@@ -2,7 +2,7 @@ import styles from "./Search.module.scss";
 import classNames from "classnames";
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setMarkerPos } from "../redux/modules/getMap";
+import { setCurrentPos, setMarkerPos } from "../redux/modules/getMap";
 import {
   getMapStateType,
   paginationStateType,
@@ -33,7 +33,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     totalCount: 0,
   });
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selected, setSelected] = useState<any>({ section: null, index: 0 });
+  const [selected, setSelected] = useState<any>({ section: null, index: null });
   const listElRef = useRef<any>(null);
 
   const searchCallback = useCallback(
@@ -43,10 +43,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         setError(false);
         setIsZero(false);
         setSearchResult(result);
-        const { x, y } = result[0];
-        const location = new window.kakao.maps.LatLng(y, x);
-        map.setCenter(location);
-        dispatch(setMarkerPos(location));
       } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
         setError(false);
         setIsZero(true);
@@ -60,7 +56,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
       setPagination({
         nextClick: (): void => {
           if (pagination.hasNextPage) {
-            setSelected({ section: "place", index: 0 });
+            setSelected({ section: null, index: null });
             setCurrentPage((prevState: number): number => prevState + 1);
             pagination.nextPage();
             listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
@@ -68,7 +64,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         },
         prevClick: (): void => {
           if (pagination.hasPrevPage) {
-            setSelected({ section: "place", index: 0 });
+            setSelected({ section: null, index: null });
             setCurrentPage((prevState: number): number => prevState - 1);
             pagination.prevPage();
             listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
@@ -77,7 +73,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         totalCount: pagination.totalCount,
       });
     },
-    [dispatch, map]
+    [dispatch]
   );
 
   const keywordSearch = useCallback(
@@ -94,7 +90,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
       e.preventDefault();
 
       setCurrentPage(1);
-      setSelected({ section: "place", index: 0 });
+      setSelected({ section: null, index: null });
 
       if (searchText === "") {
         map.setCenter(currentPos);
@@ -112,19 +108,17 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     setSearchText(e.target.value);
   }, []);
 
-  const onCurrentPosBtnClick = useCallback(
-    (e?): void => {
-      e?.preventDefault();
-
-      map.setCenter(currentPos);
-      dispatch(setMarkerPos(currentPos));
+  const searchAndMove = useCallback(
+    (location: any): void => {
+      map.setCenter(location);
+      dispatch(setMarkerPos(location));
       setCurrentPage(1);
       setSelected({ section: "place", index: 0 });
 
-      if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
+      if (Object.keys(geocoder).length !== 0 && location !== null) {
         geocoder.coord2Address(
-          currentPos.getLng(),
-          currentPos.getLat(),
+          location.getLng(),
+          location.getLat(),
           (result: Array<any>, status: string) => {
             if (status === window.kakao.maps.services.Status.OK) {
               keywordSearch(result[0].address.address_name);
@@ -134,7 +128,33 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         );
       }
     },
-    [currentPos, dispatch, geocoder, keywordSearch, map]
+    [dispatch, geocoder, keywordSearch, map]
+  );
+
+  const onCurrentPosBtnClick = useCallback(
+    (e?): void => {
+      e?.preventDefault();
+
+      if (currentPos === null) {
+        window.navigator.geolocation.getCurrentPosition(
+          async (pos): Promise<void> => {
+            try {
+              const location = new window.kakao.maps.LatLng(
+                pos.coords.latitude,
+                pos.coords.longitude
+              );
+              dispatch(setCurrentPos(location));
+              searchAndMove(location);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        );
+      } else {
+        searchAndMove(currentPos);
+      }
+    },
+    [currentPos, dispatch, searchAndMove]
   );
 
   useEffect((): void => {
@@ -153,7 +173,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         (result: Array<any>, status: string): void => {
           if (status === window.kakao.maps.services.Status.OK) {
             setCurrentPage(1);
-            setSelected({ section: "place", index: 0 });
+            // setSelected({ section: "place", index: null });
             keywordSearch(result[0].address.address_name);
             setSearchText(result[0].address.address_name);
             dispatch(setMarkerPos(location));
