@@ -12,4 +12,6 @@ a {
 input,
 textarea {
   font-size: 16px;
+  background-color: #fffcf2;
+  color: #252422;
 }
