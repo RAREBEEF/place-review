@@ -119,7 +119,7 @@ const Login: React.FC = () => {
       <div className={styles["logo-wrapper"]}>
         <img className={styles.logo} src={logo} alt="Place review" />
       </div>
-      <div className={styles.alert}>{alert}</div>
+
       <form onSubmit={onSubmit} className={styles.form}>
         <input
           className={styles["input--email"]}
@@ -147,6 +147,7 @@ const Login: React.FC = () => {
             placeholder="비밀번호 확인"
           />
         )}
+        <div className={styles.alert}>{alert}</div>
         <Button
           className={["Login__submit"]}
           text={

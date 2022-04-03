@@ -55,15 +55,6 @@
     }
   }
 
-  .alert {
-    margin: {
-      top: 20px;
-      bottom: 20px;
-    }
-    color: #ccc5b9;
-    height: 16px;
-  }
-
   .form {
     margin: {
       bottom: 56px;
@@ -91,6 +82,15 @@
       border: 1px solid #ccc5b9;
       border-radius: 5px;
       height: 30px;
+    }
+
+    .alert {
+      margin: {
+        top: 15px;
+      }
+      color: #ccc5b9;
+      height: 16px;
+      text-align: center;
     }
   }
 

@@ -1,3 +1,9 @@
+@media screen and (max-width: 1000px) {
+  .container {
+    height: auto !important;
+  }
+}
+
 .container {
   font-family: "IBM Plex Sans KR", sans-serif;
   height: calc(100vh - 200px);
