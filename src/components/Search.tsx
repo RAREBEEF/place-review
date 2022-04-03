@@ -207,14 +207,22 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
           </ul>
         )}
         <div className={styles["result__pagination"]}>
-          <Button onClick={pagination.prevClick} text="prev" className={["Search__prev"]}/>
+          <Button
+            onClick={pagination.prevClick}
+            text="prev"
+            className={["Search__prev"]}
+          />
           <span className={styles["pagination__count"]}>
             {currentPage} /{" "}
             {Math.ceil(pagination.totalCount / 15) === 0
               ? 1
               : Math.ceil(pagination.totalCount / 15)}
           </span>
-          <Button onClick={pagination.nextClick} text="next" className={["Search__next"]}/>
+          <Button
+            onClick={pagination.nextClick}
+            text="next"
+            className={["Search__next"]}
+          />
         </div>
       </div>
       <Routes>
@@ -228,7 +236,12 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
             />
           }
         ></Route>
-        <Route path="/new" element={<NewReview />}></Route>
+        <Route
+          path="/new"
+          element={
+            <NewReview searchResult={searchResult} selected={selected} />
+          }
+        ></Route>
       </Routes>
     </div>
   );

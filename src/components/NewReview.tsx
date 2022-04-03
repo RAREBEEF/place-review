@@ -17,7 +17,10 @@ import styles from "./NewReview.module.scss";
 import Button from "./Button";
 import { Link, useNavigate } from "react-router-dom";
 
-const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
+const NewReview: React.FC<NewReviewPropType> = ({
+  searchResult,
+  selected,
+}): ReactElement => {
   const navigation = useNavigate();
   const {
     data: { geocoder },
@@ -27,7 +30,12 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
     (state: stateType): loginProcessStateType => state.loginProcess
   );
   const [review, setReview] = useState<reviewStateType>({
-    title: "",
+    title:
+      searchResult.length !== 0 &&
+      selected.section === "place" &&
+      searchResult[selected.index].place_name
+        ? searchResult[selected.index].place_name
+        : "",
     rating: 5,
     memo: "",
     location: { ...location },
@@ -36,6 +44,23 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
   const [attachment, setAttachment] = useState<string>("");
   const attachmentInputRef = useRef<any>();
   const [uploading, setUploading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (
+      searchResult.length === 0 ||
+      selected.section !== "place" ||
+      !searchResult[selected.index].place_name
+    ) {
+      return;
+    }
+
+    setReview(
+      (prev: reviewStateType): reviewStateType => ({
+        ...prev,
+        title: searchResult[selected.index].place_name,
+      })
+    );
+  }, [searchResult, selected]);
 
   useEffect((): void => {
     if (!location) {

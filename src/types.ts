@@ -79,7 +79,10 @@ export interface FindReviewPropType {
   selected: any;
   setSelected: Function;
 }
-export interface NewReviewPropType {}
+export interface NewReviewPropType {
+  searchResult: Array<any>;
+  selected: { section: string | null; index: number };
+}
 export interface ButtonPropType {
   text: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
