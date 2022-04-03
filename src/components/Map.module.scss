@@ -6,13 +6,15 @@
   }
 }
 @media screen and (max-width: 1000px) {
-  // .container {
-  //   margin-top: -15vh;
-  //   overflow: hidden;
-  //   .address {
-  //     margin-top: 15vh;
-  //   }
-  // }
+  .container {
+    width: 90vw !important;
+    height: 30vh;
+    .address {
+    }
+  }
+  #map {
+    width: 100vw !important;
+  }
 }
 
 .container {
@@ -20,8 +22,12 @@
     left: auto;
     right: auto;
   }
+  display: flex;
   position: relative;
-  min-height: 640px;
+  overflow: hidden;
+  width: 70vw;
+  align-items: center;
+
   .address {
     font-family: "IBM Plex Sans KR", sans-serif;
     z-index: 2;

@@ -117,7 +117,7 @@ const Map: React.FC = (): ReactElement => {
         ref={mapEl}
         id="map"
         style={{
-          width: "70vw",
+          width: "100vw",
           height: "calc(100vh - 60px)",
           minHeight: "640px",
           minWidth: "300px"
