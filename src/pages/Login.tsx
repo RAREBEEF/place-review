@@ -11,6 +11,7 @@ import {
 import Button from "../components/Button";
 import { GoogleAuthProvider } from "firebase/auth";
 import styles from "./Login.module.scss";
+import logo from "../images/logo.png";
 
 const Login: React.FC = () => {
   const dispatch = useDispatch();
@@ -111,10 +112,13 @@ const Login: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.logo}>
+      {/* <h1 className={styles.logo}>
         <span className={styles["logo__place"]}>Place</span>
         <span className={styles["logo__review"]}>Review</span>
-      </h1>
+      </h1> */}
+      <div className={styles["logo-wrapper"]}>
+        <img className={styles.logo} src={logo} alt="Place review" />
+      </div>
       <div className={styles.alert}>{alert}</div>
       <form onSubmit={onSubmit} className={styles.form}>
         <input

@@ -120,7 +120,7 @@ const NewReview: React.FC<NewReviewPropType> = (): ReactElement => {
 
     setUploading(true);
 
-    if (review.title === "" || review.memo === "") {
+    if (review.title === "" || (review.memo === "" && attachment === "")) {
       setUploading(false);
       return;
     }

@@ -34,42 +34,56 @@
   }
 
   .review__address {
-    font-size: 13px;
-    color: #ccc5b9;
+    .address__address {
+      font-size: 13px;
+      color: #ccc5b9;
+    }
+    .address__road-address {
+      margin: {
+        top: 3px;
+        bottom: 5px;
+      }
+      font-size: 13px;
+      color: #ccc5b9;
+    }
   }
 
-  .review__road-address {
+  .line {
     margin: {
-      top: 3px;
-      bottom: 5px;
+      top: 20px;
+      bottom: 20px;
     }
-    font-size: 13px;
-    color: #ccc5b9;
+    border: 0px;
+    height: 1px;
+    background-color: #403d39;
   }
 
-  .review__memo {
-    margin: {
-      top: 35px;
-      bottom: 5px;
+  .review__content {
+    .review__memo {
+      margin: {
+        bottom: 5px;
+      }
+      padding: {
+        left: 10px;
+        right: 10px;
+      }
+      font-size: 14px;
+      line-height: 20px;
+      height: fit-content;
     }
-    padding: {
-      left: 10px;
-      right: 10px;
+
+    .review__photo {
+      padding: {
+        left: 10px;
+        right: 10px;
+      }
+      margin: {
+        // bottom: 25px;
+      }
+      width: 100%;
     }
-    font-size: 14px;
-    line-height: 20px;
   }
 
-  .review__photo {
-    padding: {
-      left: 10px;
-      right: 10px;
-    }
-    margin: {
-      bottom: 25px;
-    }
-    width: 100%;
-  }
   .review__footer {
     padding: {
       bottom: 20px;
@@ -84,6 +98,7 @@
       color: #ccc5b9;
     }
   }
+
   &.selected {
     background-color: #fffcf2;
 
@@ -93,8 +108,12 @@
       }
     }
 
-    .review__address,
-    .review__road-address,
+    .line {
+      background-color: #ccc5b9;
+    }
+
+    .address__address,
+    .address__road-address,
     .review__memo {
       color: #403d39;
     }

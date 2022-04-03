@@ -99,17 +99,26 @@ const Review: React.FC<ReviewPropType> = ({
           ></span>
         </span>
       </div>
-      <div className={styles["review__address"]}>{review.address.address}</div>
-      <div className={styles["review__road-address"]}>
-        {review.address.roadAddress}
+      <div className={styles["review__address"]}>
+        <div className={styles["address__address"]}>
+          {review.address.address}
+        </div>
+        <div className={styles["address__road-address"]}>
+          {review.address.roadAddress}
+        </div>
       </div>
-
-      <div className={styles["review__memo"]}>{review.memo}</div>
-      <img
-        className={styles["review__photo"]}
-        src={review.attachmentUrl}
-        alt={review.attachmentUrl}
-      />
+      <hr className={styles.line} />
+      <div className={styles["review__content"]}>
+        <p className={styles["review__memo"]}>{review.memo}</p>
+        {review.attachmentUrl && (
+          <img
+            className={styles["review__photo"]}
+            src={review.attachmentUrl}
+            alt={review.attachmentUrl}
+          />
+        )}
+      </div>
+      <hr className={styles.line} />
       <div className={styles["review__footer"]}>
         <span className={styles["footer__date"]}>
           {new Date(review.createdAt).getFullYear().toString().slice(-2)}/
@@ -128,6 +137,7 @@ const Review: React.FC<ReviewPropType> = ({
             onClick={(e) => {
               onDeleteClick(e, review);
             }}
+            className={["Review__delete"]}
           ></Button>
         )}
       </div>

@@ -3,7 +3,6 @@ import styles from "./Nav.module.scss";
 import { NavLink } from "react-router-dom";
 import { NavPropType } from "../types";
 import classNames from "classnames";
-
 const Nav: React.FC<NavPropType> = (): ReactElement => {
   return (
     <ul className={styles.container}>
