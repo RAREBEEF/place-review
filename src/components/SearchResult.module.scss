@@ -5,6 +5,9 @@
     right: 15px;
     bottom: 20px;
   }
+  &:first-child {
+    border-radius: 5px 5px 0 0;
+  }
   &:nth-child(2n) {
     background-color: #2e2c2a;
   }
