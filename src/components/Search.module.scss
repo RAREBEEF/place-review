@@ -7,6 +7,13 @@
     width: 70vw !important;
     min-width: none !important;
     .form {
+      flex-wrap: wrap;
+      .input--search {
+        width: 100%;
+        margin: {
+          right: 0 !important;
+        }
+      }
     }
   }
 }
@@ -26,7 +33,6 @@
       left: 20px;
       right: 20px;
     }
-    flex-wrap: wrap;
     display: flex;
 
     .input--search {
@@ -45,8 +51,10 @@
       border: 1px solid #ccc5b9;
       border-radius: 5px;
       height: 30px;
+      min-width: 100px;
     }
     .btn-wrapper {
+      white-space: nowrap;
       text-align: center;
       margin: {
         left: auto;
