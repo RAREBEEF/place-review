@@ -173,7 +173,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         (result: Array<any>, status: string): void => {
           if (status === window.kakao.maps.services.Status.OK) {
             setCurrentPage(1);
-            // setSelected({ section: "place", index: null });
             keywordSearch(result[0].address.address_name);
             setSearchText(result[0].address.address_name);
             dispatch(setMarkerPos(location));
