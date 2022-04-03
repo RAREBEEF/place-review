@@ -109,7 +109,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   }, []);
 
   const searchAndMove = useCallback(
-    (location: any) => {
+    (location: any): void => {
       map.setCenter(location);
       dispatch(setMarkerPos(location));
       setCurrentPage(1);
