@@ -26,7 +26,7 @@ export interface getMapStartActionType {
 export interface getMapSuccessActionType {
   type: string;
   data: Object;
-  currentLocation: any;
+  location: any;
 }
 export interface getMapFailActionType {
   type: string;
@@ -35,6 +35,10 @@ export interface getMapFailActionType {
 export interface setMarkerPosActionType {
   type: string;
   markerPos: any;
+}
+export interface setCurrentPosActionType {
+  type: string;
+  currentPos: any;
 }
 
 // loginProcess

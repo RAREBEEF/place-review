@@ -4,12 +4,14 @@ import {
   getMapSuccessActionType,
   getMapStateType,
   setMarkerPosActionType,
+  setCurrentPosActionType,
 } from "../../types";
 
 export const GET_MAP_START = "GET_MAP_START";
 export const GET_MAP_SUCCESS = "GET_MAP_SUCCESS";
 export const GET_MAP_FAIL = "GET_MAP_FAIL";
 export const SET_MARKER_POS = "SET_MARKER_POS";
+export const SET_CURRENT_POS = "SET_CURRENT_POS";
 
 export function getMapStart(): getMapStartActionType {
   return {
@@ -18,12 +20,12 @@ export function getMapStart(): getMapStartActionType {
 }
 export function getMapSuccess(
   data: any,
-  currentLocation: any
+  location: any
 ): getMapSuccessActionType {
   return {
     type: GET_MAP_SUCCESS,
     data,
-    currentLocation,
+    location,
   };
 }
 export function getMapFail(error: any): getMapFailActionType {
@@ -38,45 +40,19 @@ export function setMarkerPos(markerPos: any): setMarkerPosActionType {
     markerPos,
   };
 }
+export function setCurrentPos(currentPos: any): setCurrentPosActionType {
+  return {
+    type: SET_CURRENT_POS,
+    currentPos,
+  };
+}
 
 export function getMapThunk(element: any): Function {
   return async (dispatch: any) => {
     if (window.navigator) {
-      const timeout = setTimeout(() => {
-        window.alert(
-          "로딩이 계속될 경우 위치 정보 액세스 차단 여부를 확인해 주세요."
-        );
-      }, 10000);
-      window.navigator.geolocation.getCurrentPosition(async (pos) => {
-        try {
-          dispatch(getMapStart());
-
-          const location = new window.kakao.maps.LatLng(
-            pos.coords.latitude,
-            pos.coords.longitude
-          );
-
-          const options = {
-            center: location,
-            level: 3,
-          };
-
-          const map = await new window.kakao.maps.Map(element, options);
-          const places = new window.kakao.maps.services.Places(map);
-          const geocoder = new window.kakao.maps.services.Geocoder();
-
-          dispatch(getMapSuccess({ map, places, geocoder }, location));
-          clearTimeout(timeout);
-        } catch (error) {
-          console.log(error);
-          dispatch(getMapFail(error));
-        }
-      });
-    } else {
       try {
-        console.log("try");
         dispatch(getMapStart());
-        const location = new window.kakao.maps.LatLng(0, 0);
+        const location = new window.kakao.maps.LatLng(37.5125, 127.102778);
 
         const options = {
           center: location,
@@ -87,7 +63,7 @@ export function getMapThunk(element: any): Function {
         const places = new window.kakao.maps.services.Places(map);
         const geocoder = new window.kakao.maps.services.Geocoder();
 
-        dispatch(getMapSuccess({ map, places, geocoder }, null));
+        dispatch(getMapSuccess({ map, places, geocoder }, location));
       } catch (error) {
         dispatch(getMapFail(error));
       }
@@ -116,11 +92,7 @@ const reducer = (
         loading: false,
         error: null,
         data: action.data,
-        markerPos:
-          action.currentLocation === null
-            ? new window.kakao.maps.LatLng(0, 0)
-            : action.currentLocation,
-        currentPos: action.currentLocation,
+        markerPos: action.location,
       };
     case GET_MAP_FAIL:
       return { ...state, loading: false, error: action.error };
@@ -131,6 +103,14 @@ const reducer = (
           ...state.data,
         },
         markerPos: action.markerPos,
+      };
+    case SET_CURRENT_POS:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+        },
+        currentPos: action.currentPos,
       };
     default:
       return state;
