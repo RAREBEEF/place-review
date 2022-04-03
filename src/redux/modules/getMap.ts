@@ -1,4 +1,3 @@
-import { markAsUntransferable } from "worker_threads";
 import {
   getMapFailActionType,
   getMapStartActionType,
