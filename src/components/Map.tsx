@@ -34,19 +34,21 @@ const Map: React.FC = (): ReactElement => {
   const mapEl = useRef(null);
 
   useEffect(() => {
-    if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
-      geocoder.coord2Address(
-        currentPos.getLng(),
-        currentPos.getLat(),
-        (result: Array<any>, status: string): void => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            setCurrentAddress({
-              address: result[0].address.address_name,
-              roadAddress: result[0].road_address?.address_name,
-            });
+    if (Object.keys(geocoder).length !== 0) {
+      if (currentPos !== null) {
+        geocoder.coord2Address(
+          currentPos.getLng(),
+          currentPos.getLat(),
+          (result: Array<any>, status: string): void => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              setCurrentAddress({
+                address: result[0].address.address_name,
+                roadAddress: result[0].road_address?.address_name,
+              });
+            }
           }
-        }
-      );
+        );
+      }
       geocoder.coord2Address(
         markerPos.getLng(),
         markerPos.getLat(),
@@ -93,6 +95,25 @@ const Map: React.FC = (): ReactElement => {
   }, [map, markerPos]);
 
   useEffect((): void => {
+    if (marker) {
+      console.log(markerAddress.address);
+      const iwContent = `<div class="infowindow">${markerAddress.address}</div>`;
+      const infoWindow = new window.kakao.maps.InfoWindow({
+        content: iwContent,
+      });
+
+      window.kakao.maps.event.addListener(marker, "mouseover", () => {
+        infoWindow.open(map, marker);
+        console.log("over");
+      });
+      window.kakao.maps.event.addListener(marker, "mouseout", () => {
+        infoWindow.close();
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, markerPos, markerAddress]);
+
+  useEffect((): void => {
     const icon = new window.kakao.maps.MarkerImage(
       markerImg,
       new window.kakao.maps.Size(40, 48),
@@ -105,14 +126,13 @@ const Map: React.FC = (): ReactElement => {
 
   return (
     <div className={classNames(styles.container)}>
-      <div className={styles["address"]}>
-        <div className={styles["address__current"]}>
-          현재 위치 : {currentAddress.address}
+      {currentAddress.address !== "" && (
+        <div className={styles["address"]}>
+          <div className={styles["address__current"]}>
+            내 위치 : {currentAddress.address}
+          </div>
         </div>
-        <div className={styles["address__marker"]}>
-          마커 위치 : {markerAddress.address}
-        </div>
-      </div>
+      )}
       <div
         ref={mapEl}
         id="map"
@@ -120,7 +140,7 @@ const Map: React.FC = (): ReactElement => {
           width: "100vw",
           height: "calc(100vh - 60px)",
           minHeight: "640px",
-          minWidth: "300px"
+          minWidth: "300px",
         }}
       >
         {loading && <Loading />}

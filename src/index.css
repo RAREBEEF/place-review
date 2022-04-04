@@ -15,3 +15,10 @@ textarea {
   background-color: #fffcf2;
   color: #252422;
 }
+.infowindow {
+  color: #252422 !important;
+  width: 250px;
+  line-height: 20px;
+  text-align: center;
+  margin: 10px auto;
+}

@@ -36,6 +36,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   const [selected, setSelected] = useState<any>({ section: null, index: null });
   const listElRef = useRef<any>(null);
 
+  // 검색 로직
   const searchCallback = useCallback(
     (result: Array<any>, status: string, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
@@ -76,7 +77,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [dispatch]
   );
 
-  const keywordSearch = useCallback(
+  const search = useCallback(
     (keyword: string | number): void => {
       places.keywordSearch(keyword, searchCallback, {
         location: currentPos,
@@ -96,10 +97,10 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         map.setCenter(currentPos);
         dispatch(setMarkerPos(currentPos));
       } else if (searchText !== "") {
-        keywordSearch(searchText);
+        search(searchText);
       }
     },
-    [searchText, map, currentPos, dispatch, keywordSearch]
+    [searchText, map, currentPos, dispatch, search]
   );
 
   const onKeywordChange = useCallback((e): void => {
@@ -107,7 +108,9 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
 
     setSearchText(e.target.value);
   }, []);
+  //////
 
+  // 현위치 버튼 로직
   const searchAndMove = useCallback(
     (location: any): void => {
       map.setCenter(location);
@@ -121,14 +124,14 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
           location.getLat(),
           (result: Array<any>, status: string) => {
             if (status === window.kakao.maps.services.Status.OK) {
-              keywordSearch(result[0].address.address_name);
+              search(result[0].address.address_name);
               setSearchText(result[0].address.address_name);
             }
           }
         );
       }
     },
-    [dispatch, geocoder, keywordSearch, map]
+    [dispatch, geocoder, search, map]
   );
 
   const onCurrentPosBtnClick = useCallback(
@@ -156,13 +159,16 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     },
     [currentPos, dispatch, searchAndMove]
   );
+  ////
 
+  // 컴포넌트가 마운트될 때 현위치로 이동 (현위치 있을 경우)
   useEffect((): void => {
     if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
       onCurrentPosBtnClick();
     }
   }, [currentPos, geocoder, onCurrentPosBtnClick]);
 
+  // 드래그 이벤트
   useEffect((): void => {
     const dragCallback = (): void => {
       const location = map.getCenter();
@@ -173,7 +179,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         (result: Array<any>, status: string): void => {
           if (status === window.kakao.maps.services.Status.OK) {
             setCurrentPage(1);
-            keywordSearch(result[0].address.address_name);
+            search(result[0].address.address_name);
             setSearchText(result[0].address.address_name);
             dispatch(setMarkerPos(location));
           }
@@ -184,7 +190,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     if (Object.keys(map).length !== 0) {
       window.kakao.maps.event.addListener(map, "dragend", dragCallback);
     }
-  }, [dispatch, geocoder, keywordSearch, map]);
+  }, [dispatch, geocoder, search, map]);
 
   return (
     <div className={classNames(styles.container, loading && styles.loading)}>
