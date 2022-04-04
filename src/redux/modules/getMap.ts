@@ -99,17 +99,11 @@ const reducer = (
     case SET_MARKER_POS:
       return {
         ...state,
-        data: {
-          ...state.data,
-        },
         markerPos: action.markerPos,
       };
     case SET_CURRENT_POS:
       return {
         ...state,
-        data: {
-          ...state.data,
-        },
         currentPos: action.currentPos,
       };
     default:
