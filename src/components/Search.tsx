@@ -25,7 +25,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   } = useSelector((state: stateType): getMapStateType => state.getMap);
   const [searchText, setSearchText] = useState<string | number>("");
   const [searchResult, setSearchResult] = useState<Array<any>>([]);
-  const [isZero, setIsZero] = useState<boolean>(false);
+  const [isZero, setIsZero] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [pagination, setPagination] = useState<paginationStateType>({
     nextClick: () => {},
@@ -219,7 +219,11 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         ) : isZero ? (
           <div className={styles["result__zero"]}>검색 결과가 없습니다.</div>
         ) : (
-          <ul className={styles["result__list"]} ref={listElRef}>
+          <ul
+            className={styles["result__list"]}
+            ref={listElRef}
+            style={{ overflow: isZero ? "hidden" : "auto" }}
+          >
             {searchResult.map((el: any, i: any) => (
               <SearchResult
                 key={i}
