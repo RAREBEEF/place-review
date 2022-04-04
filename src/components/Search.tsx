@@ -53,26 +53,27 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         setError(true);
         setIsZero(false);
       }
-
-      setPagination({
-        nextClick: (): void => {
-          if (pagination.hasNextPage) {
-            setSelected({ section: null, index: null });
-            setCurrentPage((prevState: number): number => prevState + 1);
-            pagination.nextPage();
-            listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
-          }
-        },
-        prevClick: (): void => {
-          if (pagination.hasPrevPage) {
-            setSelected({ section: null, index: null });
-            setCurrentPage((prevState: number): number => prevState - 1);
-            pagination.prevPage();
-            listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
-          }
-        },
-        totalCount: pagination.totalCount,
-      });
+      if (pagination.totalCount !== 0) {
+        setPagination({
+          nextClick: (): void => {
+            if (pagination.hasNextPage) {
+              setSelected({ section: null, index: null });
+              setCurrentPage((prevState: number): number => prevState + 1);
+              pagination.nextPage();
+              listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          },
+          prevClick: (): void => {
+            if (pagination.hasPrevPage) {
+              setSelected({ section: null, index: null });
+              setCurrentPage((prevState: number): number => prevState - 1);
+              pagination.prevPage();
+              listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          },
+          totalCount: pagination.totalCount,
+        });
+      }
     },
     [dispatch]
   );
@@ -212,15 +213,13 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         </div>
       </form>
       <div className={styles["result"]}>
-        {error && (
+        {error ? (
           <div className={styles["result__error"]}>
             오류가 발생했습니다. 잠시 후 다시 시도해주세요.
           </div>
-        )}{" "}
-        {isZero && (
+        ) : isZero ? (
           <div className={styles["result__zero"]}>검색 결과가 없습니다.</div>
-        )}
-        {searchResult.length !== 0 && (
+        ) : (
           <ul className={styles["result__list"]} ref={listElRef}>
             {searchResult.map((el: any, i: any) => (
               <SearchResult
