@@ -96,7 +96,6 @@ const Map: React.FC = (): ReactElement => {
 
   useEffect((): void => {
     if (marker) {
-      console.log(markerAddress.address);
       const iwContent = `<div class="infowindow">${markerAddress.address}</div>`;
       const infoWindow = new window.kakao.maps.InfoWindow({
         content: iwContent,
@@ -104,7 +103,6 @@ const Map: React.FC = (): ReactElement => {
 
       window.kakao.maps.event.addListener(marker, "mouseover", () => {
         infoWindow.open(map, marker);
-        console.log("over");
       });
       window.kakao.maps.event.addListener(marker, "mouseout", () => {
         infoWindow.close();
