@@ -211,7 +211,10 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
           />
         </div>
       </form>
-      <div className={styles["result"]}>
+      <div
+        className={styles["result"]}
+        style={{ pointerEvents: isZero ? "none" : "all" }}
+      >
         {error ? (
           <div className={styles["result__error"]}>
             오류가 발생했습니다. 잠시 후 다시 시도해주세요.
@@ -219,11 +222,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         ) : isZero ? (
           <div className={styles["result__zero"]}>검색 결과가 없습니다.</div>
         ) : (
-          <ul
-            className={styles["result__list"]}
-            ref={listElRef}
-            style={{ overflow: isZero ? "hidden" : "auto" }}
-          >
+          <ul className={styles["result__list"]} ref={listElRef}>
             {searchResult.map((el: any, i: any) => (
               <SearchResult
                 key={i}
