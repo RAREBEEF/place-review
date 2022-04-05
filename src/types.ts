@@ -98,6 +98,7 @@ export interface ReviewPropType {
   selected?: { section: string | null; index: number };
   setSelected?: Function;
   i?: number;
+  isProfile?: boolean;
 }
 export interface HomePropType {}
 export interface RouterPropType {}

@@ -15,6 +15,7 @@ const Review: React.FC<ReviewPropType> = ({
   selected,
   setSelected,
   i,
+  isProfile,
 }): ReactElement => {
   const dispatch = useDispatch();
   const {
@@ -50,7 +51,8 @@ const Review: React.FC<ReviewPropType> = ({
         styles.review,
         selected?.section === "review" &&
           selected.index === i &&
-          styles.selected
+          styles.selected,
+        isProfile && styles["profile-page"]
       )}
       onClick={(): void => {
         if (!map.setCenter) {

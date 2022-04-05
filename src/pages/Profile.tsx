@@ -176,7 +176,12 @@ const Profile: React.FC = (): ReactElement => {
               review.location.La
             );
             return (
-              <Review key={review.id} location={location} review={review} />
+              <Review
+                key={review.id}
+                location={location}
+                review={review}
+                isProfile={true}
+              />
             );
           })}
         </ul>

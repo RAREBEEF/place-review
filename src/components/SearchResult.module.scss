@@ -69,4 +69,8 @@
       color: #403d39;
     }
   }
+
+  &:hover:not(.selected) {
+    background-color: #474542;
+  }
 }
