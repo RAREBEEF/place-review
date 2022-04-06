@@ -143,7 +143,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
 
       if (currentPos === null) {
         const ok = window.confirm(
-          "사용자의 위치 정보가 필요합니다.\n액세스를 허용하시겠습니까?\n\n(권한 요청이 뜨지 않을 경우 브라우저 설정에서 차단 여부를 확인해 주세요.)"
+          "사용자의 위치 정보를 사용하게 됩니다.\n최초 실행 시 몇 초 정도 시간이 소요될 수 있습니다.\n\n(작동하지 않을 경우 브라우저 설정에서 위치 정보 액세스 차단 여부를 확인해 주세요.)"
         );
         if (ok) {
           window.navigator.geolocation.getCurrentPosition(
@@ -170,7 +170,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [currentPos, dispatch, searchAndMove]
   );
 
-  // 현위치 정보가 있으면 컴포넌트가 마운트될 때 현위치로 이동 
+  // 현위치 정보가 있으면 컴포넌트가 마운트될 때 현위치로 이동
   useEffect((): void => {
     if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
       onCurrentPosBtnClick();
