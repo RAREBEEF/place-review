@@ -254,7 +254,9 @@ const WriteReview: React.FC<WriteReviewPropType> = ({
     }
 
     setUploading(false);
-    navigation("/");
+    if (!isEditMod) {
+      navigation("/");
+    }
   };
 
   // 작성 취소
@@ -388,7 +390,7 @@ const WriteReview: React.FC<WriteReviewPropType> = ({
           </div>
 
           <div className={styles["attachment-wrapper"]}>
-            <div className={styles.label}>사진 첨부</div>
+            {/* <div className={styles.label}>사진 첨부</div> */}
             <input
               id="attachmentInput"
               onChange={onFileChange}
@@ -408,7 +410,7 @@ const WriteReview: React.FC<WriteReviewPropType> = ({
                 htmlFor="attachmentInput"
                 className={classNames(styles["input--file"])}
               >
-                찾아보기
+                사진 첨부
               </label>
             )}
           </div>

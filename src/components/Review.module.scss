@@ -14,7 +14,7 @@
     background-color: #fffcf2;
   }
 
-  &:not(.profile-page) {
+  &:not(.profile-page, .edit-mod) {
     cursor: pointer;
   }
 

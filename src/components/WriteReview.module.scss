@@ -1,6 +1,9 @@
 @media screen and (max-width: 1000px) {
   .container {
     height: auto !important;
+    .form {
+      min-height: 400px;
+    }
   }
 }
 
@@ -39,6 +42,7 @@
       }
 
       .counter {
+        color: #252422;
         &.over {
           color: #eb5e28;
         }
@@ -73,7 +77,8 @@
 
     .middle-wrapper {
       margin: {
-        top: 20px;
+        top: 25px;
+        bottom: 5px;
       }
       display: flex;
       align-items: center;
@@ -103,13 +108,6 @@
         display: flex;
         justify-content: left;
         align-items: flex-start;
-
-        .label {
-          margin: {
-            top: 5px;
-            right: 5px;
-          }
-        }
 
         .input--file {
           margin: {
@@ -183,22 +181,17 @@
 
   &.edit-mod {
     height: auto;
-    min-height: 0;
     .form {
       margin: 0;
+      min-height: 400px;
       .header-wrapper {
         margin: {
           top: 0;
         }
       }
       .middle-wrapper {
-        flex-direction: column;
-        align-items: start;
-        .rating-wrapper {
-          margin: {
-            top: 5px;
-            bottom: 20px;
-          }
+        margin: {
+          bottom: 25px;
         }
       }
     }
