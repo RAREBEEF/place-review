@@ -53,7 +53,10 @@ export function getMapThunk(element: any): Function {
       try {
         dispatch(getMapStart());
         // 최초 위치
-        const location = new window.kakao.maps.LatLng(37.5125, 127.102778);
+        const location = new window.kakao.maps.LatLng(
+          37.56682420267543,
+          126.978652258823
+        );
 
         const options = {
           center: location,

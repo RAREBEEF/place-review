@@ -15,7 +15,7 @@ const SearchResult: React.FC<SearchResultPropType> = ({
   const {
     data: { map },
   } = useSelector((state: stateType): getMapStateType => state.getMap);
-
+  
   return (
     <li
       className={classNames(

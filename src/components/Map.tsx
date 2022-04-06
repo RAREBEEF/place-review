@@ -54,6 +54,7 @@ const Map: React.FC = (): ReactElement => {
 
       // 마커 위치 데이터 존재할 경우 주소로 변환하여 저장(인포윈도우 용도)
       if (markerPos !== null) {
+        console.log(markerPos);
         geocoder.coord2Address(
           markerPos.getLng(),
           markerPos.getLat(),
