@@ -12,7 +12,12 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { dbService, storageService } from "../fbase";
 import { doc, setDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "firebase/storage";
 import styles from "./NewReview.module.scss";
 import Button from "./Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,6 +25,10 @@ import { Link, useNavigate } from "react-router-dom";
 const NewReview: React.FC<NewReviewPropType> = ({
   searchResult,
   selected,
+  isEditMod,
+  setIsEditMod,
+  prevReview,
+  i,
 }): ReactElement => {
   const navigation = useNavigate();
   const {
@@ -30,40 +39,48 @@ const NewReview: React.FC<NewReviewPropType> = ({
     (state: stateType): loginProcessStateType => state.loginProcess
   );
   const [review, setReview] = useState<reviewStateType>({
-    title:
-      searchResult.length !== 0 &&
-      selected.section === "place" &&
-      searchResult[selected.index].place_name
-        ? searchResult[selected.index].place_name
-        : "",
-    rating: 5,
-    memo: "",
-    location: { ...location },
-    address: {},
+    title: prevReview
+      ? prevReview.title
+      : searchResult &&
+        selected &&
+        searchResult.length !== 0 &&
+        selected.section === "place" &&
+        searchResult[selected.index].place_name
+      ? searchResult[selected.index].place_name
+      : "",
+    rating: prevReview ? prevReview.rating : 5,
+    memo: prevReview ? prevReview.memo : "",
+    location: prevReview ? { ...prevReview.location } : { ...location },
+    address: prevReview ? { ...prevReview.address } : {},
   });
   const [attachment, setAttachment] = useState<string>("");
   const attachmentInputRef = useRef<any>();
   const [uploading, setUploading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (
-      searchResult.length === 0 ||
-      selected.section !== "place" ||
-      !searchResult[selected.index].place_name
-    ) {
+    if (prevReview) {
+      setAttachment(prevReview.attachmentUrl);
       return;
     }
 
-    setReview(
-      (prev: reviewStateType): reviewStateType => ({
-        ...prev,
-        title: searchResult[selected.index].place_name,
-      })
-    );
-  }, [searchResult, selected]);
+    if (
+      searchResult &&
+      selected &&
+      searchResult.length !== 0 &&
+      selected.section === "place" &&
+      searchResult[selected.index].place_name
+    ) {
+      setReview(
+        (prev: reviewStateType): reviewStateType => ({
+          ...prev,
+          title: searchResult[selected.index].place_name,
+        })
+      );
+    }
+  }, [prevReview, searchResult, selected]);
 
   useEffect((): void => {
-    if (!location) {
+    if (!location || prevReview) {
       return;
     }
 
@@ -98,7 +115,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
         }
       }
     );
-  }, [geocoder, location]);
+  }, [geocoder, location, prevReview]);
 
   const onTitleChange = useCallback((e): void => {
     setReview(
@@ -153,7 +170,10 @@ const NewReview: React.FC<NewReviewPropType> = ({
     let attachmentUrl = "";
     let attachmentId = "";
 
-    if (attachment !== "") {
+    if (prevReview && prevReview.attachmentUrl === attachment) {
+      attachmentId = prevReview.attachmentId;
+      attachmentUrl = prevReview.attachmentUrl;
+    } else if (attachment !== "") {
       try {
         attachmentId = uuidv4();
 
@@ -172,27 +192,78 @@ const NewReview: React.FC<NewReviewPropType> = ({
       }
     }
 
-    let reviewObj: reviewObjType = {
-      ...review,
-      createdAt: Date.now(),
-      creatorId: userObj.uid,
-      displayName: userObj.displayName,
-      attachmentUrl,
-      attachmentId,
-    };
+    if (isEditMod && prevReview && prevReview.id && setIsEditMod) {
+      let reviewObj: reviewObjType = {
+        ...review,
+        createdAt: Date.now(),
+        creatorId: prevReview.creatorId,
+        displayName: prevReview.displayName,
+        attachmentUrl,
+        attachmentId,
+      };
 
-    await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj }).catch(
-      (error): void => {
+      await setDoc(doc(dbService, "reviews", prevReview.id), {
+        ...reviewObj,
+      }).catch((error): void => {
         throw error;
+      });
+
+      if (
+        prevReview.attachmentUrl !== "" &&
+        prevReview.attachmentUrl !== attachmentUrl
+      ) {
+        const attachmentRef = ref(
+          storageService,
+          `${userObj.uid}/${prevReview.attachmentId}`
+        );
+        await deleteObject(attachmentRef);
       }
-    );
+
+      setIsEditMod(false);
+    } else {
+      let reviewObj: reviewObjType = {
+        ...review,
+        createdAt: Date.now(),
+        creatorId: userObj.uid,
+        displayName: userObj.displayName,
+        attachmentUrl,
+        attachmentId,
+      };
+
+      await setDoc(doc(dbService, "reviews", uuidv4()), { ...reviewObj }).catch(
+        (error): void => {
+          throw error;
+        }
+      );
+    }
 
     setUploading(false);
     navigation("/");
   };
 
+  const onCancelClick = useCallback(
+    (e): void => {
+      if (!isEditMod || setIsEditMod === undefined) {
+        return;
+      }
+      e.preventDefault();
+
+      setIsEditMod(false);
+    },
+    [isEditMod, setIsEditMod]
+  );
+
   return (
-    <form className={styles.container} onSubmit={onSubmit}>
+    <form
+      className={classNames(
+        styles.container,
+        isEditMod && styles["edit-mod"],
+        selected?.section === "review" &&
+          selected?.index === i &&
+          styles.selected
+      )}
+      onSubmit={onSubmit}
+    >
       <div className={styles["header-wrapper"]}>
         <label className={styles.label} htmlFor="memo">
           상호명
@@ -350,12 +421,18 @@ const NewReview: React.FC<NewReviewPropType> = ({
           className={["NewReview__submit", uploading && "disable"]}
         />
         <Link to="/">
-          <Button text="돌아가기" className={["NewReview__cancel"]} />
+          <Button
+            text="돌아가기"
+            className={["NewReview__cancel"]}
+            onClick={onCancelClick}
+          />
         </Link>
       </div>
-      <footer className={styles.footer}>
-        &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
-      </footer>
+      {!isEditMod && (
+        <footer className={styles.footer}>
+          &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
+        </footer>
+      )}
     </form>
   );
 };

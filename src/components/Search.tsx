@@ -14,7 +14,6 @@ import FindReview from "./FindReview";
 import NewReview from "./NewReview";
 import Button from "./Button";
 import SearchResult from "./SearchResult";
-import { setFilter } from "../redux/modules/getReviews";
 
 const Search: React.FC<SearchPropType> = (): ReactElement => {
   const dispatch = useDispatch();
@@ -40,7 +39,6 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   const searchCallback = useCallback(
     (result: Array<any>, status: string, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
-        dispatch(setFilter("HERE"));
         setError(false);
         setIsZero(false);
         setSearchResult(result);
@@ -75,7 +73,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         });
       }
     },
-    [dispatch]
+    []
   );
 
   const search = useCallback(
@@ -179,6 +177,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         location.getLat(),
         (result: Array<any>, status: string): void => {
           if (status === window.kakao.maps.services.Status.OK) {
+            setSelected({ section: null, index: null });
             setCurrentPage(1);
             search(result[0].address.address_name);
             setSearchText(result[0].address.address_name);
@@ -192,6 +191,24 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
       window.kakao.maps.event.addListener(map, "dragend", dragCallback);
     }
   }, [dispatch, geocoder, search, map]);
+
+  const searchReviewPos = useCallback(
+    (location, i): void => {
+      geocoder.coord2Address(
+        location.getLng(),
+        location.getLat(),
+        (result: Array<any>, status: string): void => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            setSelected({ section: "review", index: i });
+            setCurrentPage(1);
+            search(result[0].address.address_name);
+            setSearchText(result[0].address.address_name);
+          }
+        }
+      );
+    },
+    [geocoder, search]
+  );
 
   return (
     <div className={classNames(styles.container, loading && styles.loading)}>
@@ -259,6 +276,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
               onCurrentPosBtnClick={onCurrentPosBtnClick}
               selected={selected}
               setSelected={setSelected}
+              searchReviewPos={searchReviewPos}
             />
           }
         ></Route>

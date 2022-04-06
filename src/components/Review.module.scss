@@ -1,3 +1,6 @@
+@media screen and (max-width: 1000px) {
+}
+
 .review {
   padding: {
     top: 20px;
@@ -8,6 +11,11 @@
   transition: all 0.3s;
   max-width: inherit;
   min-width: 250px;
+
+  &.edit-mod.profile-page {
+    background-color: #fffcf2;
+  }
+
   &:not(.profile-page) {
     cursor: pointer;
   }
@@ -104,7 +112,6 @@
 
   &.selected {
     background-color: #fffcf2;
-
     .review__header {
       .header__title {
         color: #252422;
@@ -126,6 +133,13 @@
       .footer__author {
         color: #403d39;
       }
+    }
+  }
+
+  .creator-btn-wrapper {
+    display: block;
+    margin: {
+      top: 10px;
     }
   }
 

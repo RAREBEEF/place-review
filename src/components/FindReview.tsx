@@ -15,6 +15,7 @@ import { setFilter } from "../redux/modules/getReviews";
 const FindReview: React.FC<FindReviewPropType> = ({
   selected,
   setSelected,
+  searchReviewPos,
 }) => {
   const dispatch = useDispatch();
   const { markerPos } = useSelector(
@@ -89,6 +90,7 @@ const FindReview: React.FC<FindReviewPropType> = ({
               selected={selected}
               setSelected={setSelected}
               i={i}
+              searchReviewPos={searchReviewPos}
             />
           );
         })}

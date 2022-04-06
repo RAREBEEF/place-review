@@ -82,10 +82,15 @@ export interface FindReviewPropType {
   onCurrentPosBtnClick: Function;
   selected: any;
   setSelected: Function;
+  searchReviewPos?: Function;
 }
 export interface NewReviewPropType {
-  searchResult: Array<any>;
-  selected: { section: string | null; index: number };
+  searchResult?: Array<any>;
+  selected?: { section: string | null; index: number };
+  isEditMod?: boolean;
+  setIsEditMod?: Function;
+  prevReview?: reviewObjType;
+  i?: any;
 }
 export interface ButtonPropType {
   text: string;
@@ -99,6 +104,7 @@ export interface ReviewPropType {
   setSelected?: Function;
   i?: number;
   isProfile?: boolean;
+  searchReviewPos?: Function;
 }
 export interface HomePropType {}
 export interface RouterPropType {}

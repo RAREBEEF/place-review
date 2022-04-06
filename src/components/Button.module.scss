@@ -82,8 +82,14 @@
     bottom: 10px;
   }
 }
-.Review__delete {
+.Review__delete,
+.Review__edit {
   font-size: 10px;
+  &.Review__edit {
+    margin: {
+      right: 5px;
+    }
+  }
 }
 
 .Search__prev,
@@ -92,6 +98,6 @@
   line-height: 14px;
   margin: {
     left: 10px;
-     right: 10px;
+    right: 10px;
   }
 }

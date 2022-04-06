@@ -166,4 +166,13 @@
       bottom: 15px;
     }
   }
+  &.edit-mod {
+    height: 100%;
+
+    &.selected {
+      .label {
+        color: #252422;
+      }
+    }
+  }
 }

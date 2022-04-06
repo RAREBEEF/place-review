@@ -31,6 +31,7 @@ const Map: React.FC = (): ReactElement => {
     address: "",
     roadAddress: "",
   });
+  const [infoWindow, setInfoWindow] = useState<any>(null);
   const mapEl = useRef(null);
 
   useEffect(() => {
@@ -70,6 +71,9 @@ const Map: React.FC = (): ReactElement => {
 
   useEffect((): void => {
     const dragStartCallback = (): void => {
+      if (infoWindow !== null) {
+        infoWindow.close();
+      }
       setCrossActive(true);
     };
     const dragEndCallback = (): void => {
@@ -79,7 +83,7 @@ const Map: React.FC = (): ReactElement => {
       window.kakao.maps.event.addListener(map, "dragstart", dragStartCallback);
       window.kakao.maps.event.addListener(map, "dragend", dragEndCallback);
     }
-  }, [map]);
+  }, [infoWindow, map]);
 
   useEffect((): void => {
     if (markerPos) {
@@ -97,9 +101,11 @@ const Map: React.FC = (): ReactElement => {
   useEffect((): void => {
     if (marker) {
       const iwContent = `<div class="infowindow">${markerAddress.address}</div>`;
-      const infoWindow = new window.kakao.maps.InfoWindow({
-        content: iwContent,
-      });
+      setInfoWindow(
+        new window.kakao.maps.InfoWindow({
+          content: iwContent,
+        })
+      );
 
       window.kakao.maps.event.addListener(marker, "mouseover", () => {
         infoWindow.open(map, marker);
