@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import {
   getMapStateType,
   loginProcessStateType,
-  NewReviewPropType,
+  WriteReviewPropType,
   reviewObjType,
   reviewStateType,
   stateType,
@@ -18,11 +18,11 @@ import {
   ref,
   uploadString,
 } from "firebase/storage";
-import styles from "./NewReview.module.scss";
+import styles from "./WriteReview.module.scss";
 import Button from "./Button";
 import { Link, useNavigate } from "react-router-dom";
 
-const NewReview: React.FC<NewReviewPropType> = ({
+const WriteReview: React.FC<WriteReviewPropType> = ({
   searchResult,
   selected,
   isEditMod,
@@ -57,7 +57,10 @@ const NewReview: React.FC<NewReviewPropType> = ({
   const attachmentInputRef = useRef<any>();
   const [uploading, setUploading] = useState<boolean>(false);
 
-  useEffect(() => {
+  // 선택 장소가 바뀌면 자동으로 제목 변경
+  // 수정모드일 경우 기존 리뷰 이름으로 고정
+  // 수정모드일 경우 기존 리뷰에서 첨부사진 불러옴(기존 리뷰 사진 유무 구분용)
+  useEffect((): void => {
     if (prevReview) {
       setAttachment(prevReview.attachmentUrl);
       return;
@@ -79,6 +82,8 @@ const NewReview: React.FC<NewReviewPropType> = ({
     }
   }, [prevReview, searchResult, selected]);
 
+  // 좌표를 주소로 변환하여 저장
+  // 수정모드일 경우 실행 안함
   useEffect((): void => {
     if (!location || prevReview) {
       return;
@@ -117,6 +122,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
     );
   }, [geocoder, location, prevReview]);
 
+  // 리뷰 제목 입력
   const onTitleChange = useCallback((e): void => {
     setReview(
       (prev: reviewStateType): reviewStateType => ({
@@ -126,6 +132,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
     );
   }, []);
 
+  // 리뷰 메모 입력
   const onMemoChange = useCallback((e): void => {
     setReview(
       (prev: reviewStateType): reviewStateType => ({
@@ -135,6 +142,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
     );
   }, []);
 
+  // 첨부파일 선택
   const onFileChange = (e: any): void => {
     const {
       target: { files },
@@ -152,16 +160,20 @@ const NewReview: React.FC<NewReviewPropType> = ({
     reader.readAsDataURL(file);
   };
 
+  // 첨부파일 삭제
   const onClearAttachmentClick = (): void => {
     setAttachment("");
     attachmentInputRef.current.value = null;
   };
 
+  // 리뷰 등록
   const onSubmit = async (e: any): Promise<void> => {
     e.preventDefault();
 
+    // 중복 업로드 방지하기 위해 업로드 중 버튼 클릭 비활성화
     setUploading(true);
 
+    // 내용이 없을 경우 업로드 중지
     if (review.title === "" || (review.memo === "" && attachment === "")) {
       setUploading(false);
       return;
@@ -170,6 +182,8 @@ const NewReview: React.FC<NewReviewPropType> = ({
     let attachmentUrl = "";
     let attachmentId = "";
 
+    // 첨부파일 있을 경우 스토리지 업로드 후 data url로 변환하여 불러옴
+    // 수정모드면서 첨부파일에 변동 없을 경우 생략
     if (prevReview && prevReview.attachmentUrl === attachment) {
       attachmentId = prevReview.attachmentId;
       attachmentUrl = prevReview.attachmentUrl;
@@ -192,6 +206,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
       }
     }
 
+    // 모든 내용 취합 후 데이터베이스 업로드
     if (isEditMod && prevReview && prevReview.id && setIsEditMod) {
       let reviewObj: reviewObjType = {
         ...review,
@@ -208,6 +223,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
         throw error;
       });
 
+      // 수정 모드에서 첨부파일이 변경된 경우 스토리지에서 기존 사진 찾아서 삭제
       if (
         prevReview.attachmentUrl !== "" &&
         prevReview.attachmentUrl !== attachmentUrl
@@ -241,6 +257,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
     navigation("/");
   };
 
+  // 작성 취소
   const onCancelClick = useCallback(
     (e): void => {
       if (!isEditMod || setIsEditMod === undefined) {
@@ -254,7 +271,7 @@ const NewReview: React.FC<NewReviewPropType> = ({
   );
 
   return (
-    <form
+    <div
       className={classNames(
         styles.container,
         isEditMod && styles["edit-mod"],
@@ -262,179 +279,182 @@ const NewReview: React.FC<NewReviewPropType> = ({
           selected?.index === i &&
           styles.selected
       )}
-      onSubmit={onSubmit}
     >
-      <div className={styles["header-wrapper"]}>
-        <label className={styles.label} htmlFor="memo">
-          상호명
-        </label>
-        <span
-          className={classNames(
-            styles.counter,
-            review.title.length >= 20 && styles.over
-          )}
-        >
-          {review.title.length} / 20
-        </span>
-      </div>
-      <input
-        maxLength={20}
-        className={styles["input--store-name"]}
-        id="storeName"
-        value={review.title}
-        onChange={onTitleChange}
-      ></input>
-      <div className={styles["middle-wrapper"]}>
-        <div className={styles["rating-wrapper"]}>
-          <label className={styles.label} htmlFor="rating">
-            별점
+      <form onSubmit={onSubmit} className={styles.form}>
+        <div className={styles["header-wrapper"]}>
+          <label className={styles.label} htmlFor="memo">
+            상호명
           </label>
-          <div className={styles["rating"]}>
-            <span
-              className="fa fa-star"
-              style={{
-                color: review.rating >= 1 ? "#eb5e28" : "lightgray",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setReview(
-                  (prev: reviewStateType): reviewStateType => ({
-                    ...prev,
-                    rating: 1,
-                  })
-                );
-              }}
-            ></span>
-            <span
-              className="fa fa-star"
-              style={{
-                color: review.rating >= 2 ? "#eb5e28" : "lightgray",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setReview(
-                  (prev: reviewStateType): reviewStateType => ({
-                    ...prev,
-                    rating: 2,
-                  })
-                );
-              }}
-            ></span>
-            <span
-              className="fa fa-star"
-              style={{
-                color: review.rating >= 3 ? "#eb5e28" : "lightgray",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setReview(
-                  (prev: reviewStateType): reviewStateType => ({
-                    ...prev,
-                    rating: 3,
-                  })
-                );
-              }}
-            ></span>
-            <span
-              className="fa fa-star"
-              style={{
-                color: review.rating >= 4 ? "#eb5e28" : "lightgray",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setReview(
-                  (prev: reviewStateType): reviewStateType => ({
-                    ...prev,
-                    rating: 4,
-                  })
-                );
-              }}
-            ></span>
-            <span
-              className="fa fa-star"
-              style={{
-                color: review.rating === 5 ? "#eb5e28" : "lightgray",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setReview(
-                  (prev: reviewStateType): reviewStateType => ({
-                    ...prev,
-                    rating: 5,
-                  })
-                );
-              }}
-            ></span>
+          <span
+            className={classNames(
+              styles.counter,
+              (review.title.length >= 20 || review.title.length === 0) &&
+                styles.over
+            )}
+          >
+            {review.title.length} / 20
+          </span>
+        </div>
+        <input
+          maxLength={20}
+          minLength={1}
+          className={styles["input--store-name"]}
+          id="storeName"
+          value={review.title}
+          onChange={onTitleChange}
+        ></input>
+        <div className={styles["middle-wrapper"]}>
+          <div className={styles["rating-wrapper"]}>
+            <label className={styles.label} htmlFor="rating">
+              별점
+            </label>
+            <div className={styles["rating"]}>
+              <span
+                className="fa fa-star"
+                style={{
+                  color: review.rating >= 1 ? "#eb5e28" : "lightgray",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setReview(
+                    (prev: reviewStateType): reviewStateType => ({
+                      ...prev,
+                      rating: 1,
+                    })
+                  );
+                }}
+              ></span>
+              <span
+                className="fa fa-star"
+                style={{
+                  color: review.rating >= 2 ? "#eb5e28" : "lightgray",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setReview(
+                    (prev: reviewStateType): reviewStateType => ({
+                      ...prev,
+                      rating: 2,
+                    })
+                  );
+                }}
+              ></span>
+              <span
+                className="fa fa-star"
+                style={{
+                  color: review.rating >= 3 ? "#eb5e28" : "lightgray",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setReview(
+                    (prev: reviewStateType): reviewStateType => ({
+                      ...prev,
+                      rating: 3,
+                    })
+                  );
+                }}
+              ></span>
+              <span
+                className="fa fa-star"
+                style={{
+                  color: review.rating >= 4 ? "#eb5e28" : "lightgray",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setReview(
+                    (prev: reviewStateType): reviewStateType => ({
+                      ...prev,
+                      rating: 4,
+                    })
+                  );
+                }}
+              ></span>
+              <span
+                className="fa fa-star"
+                style={{
+                  color: review.rating === 5 ? "#eb5e28" : "lightgray",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setReview(
+                    (prev: reviewStateType): reviewStateType => ({
+                      ...prev,
+                      rating: 5,
+                    })
+                  );
+                }}
+              ></span>
+            </div>
+          </div>
+
+          <div className={styles["attachment-wrapper"]}>
+            <div className={styles.label}>사진 첨부</div>
+            <input
+              id="attachmentInput"
+              onChange={onFileChange}
+              type="file"
+              accept="image/*"
+              ref={attachmentInputRef}
+              style={{ display: "none" }}
+            />
+            {attachment ? (
+              <Button
+                text="사진 삭제"
+                onClick={onClearAttachmentClick}
+                className={["NewReview__delete"]}
+              ></Button>
+            ) : (
+              <label
+                htmlFor="attachmentInput"
+                className={classNames(styles["input--file"])}
+              >
+                찾아보기
+              </label>
+            )}
           </div>
         </div>
-
-        <div className={styles["attachment-wrapper"]}>
-          <div className={styles.label}>사진 첨부</div>
-          <input
-            id="attachmentInput"
-            onChange={onFileChange}
-            type="file"
-            accept="image/*"
-            ref={attachmentInputRef}
-            style={{ display: "none" }}
-          />
-          {attachment ? (
-            <Button
-              text="사진 삭제"
-              onClick={onClearAttachmentClick}
-              className={["NewReview__delete"]}
-            ></Button>
-          ) : (
-            <label
-              htmlFor="attachmentInput"
-              className={classNames(styles["input--file"])}
-            >
-              찾아보기
-            </label>
-          )}
+        <div className={styles["header-wrapper"]}>
+          <label className={styles.label} htmlFor="memo">
+            메모
+          </label>
+          <span
+            className={classNames(
+              styles.counter,
+              review.memo.length >= 120 && styles.over
+            )}
+          >
+            {" "}
+            {review.memo.length} / 120
+          </span>
         </div>
-      </div>
-      <div className={styles["header-wrapper"]}>
-        <label className={styles.label} htmlFor="memo">
-          메모
-        </label>
-        <span
-          className={classNames(
-            styles.counter,
-            review.memo.length >= 120 && styles.over
-          )}
-        >
-          {" "}
-          {review.memo.length} / 120
-        </span>
-      </div>
-      <textarea
-        maxLength={120}
-        id="memo"
-        className={styles["input--memo"]}
-        value={review.memo}
-        onChange={onMemoChange}
-      ></textarea>
-      <div className={styles["btn-wrapper"]}>
-        <Button
-          text="등록"
-          className={["NewReview__submit", uploading && "disable"]}
-        />
-        <Link to="/">
+        <textarea
+          maxLength={120}
+          id="memo"
+          className={styles["input--memo"]}
+          value={review.memo}
+          onChange={onMemoChange}
+        ></textarea>
+        <div className={styles["btn-wrapper"]}>
           <Button
-            text="돌아가기"
-            className={["NewReview__cancel"]}
-            onClick={onCancelClick}
+            text="등록"
+            className={["NewReview__submit", uploading && "disable"]}
           />
-        </Link>
-      </div>
+          <Link to="/">
+            <Button
+              text="돌아가기"
+              className={["NewReview__cancel"]}
+              onClick={onCancelClick}
+            />
+          </Link>
+        </div>
+      </form>
       {!isEditMod && (
         <footer className={styles.footer}>
           &copy; {new Date().getFullYear()}. RAREBEEF All Rights Reserved.
         </footer>
       )}
-    </form>
+    </div>
   );
 };
 
-export default NewReview;
+export default WriteReview;

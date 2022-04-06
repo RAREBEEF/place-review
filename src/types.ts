@@ -84,7 +84,7 @@ export interface FindReviewPropType {
   setSelected: Function;
   searchReviewPos?: Function;
 }
-export interface NewReviewPropType {
+export interface WriteReviewPropType {
   searchResult?: Array<any>;
   selected?: { section: string | null; index: number };
   isEditMod?: boolean;

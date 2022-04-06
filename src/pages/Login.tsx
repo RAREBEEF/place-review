@@ -23,10 +23,56 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordCheck, setPasswordCheck] = useState<string>("");
 
+  // 이메일 입력
+  const onEmailChange = useCallback((e): void => {
+    setEmail(e.target.value);
+  }, []);
+
+  // 비밀번호 입력
+  const onPasswordChange = useCallback((e): void => {
+    setPassword(e.target.value);
+  }, []);
+
+  // 비밀번호 확인 입력
+  const onPasswordCheckChange = useCallback((e): void => {
+    setPasswordCheck(e.target.value);
+  }, []);
+
+  // 모드 변경(로그인 / 회원가입)
+  const onFormChangeClick = useCallback(
+    (e): void => {
+      e.preventDefault();
+      if (formAction === "login") {
+        setFormAction("signUp");
+      } else {
+        setFormAction("login");
+      }
+    },
+    [formAction]
+  );
+
+  // 비밀번호 재설정 버튼 클릭
+  const onFindPwBtnClick = useCallback((e): void => {
+    e.preventDefault();
+
+    setFormAction("findPw");
+  }, []);
+
+  // 소셜 로그인 클릭(리다이렉트)
+  const onGoogleClick = useCallback((e): void => {
+    e.preventDefault();
+
+    const provider = new GoogleAuthProvider();
+
+    signInWithRedirect(authService, provider);
+  }, []);
+
+  // 전송
   const onSubmit = useCallback(
     async (e): Promise<void> => {
       e.preventDefault();
 
+      // 로그인
       if (formAction === "login") {
         await signInWithEmailAndPassword(authService, email, password)
           .then((userCredential) => {
@@ -42,6 +88,8 @@ const Login: React.FC = () => {
           .catch((error): void => {
             setAlert(error.message);
           });
+
+        // 회원가입
       } else if (formAction === "signUp") {
         if (password === passwordCheck) {
           await createUserWithEmailAndPassword(authService, email, password)
@@ -59,6 +107,8 @@ const Login: React.FC = () => {
               setAlert(error.message);
             });
         }
+
+        // 비밀번호 재설정
       } else if (formAction === "findPw") {
         try {
           sendPasswordResetEmail(authService, email).then((): void => {
@@ -72,50 +122,8 @@ const Login: React.FC = () => {
     [email, password, dispatch, formAction, passwordCheck]
   );
 
-  const onEmailChange = useCallback((e): void => {
-    setEmail(e.target.value);
-  }, []);
-
-  const onPasswordChange = useCallback((e): void => {
-    setPassword(e.target.value);
-  }, []);
-
-  const onPasswordCheckChange = useCallback((e): void => {
-    setPasswordCheck(e.target.value);
-  }, []);
-
-  const onFormChangeClick = useCallback(
-    (e): void => {
-      e.preventDefault();
-      if (formAction === "login") {
-        setFormAction("signUp");
-      } else {
-        setFormAction("login");
-      }
-    },
-    [formAction]
-  );
-
-  const onFindPwBtnClick = useCallback((e): void => {
-    e.preventDefault();
-
-    setFormAction("findPw");
-  }, []);
-
-  const onGoogleClick = useCallback((e): void => {
-    e.preventDefault();
-
-    const provider = new GoogleAuthProvider();
-
-    signInWithRedirect(authService, provider);
-  }, []);
-
   return (
     <div className={styles.container}>
-      {/* <h1 className={styles.logo}>
-        <span className={styles["logo__place"]}>Place</span>
-        <span className={styles["logo__review"]}>Review</span>
-      </h1> */}
       <div className={styles["logo-wrapper"]}>
         <img className={styles.logo} src={logo} alt="Place review" />
       </div>

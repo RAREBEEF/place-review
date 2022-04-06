@@ -26,10 +26,12 @@ const FindReview: React.FC<FindReviewPropType> = ({
   );
   const [text, setText] = useState<string>("");
 
+  // 검색어 입력
   const onChange = useCallback((e): void => {
     setText(e.target.value);
   }, []);
 
+  // 리뷰 필터
   const onFilterClick = useCallback((): void => {
     if (filter === "ALL") {
       dispatch(setFilter("HERE"));
@@ -43,7 +45,7 @@ const FindReview: React.FC<FindReviewPropType> = ({
       <div className={styles["btn-wrapper"]}>
         <Button
           onClick={onFilterClick}
-          text={filter === "ALL" ? "해당 위치 리뷰 보기" : "전체 리뷰 보기"}
+          text={filter === "ALL" ? "해당 위치 리뷰만 보기" : "전체 리뷰 보기"}
           className={["FindReview__filter"]}
         />
         <Link to="/new">

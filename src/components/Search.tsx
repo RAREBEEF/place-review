@@ -11,9 +11,10 @@ import {
 } from "../types";
 import { Routes, Route } from "react-router-dom";
 import FindReview from "./FindReview";
-import NewReview from "./NewReview";
+import WriteReview from "./WriteReview";
 import Button from "./Button";
 import SearchResult from "./SearchResult";
+import { setFilter } from "../redux/modules/getReviews";
 
 const Search: React.FC<SearchPropType> = (): ReactElement => {
   const dispatch = useDispatch();
@@ -35,7 +36,8 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
   const [selected, setSelected] = useState<any>({ section: null, index: null });
   const listElRef = useRef<any>(null);
 
-  // 검색 로직
+  // 검색 콜백
+  // 검색 결과(검색 내용, 내용 없음, 검색 실패)를 처리하고 페이지네이션 생성
   const searchCallback = useCallback(
     (result: Array<any>, status: string, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
@@ -51,31 +53,30 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         setError(true);
         setIsZero(false);
       }
-      if (pagination.totalCount !== 0) {
-        setPagination({
-          nextClick: (): void => {
-            if (pagination.hasNextPage) {
-              setSelected({ section: null, index: null });
-              setCurrentPage((prevState: number): number => prevState + 1);
-              pagination.nextPage();
-              listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          },
-          prevClick: (): void => {
-            if (pagination.hasPrevPage) {
-              setSelected({ section: null, index: null });
-              setCurrentPage((prevState: number): number => prevState - 1);
-              pagination.prevPage();
-              listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          },
-          totalCount: pagination.totalCount,
-        });
-      }
+      setPagination({
+        nextClick: (): void => {
+          if (pagination.hasNextPage) {
+            setSelected({ section: null, index: null });
+            setCurrentPage((prevState: number): number => prevState + 1);
+            pagination.nextPage();
+            listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        },
+        prevClick: (): void => {
+          if (pagination.hasPrevPage) {
+            setSelected({ section: null, index: null });
+            setCurrentPage((prevState: number): number => prevState - 1);
+            pagination.prevPage();
+            listElRef.current.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        },
+        totalCount: pagination.totalCount,
+      });
     },
     []
   );
 
+  // 검색 실행
   const search = useCallback(
     (keyword: string | number): void => {
       places.keywordSearch(keyword, searchCallback, {
@@ -85,6 +86,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [places, searchCallback, currentPos]
   );
 
+  // 검색어 Submit
   const onSubmit = useCallback(
     (e): void => {
       e.preventDefault();
@@ -102,21 +104,21 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [searchText, map, currentPos, dispatch, search]
   );
 
+  // 검색어 입력
   const onKeywordChange = useCallback((e): void => {
     e.preventDefault();
 
     setSearchText(e.target.value);
   }, []);
-  //////
 
-  // 현위치 버튼 로직
+  // 현위치 클릭 시 처리할 로직
   const searchAndMove = useCallback(
     (location: any): void => {
       map.setCenter(location);
       dispatch(setMarkerPos(location));
       setCurrentPage(1);
       setSelected({ section: "place", index: 0 });
-
+      dispatch(setFilter("HERE"));
       if (Object.keys(geocoder).length !== 0 && location !== null) {
         geocoder.coord2Address(
           location.getLng(),
@@ -133,41 +135,50 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     [dispatch, geocoder, search, map]
   );
 
+  // 현위치 버튼 클릭 핸들러
+  // 위치 정보에 액세스 시도 및 성공 시 바로 위 함수 실행
   const onCurrentPosBtnClick = useCallback(
     (e?): void => {
       e?.preventDefault();
 
       if (currentPos === null) {
-        window.navigator.geolocation.getCurrentPosition(
-          async (pos): Promise<void> => {
-            try {
-              const location = new window.kakao.maps.LatLng(
-                pos.coords.latitude,
-                pos.coords.longitude
-              );
-              dispatch(setCurrentPos(location));
-              searchAndMove(location);
-            } catch (error) {
-              console.log(error);
-            }
-          }
+        const ok = window.confirm(
+          "사용자의 위치 정보가 필요합니다.\n액세스를 허용하시겠습니까?\n\n(권한 요청이 뜨지 않을 경우 브라우저 설정에서 차단 여부를 확인해 주세요.)"
         );
+        if (ok) {
+          window.navigator.geolocation.getCurrentPosition(
+            async (pos): Promise<void> => {
+              try {
+                const location = new window.kakao.maps.LatLng(
+                  pos.coords.latitude,
+                  pos.coords.longitude
+                );
+                dispatch(setCurrentPos(location));
+                searchAndMove(location);
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          );
+        } else {
+          return;
+        }
       } else {
         searchAndMove(currentPos);
       }
     },
     [currentPos, dispatch, searchAndMove]
   );
-  ////
 
-  // 컴포넌트가 마운트될 때 현위치로 이동 (현위치 있을 경우)
+  // 현위치 정보가 있으면 컴포넌트가 마운트될 때 현위치로 이동 
   useEffect((): void => {
     if (Object.keys(geocoder).length !== 0 && currentPos !== null) {
       onCurrentPosBtnClick();
     }
   }, [currentPos, geocoder, onCurrentPosBtnClick]);
 
-  // 드래그 이벤트
+  // 지도 드래그 이벤트
+  // 드래그가 종료될 때 지도 중심 위치 검색
   useEffect((): void => {
     const dragCallback = (): void => {
       const location = map.getCenter();
@@ -192,6 +203,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
     }
   }, [dispatch, geocoder, search, map]);
 
+  // 리뷰 위치 검색(리뷰 클릭 시 실행)
   const searchReviewPos = useCallback(
     (location, i): void => {
       geocoder.coord2Address(
@@ -283,7 +295,7 @@ const Search: React.FC<SearchPropType> = (): ReactElement => {
         <Route
           path="/new"
           element={
-            <NewReview searchResult={searchResult} selected={selected} />
+            <WriteReview searchResult={searchResult} selected={selected} />
           }
         ></Route>
       </Routes>

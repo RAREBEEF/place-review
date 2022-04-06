@@ -19,6 +19,9 @@ const App: React.FC = (): ReactElement => {
   );
   const [init, setInit] = useState<boolean>(false);
 
+  // 앱 실행 시
+  // 로그인 여부 파악
+  // 유저 & 리뷰 데이터 받아오기
   useEffect(() => {
     onAuthStateChanged(authService, (user) => {
       if (user) {

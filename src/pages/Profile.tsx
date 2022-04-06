@@ -25,18 +25,21 @@ const Profile: React.FC = (): ReactElement => {
   const [alert, setAlert] = useState<any>("");
   const navigate = useNavigate();
 
+  // 닉네임 입력
   const ondisplayNameChange = useCallback((e): void => {
     setDisplayName(e.target.value);
   }, []);
 
+  // 이메일 입력
   const onEmailCheckChange = useCallback((e): void => {
     setEmailCheck(e.target.value);
   }, []);
 
+  // 닉네임 변경 클릭
   const onDisplayNameChangeClick = useCallback(
     async (e): Promise<void> => {
       e.preventDefault();
-
+      // 오류 출력 or 변경 실행
       if (authService.currentUser) {
         if (displayName === "") {
           setAlert("닉네임을 입력해주세요.");
@@ -61,6 +64,7 @@ const Profile: React.FC = (): ReactElement => {
     [displayName, myReviews, userObj]
   );
 
+  // 비밀번호 재설정 메일 발송
   const onResetPwClick = useCallback(
     async (e): Promise<void> => {
       e.preventDefault();
@@ -82,6 +86,7 @@ const Profile: React.FC = (): ReactElement => {
     [emailCheck]
   );
 
+  // 회원 탈퇴
   const onDeleteClick = useCallback(async (): Promise<void> => {
     const ok = window.confirm(
       "정말 탈퇴하시겠습니까?\n작성한 글은 삭제되지 않습니다."
@@ -98,11 +103,13 @@ const Profile: React.FC = (): ReactElement => {
     }
   }, [navigate]);
 
+  // 로그아웃
   const onLogOutClick = (): void => {
     authService.signOut();
     navigate("/");
   };
 
+  // 내가 작성한 리뷰만 추려서 저장
   useEffect((): void => {
     if (userObj.uid === undefined || allReviews.length === 0) {
       return;

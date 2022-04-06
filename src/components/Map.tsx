@@ -35,6 +35,7 @@ const Map: React.FC = (): ReactElement => {
   const mapEl = useRef(null);
 
   useEffect(() => {
+    // 현위치 데이터 존재할 경우 주소로 변환하여 저장 (지도에 띄울 용도)
     if (Object.keys(geocoder).length !== 0) {
       if (currentPos !== null) {
         geocoder.coord2Address(
@@ -50,25 +51,33 @@ const Map: React.FC = (): ReactElement => {
           }
         );
       }
-      geocoder.coord2Address(
-        markerPos.getLng(),
-        markerPos.getLat(),
-        (result: Array<any>, status: string): void => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            setMarkerAddress({
-              address: result[0].address.address_name,
-              roadAddress: result[0].road_address?.address_name,
-            });
+
+      // 마커 위치 데이터 존재할 경우 주소로 변환하여 저장(인포윈도우 용도)
+      if (markerPos !== null) {
+        geocoder.coord2Address(
+          markerPos.getLng(),
+          markerPos.getLat(),
+          (result: Array<any>, status: string): void => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              setMarkerAddress({
+                address: result[0].address.address_name,
+                roadAddress: result[0].road_address?.address_name,
+              });
+            }
           }
-        }
-      );
+        );
+      }
     }
   }, [currentPos, geocoder, markerPos]);
 
+  // 카카오맵 api 불러오기
   useEffect((): void => {
     dispatch(getMapThunk(mapEl.current));
   }, [dispatch]);
 
+  // 지도 드래그 이벤트 등록
+  // 드래그 시작 시 인포윈도우 닫고 크로스헤어 활성화
+  // 드래그 종료 시 크로스헤어 비활성화
   useEffect((): void => {
     const dragStartCallback = (): void => {
       if (infoWindow !== null) {
@@ -85,6 +94,7 @@ const Map: React.FC = (): ReactElement => {
     }
   }, [infoWindow, map]);
 
+  // 마커 위치 변경 시 기존 마커 제거 후 신규 마커 생성
   useEffect((): void => {
     if (markerPos) {
       marker?.setMap(null);
@@ -98,8 +108,9 @@ const Map: React.FC = (): ReactElement => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, markerPos]);
 
+  // 마커에 인포윈도우 적용
   useEffect((): void => {
-    if (marker) {
+    if (marker && markerAddress.address) {
       const iwContent = `<div class="infowindow">${markerAddress.address}</div>`;
       setInfoWindow(
         new window.kakao.maps.InfoWindow({
@@ -117,6 +128,7 @@ const Map: React.FC = (): ReactElement => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, markerPos, markerAddress]);
 
+  // 마커 아이콘 적용
   useEffect((): void => {
     const icon = new window.kakao.maps.MarkerImage(
       markerImg,

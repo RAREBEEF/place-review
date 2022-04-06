@@ -52,6 +52,7 @@ export function getMapThunk(element: any): Function {
     if (window.navigator) {
       try {
         dispatch(getMapStart());
+        // 최초 위치
         const location = new window.kakao.maps.LatLng(37.5125, 127.102778);
 
         const options = {
@@ -92,7 +93,7 @@ const reducer = (
         loading: false,
         error: null,
         data: action.data,
-        markerPos: action.location,
+        // markerPos: action.location,
       };
     case GET_MAP_FAIL:
       return { ...state, loading: false, error: action.error };

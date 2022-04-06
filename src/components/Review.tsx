@@ -7,7 +7,7 @@ import { dbService, storageService } from "../fbase";
 import { setMarkerPos } from "../redux/modules/getMap";
 import { ReviewPropType, stateType } from "../types";
 import Button from "./Button";
-import NewReview from "./NewReview";
+import WriteReview from "./WriteReview";
 import styles from "./Review.module.scss";
 
 const Review: React.FC<ReviewPropType> = ({
@@ -28,6 +28,8 @@ const Review: React.FC<ReviewPropType> = ({
   } = useSelector((state: stateType): stateType => state);
   const [isEditMod, setIsEditMod] = useState<boolean>(false);
 
+  // 리뷰 삭제
+  // 사진 있으면 스토리지에서 사진도 찾아서 삭제
   const onDeleteClick = useCallback(
     async (e, review): Promise<void> => {
       e.preventDefault();
@@ -48,23 +50,16 @@ const Review: React.FC<ReviewPropType> = ({
     [userObj.uid]
   );
 
-  const onEditClick = useCallback(
-    (e, review) => {
-      e.preventDefault();
+  // 리뷰 수정
+  const onEditClick = useCallback((e, review) => {
+    e.preventDefault();
 
-      if (isEditMod) {
-        window.alert(
-          "현재 수정 중인 다른 글이 존재합니다.\n수정 완료 후 다시 시도해 주세요."
-        );
-      }
+    setIsEditMod(true);
+  }, []);
 
-      setIsEditMod(true);
-    },
-    [isEditMod]
-  );
-
+  // 선택 항목이 변경될 경우 수정모드 종료
   useEffect(() => {
-    if (selected && selected.section === "review" && selected.index !== i) {
+    if (selected && (selected.section !== "review" || selected.index !== i)) {
       setIsEditMod(false);
     }
   }, [i, selected]);
@@ -95,7 +90,7 @@ const Review: React.FC<ReviewPropType> = ({
       }}
     >
       {isEditMod ? (
-        <NewReview
+        <WriteReview
           isEditMod={isEditMod}
           setIsEditMod={setIsEditMod}
           prevReview={review}
@@ -177,7 +172,7 @@ const Review: React.FC<ReviewPropType> = ({
             </span>
             {(userObj.uid === review.creatorId ||
               userObj.uid === "oieGlxRf5zXW1JzXxpiY1DAskDF3") && (
-              <span className={styles["creator-btn-wrapper"]}>
+              <div className={styles["creator-btn-wrapper"]}>
                 <Button
                   text="수정"
                   onClick={(e) => {
@@ -192,7 +187,7 @@ const Review: React.FC<ReviewPropType> = ({
                   }}
                   className={["Review__delete"]}
                 ></Button>
-              </span>
+              </div>
             )}
           </div>
         </>
