@@ -91,16 +91,18 @@ const Profile: React.FC = (): ReactElement => {
       e.preventDefault();
 
       if (authService.currentUser) {
-        if (authService.currentUser.email !== emailCheck) {
-          setAlert("메일이 일치하지 않습니다.");
-          return;
-        }
-        try {
-          sendPasswordResetEmail(authService, emailCheck).then(() => {
-            setAlert("메일이 발송되었습니다.");
-          });
-        } catch (error) {
-          setAlert(error);
+        if (emailCheck.length === 0) {
+          setAlert("이메일을 입력해주세요.");
+        } else if (authService.currentUser.email !== emailCheck) {
+          setAlert("이메일이 일치하지 않습니다.");
+        } else {
+          try {
+            sendPasswordResetEmail(authService, emailCheck).then(() => {
+              setAlert("메일이 발송되었습니다.");
+            });
+          } catch (error) {
+            setAlert(error);
+          }
         }
       }
     },
