@@ -86,37 +86,71 @@ const Login: React.FC = () => {
             );
           })
           .catch((error): void => {
-            setAlert(error.message);
+            if (email.length === 0) {
+              setAlert("이메일을 입력해주세요.");
+            } else if (password.length === 0) {
+              setAlert("비밀번호를 입력해주세요.");
+            } else if (error.code === "auth/invalid-email") {
+              setAlert("유효하지 않은 이메일입니다.");
+            } else if (error.code === "auth/wrong-password") {
+              setAlert("비밀번호를 잘못 입력하셨습니다.");
+            } else {
+              setAlert(error.message);
+            }
           });
 
         // 회원가입
       } else if (formAction === "signUp") {
-        if (password === passwordCheck) {
-          await createUserWithEmailAndPassword(authService, email, password)
-            .then((userCredential) => {
-              const user = userCredential.user;
-
-              dispatch(
-                setLogin(true, {
-                  displayName: user.displayName ? user.displayName : "익명",
-                  uid: user.uid,
-                })
-              );
-            })
-            .catch((error): void => {
-              setAlert(error.message);
-            });
+        if (passwordCheck.length === 0) {
+          setAlert("비밀번호 확인을 입력해주세요.");
+          return;
         }
+
+        if (passwordCheck !== password) {
+          setAlert("비밀번호 확인이 일치하지 않습니다.");
+          return;
+        }
+
+        await createUserWithEmailAndPassword(authService, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+
+            dispatch(
+              setLogin(true, {
+                displayName: user.displayName ? user.displayName : "익명",
+                uid: user.uid,
+              })
+            );
+          })
+          .catch((error): void => {
+            if (email.length === 0) {
+              setAlert("이메일을 입력해주세요.");
+            } else if (password.length === 0) {
+              setAlert("비밀번호를 입력해주세요.");
+            } else if (error.code === "auth/invalid-email") {
+              setAlert("유효하지 않은 이메일입니다.");
+            } else if (error.code === "auth/weak-password") {
+              setAlert("비밀번호는 최소 6자 이상이어야 합니다.");
+            } else if (error.code === "auth/email-already-in-use") {
+              setAlert("이미 사용 중인 이메일입니다.");
+            } else {
+              setAlert(error.message);
+            }
+          });
 
         // 비밀번호 재설정
       } else if (formAction === "findPw") {
-        try {
-          sendPasswordResetEmail(authService, email).then((): void => {
+        await sendPasswordResetEmail(authService, email)
+          .then((): void => {
             setAlert("메일이 발송되었습니다.");
+          })
+          .catch((error): void => {
+            if (error.code === "auth/missing-email") {
+              setAlert("이메일을 입력해주세요.");
+            } else if (error.code === "auth/invalid-email") {
+              setAlert("유효하지 않은 이메일입니다.");
+            }
           });
-        } catch (error) {
-          setAlert(error);
-        }
       }
     },
     [email, password, dispatch, formAction, passwordCheck]

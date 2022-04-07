@@ -20,6 +20,7 @@ const Map: React.FC = (): ReactElement => {
     data: { map, geocoder },
     markerPos,
     currentPos,
+    error,
   } = useSelector((state: stateType): getMapStateType => state.getMap);
   const [marker, setMarker] = useState<any>();
   const [crossActive, setCrossActive] = useState<boolean>(false);
@@ -33,6 +34,12 @@ const Map: React.FC = (): ReactElement => {
   });
   const [infoWindow, setInfoWindow] = useState<any>(null);
   const mapEl = useRef(null);
+
+  useEffect(() => {
+    if (error) {
+      window.alert(error);
+    }
+  }, [error]);
 
   useEffect(() => {
     // 현위치 데이터 존재할 경우 주소로 변환하여 저장 (지도에 띄울 용도)
@@ -54,7 +61,6 @@ const Map: React.FC = (): ReactElement => {
 
       // 마커 위치 데이터 존재할 경우 주소로 변환하여 저장(인포윈도우 용도)
       if (markerPos !== null) {
-        console.log(markerPos);
         geocoder.coord2Address(
           markerPos.getLng(),
           markerPos.getLat(),

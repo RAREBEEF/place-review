@@ -46,18 +46,22 @@ const Profile: React.FC = (): ReactElement => {
         } else if (displayName === userObj.displayName) {
           setAlert("닉네임에 변경 사항이 없습니다.");
         } else if (displayName !== "") {
-          updateProfile(authService.currentUser, {
-            displayName,
-          });
-          await myReviews.forEach((review): void => {
-            if (review.displayName !== displayName) {
-              setDoc(doc(dbService, "reviews", review.id), {
-                ...review,
-                displayName,
-              });
-            }
-          });
-          setAlert("닉네임이 변경되었습니다.");
+          try {
+            updateProfile(authService.currentUser, {
+              displayName,
+            });
+            await myReviews.forEach((review): void => {
+              if (review.displayName !== displayName) {
+                setDoc(doc(dbService, "reviews", review.id), {
+                  ...review,
+                  displayName,
+                });
+              }
+            });
+            setAlert("닉네임이 변경되었습니다.");
+          } catch (error) {
+            setAlert(error);
+          }
         }
       }
     },
