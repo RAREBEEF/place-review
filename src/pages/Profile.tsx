@@ -2,10 +2,11 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 import { authService, dbService } from "../fbase";
 import {
   deleteUser,
+  onAuthStateChanged,
   sendPasswordResetEmail,
   updateProfile,
 } from "firebase/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { reviewObjType, stateType } from "../types";
 import Button from "../components/Button";
 import { doc, setDoc } from "firebase/firestore";
@@ -13,12 +14,14 @@ import Review from "../components/Review";
 import { useNavigate } from "react-router-dom";
 import styles from "./Profile.module.scss";
 import classNames from "classnames";
+import { setLogin } from "../redux/modules/loginProcess";
 
 const Profile: React.FC = (): ReactElement => {
   const {
     loginProcess: { userObj },
     getReviews: { reviews: allReviews },
   } = useSelector((state: stateType): stateType => state);
+  const dispatch = useDispatch();
   const [myReviews, setMyReviews] = useState<Array<any>>([]);
   const [displayName, setDisplayName] = useState<string>("");
   const [emailCheck, setEmailCheck] = useState<string>("");
@@ -45,6 +48,8 @@ const Profile: React.FC = (): ReactElement => {
           setAlert("닉네임을 입력해주세요.");
         } else if (displayName === userObj.displayName) {
           setAlert("닉네임에 변경 사항이 없습니다.");
+        } else if (displayName.length < 2 || displayName.length > 12) {
+          setAlert("닉네임은 2자 이상 12자 이하만 가능합니다.");
         } else if (displayName !== "") {
           try {
             updateProfile(authService.currentUser, {
@@ -59,13 +64,25 @@ const Profile: React.FC = (): ReactElement => {
               }
             });
             setAlert("닉네임이 변경되었습니다.");
+            onAuthStateChanged(authService, (user) => {
+              if (user) {
+                dispatch(
+                  setLogin(true, {
+                    displayName,
+                    uid: user.uid,
+                  })
+                );
+              } else {
+                dispatch(setLogin(false, {}));
+              }
+            });
           } catch (error) {
             setAlert(error);
           }
         }
       }
     },
-    [displayName, myReviews, userObj]
+    [dispatch, displayName, myReviews, userObj.displayName]
   );
 
   // 비밀번호 재설정 메일 발송
@@ -138,7 +155,7 @@ const Profile: React.FC = (): ReactElement => {
             value={displayName}
             onChange={ondisplayNameChange}
             maxLength={12}
-            minLength={1}
+            minLength={2}
             className={classNames(styles["input--display-name"], styles.input)}
           />
           <Button
