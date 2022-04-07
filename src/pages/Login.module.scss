@@ -11,7 +11,7 @@
   font-family: "IBM Plex Sans KR", sans-serif;
   margin: auto;
   max-width: 100vw;
-  height: 99vh;
+  height: 100vh;
   @supports (-webkit-touch-callout: none) {
     height: -webkit-fill-available;
   }
@@ -32,10 +32,13 @@
       top: 20px;
     }
     .logo {
-      width: 40vw;
-      max-width: 300px;
-      min-width: 50px;
-      height: auto;
+      // width: 40vw;
+      height: 30vh;
+      min-height: 200px;
+      // max-width: 300px;
+      // min-width: 50px;
+      // height: auto;
+      width: auto;
     }
   }
 
@@ -69,9 +72,6 @@
     }
 
     .alert {
-      margin: {
-        // top: 15px;
-      }
       color: #ccc5b9;
       min-height: 16px;
       text-align: center;
