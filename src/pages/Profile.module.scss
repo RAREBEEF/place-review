@@ -108,9 +108,20 @@
     }
   }
 
+  .line {
+    width: 100%;
+    margin: {
+      top: 20px;
+      bottom: 20px;
+    }
+    border: 0px;
+    height: 1px;
+    background-color: #ccc5b9;
+  }
+
   .my-review-wrapper {
     padding: {
-      top: 80px;
+      top: 40px;
     }
     width: 70vw;
     min-width: 300px;

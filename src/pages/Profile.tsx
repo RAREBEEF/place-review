@@ -171,6 +171,7 @@ const Profile: React.FC = (): ReactElement => {
           />
         </div>
       </div>
+      <hr className={styles.line} />
       <div className={styles["my-review-wrapper"]}>
         <h2 className={styles["my-review-header"]}>내가 쓴 리뷰</h2>
         {myReviews.length === 0 && (
