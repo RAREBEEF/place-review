@@ -1,12 +1,7 @@
 import React, { ReactElement, useCallback, useState } from "react";
 import styles from "./FindReview.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  FindReviewPropType,
-  getMapStateType,
-  getReviewsStateType,
-  stateType,
-} from "../types";
+import { FindReviewPropType, stateType } from "../types";
 import { Link } from "react-router-dom";
 import Button from "./Button";
 import Review from "./Review";
@@ -18,12 +13,10 @@ const FindReview: React.FC<FindReviewPropType> = ({
   searchReviewPos,
 }) => {
   const dispatch = useDispatch();
-  const { markerPos } = useSelector(
-    (state: stateType): getMapStateType => state.getMap
-  );
-  const { reviews, filter } = useSelector(
-    (state: stateType): getReviewsStateType => state.getReviews
-  );
+  const {
+    getMap: { markerPos },
+    getReviews: { reviews, filter },
+  } = useSelector((state: stateType): stateType => state);
   const [text, setText] = useState<string>("");
 
   // 검색어 입력
