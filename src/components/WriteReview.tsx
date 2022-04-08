@@ -173,8 +173,11 @@ const WriteReview: React.FC<WriteReviewPropType> = ({
     // 중복 업로드 방지하기 위해 업로드 중 버튼 클릭 비활성화
     setUploading(true);
 
-    // 내용이 없을 경우 업로드 중지
-    if (review.title === "" || (review.memo === "" && attachment === "")) {
+    // 마커가 없을 경우
+    if (Object.keys(review.location).length === 0) {
+      window.alert(
+        "위치 정보가 존재하지 않습니다. 지도에 마커를 설정해 주세요."
+      );
       setUploading(false);
       return;
     }

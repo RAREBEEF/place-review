@@ -142,18 +142,22 @@ const Review: React.FC<ReviewPropType> = ({
               {review.address.roadAddress}
             </div>
           </div>
-          <hr className={styles.line} />
-          <div className={styles["review__content"]}>
-            <p className={styles["review__memo"]}>{review.memo}</p>
-            {review.attachmentUrl && (
-              <img
-                className={styles["review__photo"]}
-                src={review.attachmentUrl}
-                alt={review.attachmentUrl}
-              />
-            )}
-          </div>
-          <hr className={styles.line} />
+          {review.memo.length + review.attachmentUrl.length !== 0 && (
+            <>
+              <hr className={styles.line} />
+              <div className={styles["review__content"]}>
+                <p className={styles["review__memo"]}>{review.memo}</p>
+                {review.attachmentUrl && (
+                  <img
+                    className={styles["review__photo"]}
+                    src={review.attachmentUrl}
+                    alt={review.attachmentUrl}
+                  />
+                )}
+              </div>
+              <hr className={styles.line} />
+            </>
+          )}
           <div className={styles["review__footer"]}>
             <span className={styles["footer__date"]}>
               {new Date(review.createdAt).getFullYear().toString().slice(-2)}/
