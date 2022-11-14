@@ -74,7 +74,25 @@ const Login: React.FC = () => {
 
       // 로그인
       if (formAction === "login") {
-        await signInWithEmailAndPassword(authService, email, password)
+        let isTest = false;
+
+        if (email.length === 0) {
+          setAlert("이메일을 입력해주세요.");
+          return;
+        } else if (password.length === 0) {
+          setAlert("비밀번호를 입력해주세요.");
+          return;
+        }
+
+        if (email === "test" && password === "test") {
+          isTest = true;
+        }
+
+        await signInWithEmailAndPassword(
+          authService,
+          isTest ? "test@test.com" : email,
+          isTest ? "test@test.com" : password
+        )
           .then((userCredential) => {
             const user = userCredential.user;
 
@@ -86,11 +104,7 @@ const Login: React.FC = () => {
             );
           })
           .catch((error): void => {
-            if (email.length === 0) {
-              setAlert("이메일을 입력해주세요.");
-            } else if (password.length === 0) {
-              setAlert("비밀번호를 입력해주세요.");
-            } else if (error.code === "auth/invalid-email") {
+            if (error.code === "auth/invalid-email") {
               setAlert("유효하지 않은 이메일입니다.");
             } else if (error.code === "auth/wrong-password") {
               setAlert("비밀번호를 잘못 입력하셨습니다.");
@@ -101,12 +115,16 @@ const Login: React.FC = () => {
 
         // 회원가입
       } else if (formAction === "signUp") {
-        if (passwordCheck.length === 0) {
+        if (email.length === 0) {
+          setAlert("이메일을 입력해주세요.");
+          return;
+        } else if (password.length === 0) {
+          setAlert("비밀번호를 입력해주세요.");
+          return;
+        } else if (passwordCheck.length === 0) {
           setAlert("비밀번호 확인을 입력해주세요.");
           return;
-        }
-
-        if (passwordCheck !== password) {
+        } else if (passwordCheck !== password) {
           setAlert("비밀번호 확인이 일치하지 않습니다.");
           return;
         }
@@ -123,11 +141,7 @@ const Login: React.FC = () => {
             );
           })
           .catch((error): void => {
-            if (email.length === 0) {
-              setAlert("이메일을 입력해주세요.");
-            } else if (password.length === 0) {
-              setAlert("비밀번호를 입력해주세요.");
-            } else if (error.code === "auth/invalid-email") {
+            if (error.code === "auth/invalid-email") {
               setAlert("유효하지 않은 이메일입니다.");
             } else if (error.code === "auth/weak-password") {
               setAlert("비밀번호는 최소 6자 이상이어야 합니다.");

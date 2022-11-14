@@ -17,6 +17,7 @@ import classNames from "classnames";
 import { setLogin } from "../redux/modules/loginProcess";
 
 const Profile: React.FC = (): ReactElement => {
+  const testerId = "zlD5h6Lw4obUlrBM4EthJbw9OXh2";
   const {
     loginProcess: { userObj },
     getReviews: { reviews: allReviews },
@@ -40,11 +41,14 @@ const Profile: React.FC = (): ReactElement => {
 
   // 닉네임 변경 클릭
   const onDisplayNameChangeClick = useCallback(
-    async (e): Promise<void> => {
+    (e) => {
       e.preventDefault();
       // 오류 출력 or 변경 실행
       if (authService.currentUser) {
-        if (displayName === "") {
+        if (authService.currentUser.uid === testerId) {
+          window.alert("테스트 계정의 정보는 변경하실 수 없습니다.");
+          return;
+        } else if (displayName === "") {
           setAlert("닉네임을 입력해주세요.");
         } else if (displayName === userObj.displayName) {
           setAlert("닉네임에 변경 사항이 없습니다.");
@@ -55,7 +59,7 @@ const Profile: React.FC = (): ReactElement => {
             updateProfile(authService.currentUser, {
               displayName,
             });
-            await myReviews.forEach((review): void => {
+            myReviews.forEach((review): void => {
               if (review.displayName !== displayName) {
                 setDoc(doc(dbService, "reviews", review.id), {
                   ...review,
@@ -91,7 +95,10 @@ const Profile: React.FC = (): ReactElement => {
       e.preventDefault();
 
       if (authService.currentUser) {
-        if (emailCheck.length === 0) {
+        if (authService.currentUser.uid === testerId) {
+          window.alert("테스트 계정의 정보는 변경하실 수 없습니다.");
+          return;
+        } else if (emailCheck.length === 0) {
           setAlert("이메일을 입력해주세요.");
         } else if (authService.currentUser.email !== emailCheck) {
           setAlert("이메일이 일치하지 않습니다.");
@@ -111,12 +118,19 @@ const Profile: React.FC = (): ReactElement => {
 
   // 회원 탈퇴
   const onDeleteClick = useCallback(async (): Promise<void> => {
+    if (!authService.currentUser) return;
+
+    if (authService.currentUser.uid === testerId) {
+      window.alert("테스트 계정의 정보는 변경하실 수 없습니다.");
+      return;
+    }
+
     const ok = window.confirm(
       "정말 탈퇴하시겠습니까?\n작성한 글은 삭제되지 않습니다."
     );
 
     if (ok && authService.currentUser) {
-      deleteUser(authService.currentUser)
+      await deleteUser(authService.currentUser)
         .then(() => {
           navigate("/");
         })
