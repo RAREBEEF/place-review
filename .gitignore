@@ -19,7 +19,8 @@
 .env.test.local
 .env.production.local
 .env.production
-
+*.pem
+server.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

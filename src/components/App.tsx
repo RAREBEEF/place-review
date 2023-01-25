@@ -61,7 +61,7 @@ const App: React.FC = (): ReactElement => {
   return (
     <div className={styles.container}>
       {init ? (
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <BrowserRouter>
           {isLogin ? (
             <Router />
           ) : (

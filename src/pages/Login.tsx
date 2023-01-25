@@ -7,6 +7,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithRedirect,
+  signInWithPopup,
 } from "firebase/auth";
 import Button from "../components/Button";
 import { GoogleAuthProvider } from "firebase/auth";
@@ -64,7 +65,7 @@ const Login: React.FC = () => {
 
     const provider = new GoogleAuthProvider();
 
-    signInWithRedirect(authService, provider);
+    signInWithPopup(authService, provider);
   }, []);
 
   // 전송

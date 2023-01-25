@@ -54,7 +54,7 @@ export interface loginProcessStateType {
 
 // getReviews
 export interface getReviewsStateType {
-  filter: string;
+  filter: "HERE" | "ALL";
   reviews: Array<any>;
 }
 export interface setReviewsActionType {
@@ -63,7 +63,7 @@ export interface setReviewsActionType {
 }
 export interface setFilterActionType {
   type: string;
-  filter: string;
+  filter: "HERE" | "ALL";
 }
 
 // etc
