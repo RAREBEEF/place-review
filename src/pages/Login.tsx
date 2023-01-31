@@ -6,7 +6,6 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  signInWithRedirect,
   signInWithPopup,
 } from "firebase/auth";
 import Button from "../components/Button";
